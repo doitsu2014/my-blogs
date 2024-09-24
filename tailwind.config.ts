@@ -7,22 +7,21 @@ export default {
 		'./src/**/*.{html,js,svelte,ts}',
 		'./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'
 	],
-	darkMode: 'selector',
+	darkMode: 'class',
 	theme: {
 		extend: {
 			colors: {
-				// flowbite-svelte
 				primary: {
-					50: '#F8F4E3', // Very light cream
-					100: '#E3D8B7', // Light beige
-					200: '#C9BFA3', // Soft taupe
-					300: '#B3A58D', // Muted olive green
-					400: '#A18C6D', // Warm golden brown
-					500: '#8B6B4A', // Rich caramel
-					600: '#7A5B3A', // Darker warm brown
-					700: '#6C4A2D', // Deep terracotta
-					800: '#5A3B25', // Muted burnt sienna
-					900: '#482E1B' // Warm chestnut
+					'50': '#f0fdf4',
+					'100': '#dcfce7',
+					'200': '#bbf7d0',
+					'300': '#86efac',
+					'400': '#4ade80',
+					'500': '#22c55e',
+					'600': '#16a34a',
+					'700': '#15803d',
+					'800': '#166534',
+					'900': '#14532d'
 				}
 			}
 		}
