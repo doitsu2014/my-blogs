@@ -1,5 +1,23 @@
 <script>
 	import '../app.css';
+	import { page } from '$app/stores';
+	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
+	$: activeUrl = $page.url.pathname;
+	// let activeClass = 'text-underline';
 </script>
 
-<slot></slot>
+<Navbar>
+	<NavBrand href="/">
+		<img src="/images/flowbite-svelte-icon-logo.svg" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" />
+		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Flowbite</span
+		>
+	</NavBrand>
+	<NavHamburger />
+	<NavUl {activeUrl}>
+		<NavLi href="/">Home</NavLi>
+		<NavLi href="/docs/components/navbar">Navbar</NavLi>
+		<NavLi href="/docs/components/accordion">Accordion</NavLi>
+		<NavLi href="/docs/components/alert">Alert</NavLi>
+		<NavLi href="/docs/components/avatar">Avatar</NavLi>
+	</NavUl>
+</Navbar>
