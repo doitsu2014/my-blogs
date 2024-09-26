@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import '../app.css';
 	import { page } from '$app/stores';
 	import {
@@ -13,8 +13,10 @@
 	} from 'flowbite-svelte';
 	import { DarkMode } from 'flowbite-svelte';
 	import { ChevronDownOutline } from 'flowbite-svelte-icons';
+	import type { LayoutServerData } from './$types';
+
 	$: activeUrl = $page.url.pathname;
-	// let activeClass = 'text-underline';
+	export let layoutData: LayoutServerData;
 </script>
 
 <Navbar>
@@ -44,6 +46,14 @@
 	</NavUl>
 	<DarkMode />
 </Navbar>
+
+{#each layoutData?.categories ?? [] as category}
+	<li>
+		{category}
+	</li>
+{/each}
+
+{layoutData?.categories?.length ?? 0}
 
 <svelte:head>
 	<title>Doitsu Technology</title>
