@@ -13,10 +13,11 @@
 	} from 'flowbite-svelte';
 	import { DarkMode } from 'flowbite-svelte';
 	import { ChevronDownOutline } from 'flowbite-svelte-icons';
-	import type { LayoutServerData } from './$types';
-
+	import type { LayoutData } from './$types';
 	$: activeUrl = $page.url.pathname;
-	export let layoutData: LayoutServerData;
+
+	export let layoutData: LayoutData;
+	console.log(layoutData);
 </script>
 
 <Navbar>
@@ -47,13 +48,13 @@
 	<DarkMode />
 </Navbar>
 
-{#each layoutData?.categories ?? [] as category}
-	<li>
-		{category}
-	</li>
-{/each}
-
-{layoutData?.categories?.length ?? 0}
+<!-- {#each layoutData?.categories ?? [] as category} -->
+<!-- 	<li> -->
+<!-- 		{category} -->
+<!-- 	</li> -->
+<!-- {/each} -->
+<!---->
+<!-- {layoutData?.categories?.length ?? 0} -->
 
 <svelte:head>
 	<title>Doitsu Technology</title>

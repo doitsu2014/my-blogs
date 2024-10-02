@@ -1,4 +1,12 @@
-<script>
+<script lang="ts">
+	import type { PageData, PageServerData } from './$types';
+
+	export let pageServerData: PageServerData;
+	export let pageData: PageData;
+	console.log(pageServerData);
+	console.log(pageData);
+	$: ({ categories } = pageData);
+	console.log(categories);
 </script>
 
 <div class="flex justify-center">
