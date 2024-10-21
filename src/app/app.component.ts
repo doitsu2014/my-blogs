@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './@dtech/navbar/navbar.component';
 import { FlowbiteService } from './services/flowbite.service';
@@ -11,14 +11,16 @@ import { SvgIconComponent } from 'angular-svg-icon';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'web-app';
 
   constructor(private flowbiteService: FlowbiteService) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.flowbiteService.loadFlowbite((flowbite) => {
       console.info('Flowbite loaded');
     });
   }
+
+  ngOnInit(): void {}
 }
