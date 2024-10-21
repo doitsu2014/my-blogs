@@ -6,6 +6,7 @@ import { SvgIconComponent } from 'angular-svg-icon';
   standalone: true,
   selector: 'dtech-navbar',
   templateUrl: './navbar.component.html',
+  imports: [SvgIconComponent],
 })
 export class NavbarComponent implements OnInit {
   constructor(private flowbiteService: FlowbiteService) {}

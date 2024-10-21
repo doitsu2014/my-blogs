@@ -14,6 +14,11 @@ import { SvgIconComponent } from 'angular-svg-icon';
 export class AppComponent implements OnInit {
   title = 'web-app';
 
-  constructor() {}
-  ngOnInit(): void {}
+  constructor(private flowbiteService: FlowbiteService) {}
+
+  ngOnInit(): void {
+    this.flowbiteService.loadFlowbite((flowbite) => {
+      console.info('Flowbite loaded');
+    });
+  }
 }
