@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FlowbiteService } from '../../services/flowbite.service';
 import { SvgIconComponent } from 'angular-svg-icon';
 
 @Component({
@@ -9,13 +8,9 @@ import { SvgIconComponent } from 'angular-svg-icon';
   imports: [SvgIconComponent],
 })
 export class NavbarComponent implements OnInit, AfterViewInit {
-  constructor(private flowbiteService: FlowbiteService) {}
+  constructor() {}
 
   ngOnInit(): void {}
 
-  ngAfterViewInit(): void {
-    this.flowbiteService.loadFlowbite((flowbite) => {
-      console.info('Flowbite loaded');
-    });
-  }
+  ngAfterViewInit(): void {}
 }

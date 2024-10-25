@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAngularSvgIcon } from 'angular-svg-icon';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
 
     // We dont need to provide AngularSvgIcon as Server Side Rendering
-    provideAngularSvgIcon(),
+    provideAngularSvgIcon(), provideAnimationsAsync(),
   ],
 };
