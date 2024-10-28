@@ -46,6 +46,7 @@ declare module '$env/static/private' {
 	export const ZSH: string;
 	export const LSCOLORS: string;
 	export const NVM_INC: string;
+	export const npm_package_devDependencies_flowbite_svelte: string;
 	export const ZPLUG_BIN: string;
 	export const HOMEBREW_PREFIX: string;
 	export const FPATH: string;
@@ -60,6 +61,7 @@ declare module '$env/static/private' {
 	export const COLORTERM: string;
 	export const WSL_DISTRO_NAME: string;
 	export const ZPLUG_FILTER: string;
+	export const npm_package_devDependencies_tailwindcss: string;
 	export const npm_package_devDependencies_typescript: string;
 	export const NVM_DIR: string;
 	export const WAYLAND_DISPLAY: string;
@@ -67,6 +69,7 @@ declare module '$env/static/private' {
 	export const npm_package_scripts_dev: string;
 	export const npm_package_devDependencies_prettier: string;
 	export const PERIOD: string;
+	export const MASON: string;
 	export const _ZPLUG_URL: string;
 	export const LOGNAME: string;
 	export const npm_package_type: string;
@@ -76,6 +79,7 @@ declare module '$env/static/private' {
 	export const _P9K_SSH_TTY: string;
 	export const PULSE_SERVER: string;
 	export const npm_package_scripts_check_watch: string;
+	export const npm_package_devDependencies_autoprefixer: string;
 	export const ZPLUG_LOADFILE: string;
 	export const npm_package_scripts_lint: string;
 	export const npm_config_registry: string;
@@ -83,6 +87,8 @@ declare module '$env/static/private' {
 	export const TERM: string;
 	export const ZPLUG_LOG_LOAD_SUCCESS: string;
 	export const DOTNET_ROOT: string;
+	export const npm_package_devDependencies_flowbite_svelte_icons: string;
+	export const npm_package_devDependencies_prettier_plugin_tailwindcss: string;
 	export const npm_config_node_gyp: string;
 	export const PATH: string;
 	export const HOMEBREW_CELLAR: string;
@@ -100,6 +106,7 @@ declare module '$env/static/private' {
 	export const LS_COLORS: string;
 	export const npm_lifecycle_script: string;
 	export const npm_package_devDependencies__sveltejs_kit: string;
+	export const npm_package_devDependencies__tailwindcss_typography: string;
 	export const SHELL: string;
 	export const _ZPLUG_AWKPATH: string;
 	export const NODE_PATH: string;
@@ -117,6 +124,7 @@ declare module '$env/static/private' {
 	export const npm_execpath: string;
 	export const _P9K_TTY: string;
 	export const NVM_CD_FLAGS: string;
+	export const npm_package_devDependencies_flowbite: string;
 	export const ZPLUG_USE_CACHE: string;
 	export const HOMEBREW_REPOSITORY: string;
 	export const npm_package_devDependencies__sveltejs_adapter_auto: string;
@@ -183,6 +191,7 @@ declare module '$env/dynamic/private' {
 		ZSH: string;
 		LSCOLORS: string;
 		NVM_INC: string;
+		npm_package_devDependencies_flowbite_svelte: string;
 		ZPLUG_BIN: string;
 		HOMEBREW_PREFIX: string;
 		FPATH: string;
@@ -197,6 +206,7 @@ declare module '$env/dynamic/private' {
 		COLORTERM: string;
 		WSL_DISTRO_NAME: string;
 		ZPLUG_FILTER: string;
+		npm_package_devDependencies_tailwindcss: string;
 		npm_package_devDependencies_typescript: string;
 		NVM_DIR: string;
 		WAYLAND_DISPLAY: string;
@@ -204,6 +214,7 @@ declare module '$env/dynamic/private' {
 		npm_package_scripts_dev: string;
 		npm_package_devDependencies_prettier: string;
 		PERIOD: string;
+		MASON: string;
 		_ZPLUG_URL: string;
 		LOGNAME: string;
 		npm_package_type: string;
@@ -213,6 +224,7 @@ declare module '$env/dynamic/private' {
 		_P9K_SSH_TTY: string;
 		PULSE_SERVER: string;
 		npm_package_scripts_check_watch: string;
+		npm_package_devDependencies_autoprefixer: string;
 		ZPLUG_LOADFILE: string;
 		npm_package_scripts_lint: string;
 		npm_config_registry: string;
@@ -220,6 +232,8 @@ declare module '$env/dynamic/private' {
 		TERM: string;
 		ZPLUG_LOG_LOAD_SUCCESS: string;
 		DOTNET_ROOT: string;
+		npm_package_devDependencies_flowbite_svelte_icons: string;
+		npm_package_devDependencies_prettier_plugin_tailwindcss: string;
 		npm_config_node_gyp: string;
 		PATH: string;
 		HOMEBREW_CELLAR: string;
@@ -237,6 +251,7 @@ declare module '$env/dynamic/private' {
 		LS_COLORS: string;
 		npm_lifecycle_script: string;
 		npm_package_devDependencies__sveltejs_kit: string;
+		npm_package_devDependencies__tailwindcss_typography: string;
 		SHELL: string;
 		_ZPLUG_AWKPATH: string;
 		NODE_PATH: string;
@@ -254,6 +269,7 @@ declare module '$env/dynamic/private' {
 		npm_execpath: string;
 		_P9K_TTY: string;
 		NVM_CD_FLAGS: string;
+		npm_package_devDependencies_flowbite: string;
 		ZPLUG_USE_CACHE: string;
 		HOMEBREW_REPOSITORY: string;
 		npm_package_devDependencies__sveltejs_adapter_auto: string;
