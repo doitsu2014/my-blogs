@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeModeScript } from "flowbite-react";
+import Link from "next/link";
+import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react";
+import Image from "next/image";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,9 +29,31 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+            <ThemeModeScript />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Navbar fluid rounded>
+          <NavbarBrand as={Link} href="/">
+            <Image src="/images/doitsu-technology-logo.svg" width={60} height={60} className="mr-3" alt="Doitsu Technology" />
+            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">D Tech</span>
+          </NavbarBrand>
+          <NavbarToggle />
+          <NavbarCollapse>
+            <NavbarLink href="#" active>
+              Home
+            </NavbarLink>
+            <NavbarLink as={Link} href="#">
+              About
+            </NavbarLink>
+            <NavbarLink href="#">Services</NavbarLink>
+            <NavbarLink href="#">Pricing</NavbarLink>
+            <NavbarLink href="#">Contact</NavbarLink>
+          </NavbarCollapse>
+        </Navbar>
+
         {children}
       </body>
     </html>
