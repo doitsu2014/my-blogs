@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeModeScript } from "flowbite-react";
 import Link from "next/link";
 import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react";
 import Image from "next/image";
+import { Roboto } from 'next/font/google'
+import { useQuery } from "@apollo/client";
+import GET_CATEGORIES from '@/graphql/queries/getCategories.gql';
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const roboto = Roboto({
+  weight: '400',
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,34 +23,36 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const a = useQuery(GET_CATEGORIES);
+
   return (
     <html lang="en">
       <head>
             <ThemeModeScript />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${roboto.className} antialiased`}
       >
-        <Navbar fluid rounded>
-          <NavbarBrand as={Link} href="/">
-            <Image src="/images/doitsu-technology-logo.svg" width={60} height={60} className="mr-3" alt="Doitsu Technology" />
-            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">D Tech</span>
-          </NavbarBrand>
-          <NavbarToggle />
-          <NavbarCollapse>
-            <NavbarLink href="#" active>
-              Home
-            </NavbarLink>
-            <NavbarLink as={Link} href="#">
-              About
-            </NavbarLink>
-            <NavbarLink href="#">Services</NavbarLink>
-            <NavbarLink href="#">Pricing</NavbarLink>
-            <NavbarLink href="#">Contact</NavbarLink>
-          </NavbarCollapse>
-        </Navbar>
+          <Navbar fluid rounded>
+            <NavbarBrand as={Link} href="/">
+              <Image src="/images/doitsu-technology-logo.svg" width={60} height={60} className="mr-3" alt="Doitsu Technology" />
+              <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">D Tech</span>
+            </NavbarBrand>
+            <NavbarToggle />
+            <NavbarCollapse>
+              <NavbarLink href="#" active>
+                Home
+              </NavbarLink>
+              <NavbarLink as={Link} href="#">
+                About
+              </NavbarLink>
+              <NavbarLink href="#">Services</NavbarLink>
+              <NavbarLink href="#">Pricing</NavbarLink>
+              <NavbarLink href="#">Contact</NavbarLink>
+            </NavbarCollapse>
+          </Navbar>
 
-        {children}
+          {children}
       </body>
     </html>
   );
