@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from 'flowbite-react';
 import Image from 'next/image';
 import { Roboto } from 'next/font/google';
-import { gql } from '@apollo/client';
-import client from './services/graphQlClient';
 import { getCategories } from './services/categories';
 
 const roboto = Roboto({
@@ -25,7 +23,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const categories = await getCategories();
-  console.log(categories);
 
   return (
     <html lang="en">
@@ -48,15 +45,11 @@ export default async function RootLayout({
           </NavbarBrand>
           <NavbarToggle />
           <NavbarCollapse>
-            <NavbarLink href="#" active>
-              Home
-            </NavbarLink>
-            <NavbarLink as={Link} href="#">
-              About
-            </NavbarLink>
-            <NavbarLink href="#">Services</NavbarLink>
-            <NavbarLink href="#">Pricing</NavbarLink>
-            <NavbarLink href="#">Contact</NavbarLink>
+            {categories.map((category) => (
+              <NavbarLink href={`/blogs/${category.slug}`} active key={category.id}>
+                {category.displayName}
+              </NavbarLink>
+            ))}
           </NavbarCollapse>
         </Navbar>
 

@@ -1,7 +1,29 @@
 import { gql } from '@apollo/client';
 import client from './graphQlClient';
 
-export async function getCategories() {
+export class CategoryModel {
+  id: string;
+  parentId: string | undefined;
+  displayName: string;
+  slug: string;
+  selfRefReverse: CategoryModel[];
+
+  constructor(
+    id: string,
+    parentId: string,
+    displayName: string,
+    slug: string,
+    selfRefReverse: CategoryModel[]
+  ) {
+    this.id = id;
+    this.parentId = parentId;
+    this.displayName = displayName;
+    this.slug = slug;
+    this.selfRefReverse = selfRefReverse;
+  }
+}
+
+export async function getCategories(): Promise<CategoryModel[]> {
   const res = await client.query({
     query: gql`
       {
@@ -10,11 +32,12 @@ export async function getCategories() {
             id
             parentId
             displayName
+            slug
             selfRefReverse {
               nodes {
                 id
-                parentId
                 displayName
+                slug
               }
             }
           }
