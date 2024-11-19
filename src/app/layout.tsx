@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeModeScript } from 'flowbite-react';
 import Link from 'next/link';
-import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from 'flowbite-react';
+import { Navbar, NavbarBrand, NavbarCollapse, NavbarToggle } from 'flowbite-react';
 import Image from 'next/image';
 import { Roboto } from 'next/font/google';
 import { getCategories } from './services/categories';
+import MyNavbarLink from './components/myNavbarLink';
 
 const roboto = Roboto({
   weight: '400',
@@ -23,7 +24,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const categories = await getCategories();
-
   return (
     <html lang="en">
       <head>
@@ -45,10 +45,13 @@ export default async function RootLayout({
           </NavbarBrand>
           <NavbarToggle />
           <NavbarCollapse>
+            <MyNavbarLink slug="/" displayName="Home"></MyNavbarLink>
             {categories.map((category) => (
-              <NavbarLink href={`/blogs/${category.slug}`} active key={category.id}>
-                {category.displayName}
-              </NavbarLink>
+              <MyNavbarLink
+                slug={`/blogs/${category.slug}`}
+                displayName={category.displayName}
+                key={category.id}
+              ></MyNavbarLink>
             ))}
           </NavbarCollapse>
         </Navbar>
