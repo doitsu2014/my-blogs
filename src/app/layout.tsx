@@ -6,7 +6,7 @@ import { Navbar, NavbarBrand, NavbarCollapse, NavbarToggle } from 'flowbite-reac
 import Image from 'next/image';
 import { Roboto } from 'next/font/google';
 import { getCategories } from './services/categories';
-import MyNavbarLink from './components/myNavbarLink';
+import MyNavbarLink from './components/my-navbar-link';
 
 const roboto = Roboto({
   weight: '400',
