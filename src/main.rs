@@ -1,9 +1,10 @@
 pub mod common;
 pub mod components;
+pub mod pages;
 
 use common::*;
-use components::Route;
 use dioxus::prelude::*;
+use pages::Route;
 
 fn main() {
     dioxus::launch(App);
