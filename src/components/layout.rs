@@ -22,12 +22,14 @@ fn Navbar(links: Vec<(Route, String)>) -> Element {
     rsx! {
         div {
             id: "navbar",
+            class: "navbar bg-base-100",
             {
                 links.iter().map(|(route, display)| {
                     let display = display.clone();
                     rsx! {
                         Link {
                             to: route.clone(),
+                            class: "btn btn-ghost text-xl",
                             {
                                 display
                             }
