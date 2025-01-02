@@ -21,21 +21,33 @@ pub fn AppLayout() -> Element {
 fn Navbar(links: Vec<(Route, String)>) -> Element {
     rsx! {
         div {
-            id: "navbar",
             class: "navbar bg-base-100",
-            {
-                links.iter().map(|(route, display)| {
-                    let display = display.clone();
-                    rsx! {
-                        Link {
-                            to: route.clone(),
-                            class: "btn btn-ghost text-xl",
-                            {
-                                display
+            div {
+                class: "flex-1",
+                a {
+                    class: "btn btn-ghost text-xl", "daisyUI"
+                }
+            }
+            div {
+                class: "flex-none",
+                ul {
+                    class: "menu menu-horizontal px-1",
+                    {
+                        links.iter().map(|(route, display)| {
+                            let display = display.clone();
+                            rsx! {
+                                li {
+                                    Link {
+                                        to: route.clone(),
+                                        {
+                                            display
+                                        }
+                                    }
+                                }
                             }
-                        }
+                        })
                     }
-                })
+                }
             }
         }
     }

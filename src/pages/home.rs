@@ -1,63 +1,29 @@
 use dioxus::prelude::*;
 
-use crate::common::HEADER_SVG;
+use crate::common::APP_LOGO;
 
-/// Home page
 #[component]
 pub fn Home() -> Element {
     rsx! {
-        Hero {}
-        Echo {}
-    }
-}
-
-#[component]
-fn Hero() -> Element {
-    rsx! {
         div {
-            id: "hero",
-            img { src: HEADER_SVG, id: "header" }
-            div { id: "links",
-                a { href: "https://dioxuslabs.com/learn/0.6/", "📚 Learn Dioxus" }
-                a { href: "https://dioxuslabs.com/awesome", "🚀 Awesome Dioxus" }
-                a { href: "https://github.com/dioxus-community/", "📡 Community Libraries" }
-                a { href: "https://github.com/DioxusLabs/sdk", "⚙️ Dioxus Development Kit" }
-                a { href: "https://marketplace.visualstudio.com/items?itemName=DioxusLabs.dioxus", "💫 VSCode Extension" }
-                a { href: "https://discord.gg/XgGxMSkvUM", "👋 Community Discord" }
-            }
-        }
-    }
-}
-
-/// Echo component that demonstrates fullstack server functions.
-#[component]
-fn Echo() -> Element {
-    let mut response = use_signal(|| String::new());
-
-    rsx! {
-        div {
-            id: "echo",
-            h4 { "ServerFn Echo" }
-            input {
-                placeholder: "Type here to echo...",
-                oninput:  move |event| async move {
-                    let data = echo_server(event.value()).await.unwrap();
-                    response.set(data);
-                },
-            }
-
-            if !response().is_empty() {
-                p {
-                    "Server echoed: "
-                    i { "{response}" }
+            class: "hero bg-base-200 min-h-screen",
+            div {
+                class: "hero-content flex-col lg:flex-row-reverse",
+                img {
+                    src: APP_LOGO,
+                    class: "max-w-sm rounded-lg shadow-2xl",
+                }
+                div {
+                    h1 {
+                        class: "text-5xl font-bold", "D Tech's blogs"
+                    }
+                    p {
+                        class: "py-6",
+                        "Lorem"
+                    }
+                    button { class: "btn btn-primary", "Explore" }
                 }
             }
         }
     }
-}
-
-/// Echo the user input on the server.
-#[server(EchoServer)]
-async fn echo_server(input: String) -> Result<String, ServerFnError> {
-    Ok(input)
 }
