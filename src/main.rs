@@ -1,5 +1,6 @@
 pub mod common;
 pub mod components;
+pub mod graphql;
 pub mod pages;
 
 use common::*;

@@ -1,0 +1,428 @@
+# Indicates that an Input Object is a OneOf Input Object (and thus requires
+#                         exactly one of its field be provided)
+directive @oneOf on INPUT_OBJECT
+
+input BooleanFilterInput {
+  eq: Boolean
+  ne: Boolean
+  gt: Boolean
+  gte: Boolean
+  lt: Boolean
+  lte: Boolean
+  is_in: [Boolean!]
+  is_not_in: [Boolean!]
+  is_null: Boolean
+  is_not_null: Boolean
+}
+
+type Categories {
+  id: String!
+  displayName: String!
+  slug: String!
+  categoryType: CategoryTypeEnum!
+  createdBy: String!
+  createdAt: String!
+  lastModifiedBy: String
+  lastModifiedAt: String
+  parentId: String
+  rowVersion: Int!
+  selfRef: Categories
+  categoryTags(
+    filters: CategoryTagsFilterInput
+    orderBy: CategoryTagsOrderInput
+    pagination: PaginationInput
+  ): CategoryTagsConnection!
+  posts(
+    filters: PostsFilterInput
+    orderBy: PostsOrderInput
+    pagination: PaginationInput
+  ): PostsConnection!
+  selfRefReverse(
+    filters: CategoriesFilterInput
+    orderBy: CategoriesOrderInput
+    pagination: PaginationInput
+  ): CategoriesConnection!
+  tags(
+    filters: TagsFilterInput
+    orderBy: TagsOrderInput
+    pagination: PaginationInput
+  ): TagsConnection!
+}
+
+type CategoriesConnection {
+  pageInfo: PageInfo!
+  paginationInfo: PaginationInfo
+  nodes: [Categories!]!
+  edges: [CategoriesEdge!]!
+}
+
+type CategoriesEdge {
+  cursor: String!
+  node: Categories!
+}
+
+input CategoriesFilterInput {
+  id: TextFilterInput
+  displayName: StringFilterInput
+  slug: StringFilterInput
+  categoryType: CategoryTypeEnumFilterInput
+  createdBy: StringFilterInput
+  createdAt: TextFilterInput
+  lastModifiedBy: StringFilterInput
+  lastModifiedAt: TextFilterInput
+  parentId: TextFilterInput
+  rowVersion: IntegerFilterInput
+  and: [CategoriesFilterInput!]
+  or: [CategoriesFilterInput!]
+}
+
+input CategoriesOrderInput {
+  id: OrderByEnum
+  displayName: OrderByEnum
+  slug: OrderByEnum
+  categoryType: OrderByEnum
+  createdBy: OrderByEnum
+  createdAt: OrderByEnum
+  lastModifiedBy: OrderByEnum
+  lastModifiedAt: OrderByEnum
+  parentId: OrderByEnum
+  rowVersion: OrderByEnum
+}
+
+type CategoryTags {
+  categoryId: String!
+  tagId: String!
+  categories: Categories
+  tags: Tags
+}
+
+type CategoryTagsConnection {
+  pageInfo: PageInfo!
+  paginationInfo: PaginationInfo
+  nodes: [CategoryTags!]!
+  edges: [CategoryTagsEdge!]!
+}
+
+type CategoryTagsEdge {
+  cursor: String!
+  node: CategoryTags!
+}
+
+input CategoryTagsFilterInput {
+  categoryId: TextFilterInput
+  tagId: TextFilterInput
+  and: [CategoryTagsFilterInput!]
+  or: [CategoryTagsFilterInput!]
+}
+
+input CategoryTagsOrderInput {
+  categoryId: OrderByEnum
+  tagId: OrderByEnum
+}
+
+enum CategoryTypeEnum {
+  BLOG
+  OTHER
+}
+
+input CategoryTypeEnumFilterInput {
+  eq: CategoryTypeEnum
+  ne: CategoryTypeEnum
+  gt: CategoryTypeEnum
+  gte: CategoryTypeEnum
+  lt: CategoryTypeEnum
+  lte: CategoryTypeEnum
+  is_in: [CategoryTypeEnum!]
+  is_not_in: [CategoryTypeEnum!]
+  is_null: CategoryTypeEnum
+  is_not_null: CategoryTypeEnum
+}
+
+input CursorInput {
+  cursor: String
+  limit: Int!
+}
+
+input IntegerFilterInput {
+  eq: Int
+  ne: Int
+  gt: Int
+  gte: Int
+  lt: Int
+  lte: Int
+  is_in: [Int!]
+  is_not_in: [Int!]
+  is_null: Int
+  is_not_null: Int
+  between: [Int!]
+  not_between: [Int!]
+}
+
+type Mutation {
+  _ping: String
+}
+
+input OffsetInput {
+  limit: Int!
+  offset: Int!
+}
+
+enum OrderByEnum {
+  ASC
+  DESC
+}
+
+type PageInfo {
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+input PageInput {
+  limit: Int!
+  page: Int!
+}
+
+type PaginationInfo {
+  pages: Int!
+  current: Int!
+  offset: Int!
+  total: Int!
+}
+
+input PaginationInput {
+  cursor: CursorInput
+  page: PageInput
+  offset: OffsetInput
+}
+
+type PostTags {
+  postId: String!
+  tagId: String!
+  posts: Posts
+  tags: Tags
+}
+
+type PostTagsConnection {
+  pageInfo: PageInfo!
+  paginationInfo: PaginationInfo
+  nodes: [PostTags!]!
+  edges: [PostTagsEdge!]!
+}
+
+type PostTagsEdge {
+  cursor: String!
+  node: PostTags!
+}
+
+input PostTagsFilterInput {
+  postId: TextFilterInput
+  tagId: TextFilterInput
+  and: [PostTagsFilterInput!]
+  or: [PostTagsFilterInput!]
+}
+
+input PostTagsOrderInput {
+  postId: OrderByEnum
+  tagId: OrderByEnum
+}
+
+type Posts {
+  id: String!
+  title: String!
+  previewContent: String
+  content: String!
+  thumbnailPaths: [String!]!
+  slug: String!
+  published: Boolean!
+  createdBy: String!
+  createdAt: String!
+  lastModifiedBy: String
+  lastModifiedAt: String
+  categoryId: String!
+  rowVersion: Int!
+  categories: Categories
+  postTags(
+    filters: PostTagsFilterInput
+    orderBy: PostTagsOrderInput
+    pagination: PaginationInput
+  ): PostTagsConnection!
+  tags(
+    filters: TagsFilterInput
+    orderBy: TagsOrderInput
+    pagination: PaginationInput
+  ): TagsConnection!
+}
+
+type PostsConnection {
+  pageInfo: PageInfo!
+  paginationInfo: PaginationInfo
+  nodes: [Posts!]!
+  edges: [PostsEdge!]!
+}
+
+type PostsEdge {
+  cursor: String!
+  node: Posts!
+}
+
+input PostsFilterInput {
+  id: TextFilterInput
+  title: StringFilterInput
+  previewContent: StringFilterInput
+  content: StringFilterInput
+  slug: StringFilterInput
+  published: BooleanFilterInput
+  createdBy: StringFilterInput
+  createdAt: TextFilterInput
+  lastModifiedBy: StringFilterInput
+  lastModifiedAt: TextFilterInput
+  categoryId: TextFilterInput
+  rowVersion: IntegerFilterInput
+  and: [PostsFilterInput!]
+  or: [PostsFilterInput!]
+}
+
+input PostsOrderInput {
+  id: OrderByEnum
+  title: OrderByEnum
+  previewContent: OrderByEnum
+  content: OrderByEnum
+  thumbnailPaths: OrderByEnum
+  slug: OrderByEnum
+  published: OrderByEnum
+  createdBy: OrderByEnum
+  createdAt: OrderByEnum
+  lastModifiedBy: OrderByEnum
+  lastModifiedAt: OrderByEnum
+  categoryId: OrderByEnum
+  rowVersion: OrderByEnum
+}
+
+type Query {
+  categories(
+    filters: CategoriesFilterInput
+    orderBy: CategoriesOrderInput
+    pagination: PaginationInput
+  ): CategoriesConnection!
+  categoryTags(
+    filters: CategoryTagsFilterInput
+    orderBy: CategoryTagsOrderInput
+    pagination: PaginationInput
+  ): CategoryTagsConnection!
+  posts(
+    filters: PostsFilterInput
+    orderBy: PostsOrderInput
+    pagination: PaginationInput
+  ): PostsConnection!
+  postTags(
+    filters: PostTagsFilterInput
+    orderBy: PostTagsOrderInput
+    pagination: PaginationInput
+  ): PostTagsConnection!
+  tags(
+    filters: TagsFilterInput
+    orderBy: TagsOrderInput
+    pagination: PaginationInput
+  ): TagsConnection!
+}
+
+input StringFilterInput {
+  eq: String
+  ne: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  is_in: [String!]
+  is_not_in: [String!]
+  is_null: String
+  is_not_null: String
+  contains: String
+  starts_with: String
+  ends_with: String
+  like: String
+  not_like: String
+  between: [String!]
+  not_between: [String!]
+}
+
+type Tags {
+  id: String!
+  name: String!
+  slug: String!
+  createdBy: String!
+  createdAt: String!
+  lastModifiedBy: String
+  lastModifiedAt: String
+  categoryTags(
+    filters: CategoryTagsFilterInput
+    orderBy: CategoryTagsOrderInput
+    pagination: PaginationInput
+  ): CategoryTagsConnection!
+  postTags(
+    filters: PostTagsFilterInput
+    orderBy: PostTagsOrderInput
+    pagination: PaginationInput
+  ): PostTagsConnection!
+  categories(
+    filters: CategoriesFilterInput
+    orderBy: CategoriesOrderInput
+    pagination: PaginationInput
+  ): CategoriesConnection!
+  posts(
+    filters: PostsFilterInput
+    orderBy: PostsOrderInput
+    pagination: PaginationInput
+  ): PostsConnection!
+}
+
+type TagsConnection {
+  pageInfo: PageInfo!
+  paginationInfo: PaginationInfo
+  nodes: [Tags!]!
+  edges: [TagsEdge!]!
+}
+
+type TagsEdge {
+  cursor: String!
+  node: Tags!
+}
+
+input TagsFilterInput {
+  id: TextFilterInput
+  name: StringFilterInput
+  slug: StringFilterInput
+  createdBy: StringFilterInput
+  createdAt: TextFilterInput
+  lastModifiedBy: StringFilterInput
+  lastModifiedAt: TextFilterInput
+  and: [TagsFilterInput!]
+  or: [TagsFilterInput!]
+}
+
+input TagsOrderInput {
+  id: OrderByEnum
+  name: OrderByEnum
+  slug: OrderByEnum
+  createdBy: OrderByEnum
+  createdAt: OrderByEnum
+  lastModifiedBy: OrderByEnum
+  lastModifiedAt: OrderByEnum
+}
+
+input TextFilterInput {
+  eq: String
+  ne: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  is_in: [String!]
+  is_not_in: [String!]
+  is_null: String
+  is_not_null: String
+  between: [String!]
+  not_between: [String!]
+}

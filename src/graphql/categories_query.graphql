@@ -1,0 +1,19 @@
+query Categories {
+  categories {
+    nodes {
+      id
+      displayName
+      slug
+      categoryType
+      categoryTags {
+        nodes {
+          tags {
+            id
+            name
+            slug
+          }
+        }
+      }
+    }
+  }
+}
