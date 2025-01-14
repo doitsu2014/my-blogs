@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 39, "column": 0}, "map": {"version":3,"sources":["turbopack://[project]/src/app/components/my-navbar-link.tsx"],"sourcesContent":["'use client';\n\nimport { NavbarLink } from 'flowbite-react';\nimport { usePathname } from 'next/navigation';\n\nexport default function MyNavbarLink({\n  displayName,\n  slug\n}: Readonly<{\n  displayName: string;\n  slug: string;\n}>) {\n  const pathname = usePathname();\n  return (\n    <NavbarLink href={slug} active={pathname === slug}>\n      {displayName}\n    </NavbarLink>\n  );\n}\n"],"names":[],"mappings":";;;;AAEA;AACA;AADA;AAFA;;;;AAKe,SAAS,aAAa,EACnC,WAAW,EACX,IAAI,EAIJ;IACA,MAAM,WAAW,CAAA,GAAA,iQAAA,CAAA,cAAW,AAAD;IAC3B,qBACE,6WAAC,+VAAA,CAAA,aAAU;QAAC,MAAM;QAAM,QAAQ,aAAa;kBAC1C;;;;;;AAGP"}},
+    {"offset": {"line": 62, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
+}
