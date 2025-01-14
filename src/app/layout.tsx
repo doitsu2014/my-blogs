@@ -1,12 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { ThemeModeScript } from 'flowbite-react';
-import Link from 'next/link';
-import { Navbar, NavbarBrand, NavbarCollapse, NavbarToggle } from 'flowbite-react';
 import Image from 'next/image';
 import { Roboto } from 'next/font/google';
 import { getCategories } from './services/categories';
-import MyNavbarLink from './components/my-navbar-link';
 
 const roboto = Roboto({
   weight: '400',
@@ -26,36 +22,62 @@ export default async function RootLayout({
   const categories = await getCategories();
   return (
     <html lang="en">
-      <head>
-        <ThemeModeScript />
-      </head>
+      <head>{/* <ThemeModeScript /> */}</head>
       <body className={`${roboto.className} antialiased`}>
-        <Navbar fluid rounded>
-          <NavbarBrand as={Link} href="/">
-            <Image
-              src="/images/doitsu-technology-logo.png"
-              width={60}
-              height={60}
-              className="mr-3"
-              alt="Doitsu Technology"
-            />
-            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-              D Tech
-            </span>
-          </NavbarBrand>
-          <NavbarToggle />
-          <NavbarCollapse>
-            <MyNavbarLink slug="/" displayName="Home"></MyNavbarLink>
-            {categories.map((category) => (
-              <MyNavbarLink
-                slug={`/blogs/${category.slug}`}
-                displayName={category.displayName}
-                key={category.id}
-              ></MyNavbarLink>
-            ))}
-          </NavbarCollapse>
-        </Navbar>
+        <div className="navbar bg-base-100">
+          <div className="flex-1">
+            <div className="w-10 rounded-full">
+              <Image
+                src="/images/doitsu-technology-logo.png"
+                width={60}
+                height={60}
+                className="mr-3"
+                alt="D Tech"
+              />
+            </div>
+            <a className="btn btn-ghost text-xl">DucTH Dev</a>
+          </div>
+          <div className="flex-none">
+            <ul className="menu menu-horizontal px-1">
+              <li>
+                <a>Link</a>
+              </li>
+              <li>
+                <details>
+                  <summary>Parent</summary>
+                  <ul className="bg-base-100 rounded-t-none p-2">
+                    <li>
+                      <a>Link 1</a>
+                    </li>
+                    <li>
+                      <a>Link 2</a>
+                    </li>
+                  </ul>
+                </details>
+              </li>
+            </ul>
+          </div>
+        </div>
 
+        {/* <Navbar fluid rounded> */}
+        {/*   <NavbarBrand as={Link} href="/"> */}
+        {/*     <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white"> */}
+        {/*       D Tech */}
+        {/*     </span> */}
+        {/*   </NavbarBrand> */}
+        {/*   <NavbarToggle /> */}
+        {/*   <NavbarCollapse> */}
+        {/*     <MyNavbarLink slug="/" displayName="Home"></MyNavbarLink> */}
+        {/*     {categories.map((category) => ( */}
+        {/*       <MyNavbarLink */}
+        {/*         slug={`/blogs/${category.slug}`} */}
+        {/*         displayName={category.displayName} */}
+        {/*         key={category.id} */}
+        {/*       ></MyNavbarLink> */}
+        {/*     ))} */}
+        {/*   </NavbarCollapse> */}
+        {/* </Navbar> */}
+        {/**/}
         {children}
       </body>
     </html>

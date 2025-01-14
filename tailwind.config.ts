@@ -1,14 +1,13 @@
 import type { Config } from 'tailwindcss';
-import * as flowbite from 'flowbite-react/tailwind';
+import daisyui from 'daisyui';
 
 const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    flowbite.content()
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {},
-  plugins: [flowbite.plugin()]
+  plugins: [daisyui]
 };
 export default config;

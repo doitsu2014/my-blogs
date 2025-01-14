@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function MyNavbarLink({
@@ -9,11 +10,6 @@ export default function MyNavbarLink({
   displayName: string;
   slug: string;
 }>) {
-  const pathname = usePathname();
-  return (
-    <Link href={slug}Dashboard</Link>
-    <NavbarLink href={} active={pathname === slug}>
-      {displayName}
-    </NavbarLink>
-  );
+  const pathName = usePathname();
+  return <Link href={slug}>{displayName}</Link>;
 }
