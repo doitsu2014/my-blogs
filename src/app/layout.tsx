@@ -21,21 +21,23 @@ export default async function RootLayout({
 }>) {
   const categories = await getCategories();
   return (
-    <html lang="en">
-      <head>{/* <ThemeModeScript /> */}</head>
+    <html lang="en" data-theme="lofi">
+      <head></head>
       <body className={`${roboto.className} antialiased`}>
         <div className="navbar bg-base-100">
           <div className="flex-1">
-            <div className="w-10 rounded-full">
-              <Image
-                src="/images/doitsu-technology-logo.png"
-                width={60}
-                height={60}
-                className="mr-3"
-                alt="D Tech"
-              />
-            </div>
-            <a className="btn btn-ghost text-xl">DucTH Dev</a>
+            <a className="btn btn-ghost text-xl">
+              <div className="w-10 rounded-full">
+                <Image
+                  src="/images/doitsu-technology-logo.png"
+                  width={60}
+                  height={60}
+                  className="mr-3"
+                  alt="D Tech"
+                />
+              </div>
+              DucTH Dev
+            </a>
           </div>
           <div className="flex-none">
             <ul className="menu menu-horizontal px-1">
