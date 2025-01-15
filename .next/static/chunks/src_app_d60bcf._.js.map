@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///home/doitsu2014/my-blogs/src/app/components/my-navbar-link.tsx"],"sourcesContent":["'use client';\n\nimport { NavbarLink } from 'flowbite-react';\nimport { usePathname } from 'next/navigation';\n\nexport default function MyNavbarLink({\n  displayName,\n  slug\n}: Readonly<{\n  displayName: string;\n  slug: string;\n}>) {\n  const pathname = usePathname();\n  return (\n    <NavbarLink href={slug} active={pathname === slug}>\n      {displayName}\n    </NavbarLink>\n  );\n}\n"],"names":[],"mappings":";;;;AAEA;AACA;AADA;;;AAFA;;;AAKe,SAAS,aAAa,EACnC,WAAW,EACX,IAAI,EAIJ;;IACA,MAAM,WAAW,CAAA,GAAA,oQAAA,CAAA,cAAW,AAAD;IAC3B,qBACE,4TAAC,kWAAA,CAAA,aAAU;QAAC,MAAM;QAAM,QAAQ,aAAa;kBAC1C;;;;;;AAGP;GAbwB;;QAOL,oQAAA,CAAA,cAAW;;;KAPN"}},
-    {"offset": {"line": 43, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
-}
