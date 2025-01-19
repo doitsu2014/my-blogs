@@ -11,5 +11,9 @@ export default function MyNavbarLink({
   slug: string;
 }>) {
   const pathName = usePathname();
-  return <Link href={slug}>{displayName}</Link>;
+  return (
+    <Link className={pathName === slug ? 'active' : ''} href={slug}>
+      {displayName}
+    </Link>
+  );
 }
