@@ -4,9 +4,7 @@ import { Roboto } from 'next/font/google';
 import { getCategories } from './services/categories';
 import Loading from './loading';
 import { Suspense } from 'react';
-import Link from 'next/link';
 import Navbar from './components/navbar';
-import Image from 'next/image';
 
 const roboto = Roboto({
   weight: '400',
@@ -27,7 +25,7 @@ export default async function RootLayout({
   const date = new Date();
   const year = date.getFullYear();
   return (
-    <html lang="en" data-theme="lofi">
+    <html lang="en" data-theme="nord">
       <head></head>
       <body className={`${roboto.className} antialiased`}>
         <Navbar links={categories}></Navbar>
