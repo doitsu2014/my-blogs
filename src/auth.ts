@@ -7,7 +7,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Keycloak({
       clientId: 'my-blogs-admin-localhost',
       clientSecret: 'jBYbpUPFAeqgbgm6u6ESilDuRNwlyjKN',
-      issuer: 'https://keycloak-admin.ducth.dev/realms/master',
+      issuer: 'https://my-ids-admin.ducth.dev/realms/master',
       authorization: {
         params: {
           scope: 'my-headless-cms-api-all email openid profile'
