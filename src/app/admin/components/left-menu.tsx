@@ -1,5 +1,6 @@
 import { auth, signOut } from '@/auth';
 import SignIn from './sign-in';
+import MenuItem from './menu-item';
 
 export default async function LeftMenu() {
   const session = await auth();
@@ -12,11 +13,6 @@ export default async function LeftMenu() {
             <h3>
               {session.user?.email}
               <br />
-              {/* <div className="flex w-8 max-w-8"> */}
-              {/*   <p className="w-8 max-w-8 overflow-y-scroll"> */}
-              {/*     {session.user?.roles?.reduce((a, b) => `${a} ${b}`)} */}
-              {/*   </p> */}
-              {/* </div> */}
             </h3>
             <button
               onClick={async () => {
@@ -37,32 +33,10 @@ export default async function LeftMenu() {
         {session ? (
           <>
             <li>
-              <a>Item 1</a>
+              <MenuItem displayName="Home" slug="/admin" />
             </li>
             <li>
-              <a>Parent</a>
-              <ul>
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-                <li>
-                  <a>Parent</a>
-                  <ul>
-                    <li>
-                      <a>Submenu 1</a>
-                    </li>
-                    <li>
-                      <a>Submenu 2</a>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a>Item 3</a>
+              <MenuItem displayName="Blogs" slug="/admin/blogs" />
             </li>
           </>
         ) : (
