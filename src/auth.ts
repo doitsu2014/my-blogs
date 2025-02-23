@@ -21,10 +21,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, account, profile }) {
       if (account && profile) {
+        // NOTE: There are place to extract information of access_token
         const identity: any = jwt.decode(account.id_token || '');
         const accessToken: any = jwt.decode(account.access_token || '');
+
         // Extract roles from Keycloak profile (if present)
         token.email = identity.email;
+        token.name = identity.name;
         token.roles = accessToken.realm_access.roles;
       }
       return token;
@@ -34,17 +37,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.email = token.email || '';
       return session;
     }
-    // authorized({ auth, request: { nextUrl } }) {
-    //   const isLoggedIn = !!auth?.user;
-    //   const isAdmin = nextUrl.pathname.startsWith('/admin');
-    //   if (isAdmin) {
-    //     if (isLoggedIn) return true;
-    //     return Response.redirect(new URL('/admin', nextUrl)); // Redirect unauthenticated users to login page
-    //   }
-    //   // TODO: Must enhance there to support multiple apps else if (isLoggedIn) {
-    //     return Response.redirect(new URL('/admin', nextUrl));
-    //   }
-    //   return true;
-    // }
   }
 });

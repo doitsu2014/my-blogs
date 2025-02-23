@@ -18,7 +18,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="nord">
+    <html lang="en" data-theme="retro">
       <head></head>
       <body className={`${roboto.className} antialiased`}>{children}</body>
     </html>

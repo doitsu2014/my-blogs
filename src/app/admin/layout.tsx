@@ -1,23 +1,17 @@
 import { auth, signIn } from '@/auth';
 import LeftMenu from './components/left-menu';
 
-export default async function AdminLayout({}: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   return (
-    <div className="drawer lg:drawer-open">
-      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col items-center justify-center">
-        {/* Page content here */}
-        <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
-          Open drawer
-        </label>
+    <div className="flex min-h-screen bg-base-100">
+      {/* Left Sidebar */}
+      <LeftMenu />
 
-        <div></div>
-      </div>
-      <div className="drawer-side">
-        <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-        <LeftMenu />
-      </div>
+      {/* Right Content Area */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="bg-base-200 p-4">{children}</div>
+      </main>
     </div>
   );
 }

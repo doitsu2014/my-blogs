@@ -1,3 +1,3 @@
 export default async function AdminBlogsPage() {
-  return <div>Blog Mangement</div>;
+  return <div className="h-screen">Blogs Mangement</div>;
 }

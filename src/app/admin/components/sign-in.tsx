@@ -11,7 +11,9 @@ export default function SignIn() {
         });
       }}
     >
-      <button type="submit">Signin with Keycloak</button>
+      <button type="submit" className="btn btn-accent w-full">
+        Signin with Keycloak
+      </button>
     </form>
   );
 }
