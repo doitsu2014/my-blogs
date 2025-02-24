@@ -29,12 +29,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.email = identity.email;
         token.name = identity.name;
         token.roles = accessToken.realm_access.roles;
+        token.picture = accessToken.avatar;
       }
       return token;
     },
     async session({ session, token }) {
       session.user.roles = token.roles;
       session.user.email = token.email || '';
+      session.user.image = token.picture;
       return session;
     }
   }

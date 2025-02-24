@@ -4,10 +4,15 @@ import { UserCircleIcon } from '@heroicons/react/24/solid'; // Heroicons
 
 export default async function LeftMenu() {
   const session = await auth();
+  const avatar = session?.user?.image || undefined;
   return (
     <div className="w-64 min-h-screen bg-base-200 flex flex-col p-4">
       <div className="flex items-center space-x-3 p-2 bg-base-100 rounded-box shadow-md">
-        <UserCircleIcon className="w-16 h-16 text-gray-500" /> {/* Larger User Icon */}
+        {avatar ? (
+          <img src={avatar} alt="User Avatar" className="w-16 h-16 rounded-full border" />
+        ) : (
+          <UserCircleIcon className="w-16 h-16 text-gray-500" /> // Fallback Icon
+        )}
         <div>
           <h2 className="text-lg font-bold">{session?.user?.name}</h2>
           <p className="text-sm text-gray-500 truncate w-40">
