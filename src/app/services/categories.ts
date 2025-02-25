@@ -48,3 +48,37 @@ export async function getCategories(): Promise<CategoryModel[]> {
 
   return res.data.categories.nodes;
 }
+
+const GET_ALL_CATEGORIES = gql`
+  query GetCategories {
+    categories {
+      nodes {
+        id
+        displayName
+        slug
+        categoryType
+        createdBy
+        createdAt
+        categoryTags {
+          nodes {
+            tags {
+              id
+              name
+              slug
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getAllCategories = async () => {
+  try {
+    const { data } = await client.query({ query: GET_ALL_CATEGORIES });
+    return data?.categories?.nodes || [];
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+};

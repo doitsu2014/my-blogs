@@ -6,8 +6,8 @@ export default async function LeftMenu() {
   const session = await auth();
   const avatar = session?.user?.image || undefined;
   return (
-    <div className="w-64 min-h-screen bg-base-200 flex flex-col p-4">
-      <div className="flex items-center space-x-3 p-2 bg-base-100 rounded-box shadow-md">
+    <aside className="w-64 bg-base-200 shadow-lg min-h-screen p-4 flex flex-col">
+      <div className="flex items-center space-x-3 py-4 px-2 bg-base-100 rounded-box shadow-md">
         {avatar ? (
           <img src={avatar} alt="User Avatar" className="w-16 h-16 rounded-full border" />
         ) : (
@@ -20,7 +20,7 @@ export default async function LeftMenu() {
           </p>
         </div>
       </div>
-      <ul className="menu bg-base-200 rounded-box flex-1 mt-4">
+      <ul className="menu rounded-box flex-1 mt-4">
         <li>
           <MenuItem displayName="Dashboard" slug="/admin/dashboard" />
         </li>
@@ -38,7 +38,7 @@ export default async function LeftMenu() {
           </details>
         </li>
       </ul>
-      <div className="mt-4 pb-6">
+      <div className="">
         {session ? (
           <button
             className="btn btn-error w-full"
@@ -53,6 +53,6 @@ export default async function LeftMenu() {
           <></>
         )}
       </div>
-    </div>
+    </aside>
   );
 }
