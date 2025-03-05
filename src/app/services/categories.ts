@@ -82,3 +82,5 @@ export const getAllCategories = async () => {
     return [];
   }
 };
+
+export const createCategory = async (category: any) => {};

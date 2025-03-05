@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getAllCategories } from '@/app/services/categories';
-import { ChevronDown, ChevronUp, Pencil, Trash } from 'lucide-react';
+import { ChevronDown, ChevronUp, Home, Pencil, Trash } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CategoriesListPage() {
@@ -52,7 +52,27 @@ export default function CategoriesListPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Manage Categories</h1>
+      {/* Breadcrumb */}
+      <div className="breadcrumbs text-sm mb-4">
+        <ul className="flex space-x-2">
+          <li>
+            <Link href="/admin">
+              <span className="flex items-center space-x-1 text-gray-600 hover:text-blue-600">
+                <Home className="w-4 h-4" /> <span>Admin</span>
+              </span>
+            </Link>
+          </li>
+          <li className="text-gray-800 font-semibold">Categories</li>
+        </ul>
+      </div>
+
+      <div className="flex justify-between">
+        <h1 className="text-3xl font-bold mb-6">Manage Categories</h1>
+        {/* Create Category Button */}
+        <Link href="/admin/categories/create" className="btn btn-primary">
+          + Create Category
+        </Link>
+      </div>
 
       {/* Filter Controls */}
       <div className="flex space-x-4 mb-4">
