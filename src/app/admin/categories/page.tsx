@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAllCategories } from '@/app/services/categories';
+import { CategoryModel, getAllCategories } from '@/app/services/categories';
 import { ChevronDown, ChevronUp, Home, Pencil, Trash } from 'lucide-react';
 import Link from 'next/link';
+import Breadcrumbs from '../components/my-breadcrumbs';
+import { TagModel } from '@/app/services/tags';
 
 export default function CategoriesListPage() {
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<CategoryModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(
     null
@@ -52,19 +54,12 @@ export default function CategoriesListPage() {
 
   return (
     <div>
-      {/* Breadcrumb */}
-      <div className="breadcrumbs text-sm mb-4">
-        <ul className="flex space-x-2">
-          <li>
-            <Link href="/admin">
-              <span className="flex items-center space-x-1 text-gray-600 hover:text-blue-600">
-                <Home className="w-4 h-4" /> <span>Admin</span>
-              </span>
-            </Link>
-          </li>
-          <li className="text-gray-800 font-semibold">Categories</li>
-        </ul>
-      </div>
+      <Breadcrumbs
+        items={[
+          { label: 'Admin', href: '/admin', icon: <Home className="w-4 h-4" /> },
+          { label: 'Categories' }
+        ]}
+      />
 
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold mb-6">Manage Categories</h1>
@@ -145,10 +140,10 @@ export default function CategoriesListPage() {
                 </td>
                 <td className="p-3 text-gray-600">{category.createdBy}</td>
                 <td className="p-3">
-                  {category.categoryTags.nodes.length > 0 ? (
-                    category.categoryTags.nodes.map((node: any) => (
-                      <span key={node.tags.id} className="badge badge-secondary mr-1">
-                        {node.tags.name}
+                  {category.categoryTags?.length > 0 ? (
+                    category.categoryTags?.map((tag: TagModel) => (
+                      <span key={tag.id} className="badge badge-secondary mr-1">
+                        {tag.name}
                       </span>
                     ))
                   ) : (

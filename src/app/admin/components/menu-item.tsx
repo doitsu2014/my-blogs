@@ -12,7 +12,7 @@ export default function MenuItem({
 }>) {
   const pathName = usePathname();
   return (
-    <Link className={pathName.startsWith(slug) ? 'active' : ''} href={slug}>
+    <Link className={pathName.startsWith(slug) ? 'menu-active' : ''} href={slug}>
       {displayName}
     </Link>
   );

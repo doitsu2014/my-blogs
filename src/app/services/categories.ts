@@ -1,29 +1,52 @@
 import { gql } from '@apollo/client';
 import client from './graphQlClient';
+import { TagModel } from './tags';
+
+export enum CategoryTypeEnum {
+  Blog,
+  Other
+}
 
 export class CategoryModel {
   id: string;
   parentId: string | undefined;
   displayName: string;
   slug: string;
+  categoryType: string;
+  categoryTypeEnum: CategoryTypeEnum;
   selfRefReverse: CategoryModel[];
+  createdBy: string;
+  createdAt: string;
+  categoryTags: TagModel[];
 
   constructor(
     id: string,
-    parentId: string,
+    parentId: string | undefined,
     displayName: string,
     slug: string,
-    selfRefReverse: CategoryModel[]
+    categoryType: string,
+    createdBy: string,
+    createdAt: string,
+    selfRefReverse: CategoryModel[],
+    categoryTags: TagModel[]
   ) {
     this.id = id;
     this.parentId = parentId;
     this.displayName = displayName;
     this.slug = slug;
     this.selfRefReverse = selfRefReverse;
+    this.categoryType = categoryType;
+    this.categoryTypeEnum =
+      categoryType === 'BLOG' || categoryType === 'Blog'
+        ? CategoryTypeEnum.Blog
+        : CategoryTypeEnum.Other;
+    this.categoryTags = categoryTags;
+    this.createdBy = createdBy;
+    this.createdAt = createdAt;
   }
 }
 
-export async function getCategories(): Promise<CategoryModel[]> {
+export async function getBlogCategories(): Promise<CategoryModel[]> {
   const res = await client.query({
     query: gql`
       {
@@ -46,41 +69,97 @@ export async function getCategories(): Promise<CategoryModel[]> {
     `
   });
 
-  return res.data.categories.nodes;
+  return res.data.categories.nodes.map(mapGraphQlModelToCategoryModel);
 }
 
-const GET_ALL_CATEGORIES = gql`
-  query GetCategories {
-    categories {
-      nodes {
-        id
-        displayName
-        slug
-        categoryType
-        createdBy
-        createdAt
-        categoryTags {
-          nodes {
-            tags {
+export const getAllCategories = async (): Promise<CategoryModel[]> => {
+  try {
+    const { data } = await client.query({
+      query: gql`
+        query GetCategories {
+          categories {
+            nodes {
               id
-              name
+              displayName
               slug
+              categoryType
+              createdBy
+              createdAt
+              categoryTags {
+                nodes {
+                  tags {
+                    id
+                    name
+                    slug
+                  }
+                }
+              }
             }
           }
         }
-      }
-    }
-  }
-`;
-
-export const getAllCategories = async () => {
-  try {
-    const { data } = await client.query({ query: GET_ALL_CATEGORIES });
-    return data?.categories?.nodes || [];
+      `
+    });
+    return (data?.categories?.nodes || []).map(mapGraphQlModelToCategoryModel);
   } catch (error) {
     console.error('Error fetching categories:', error);
     return [];
   }
+};
+
+export const getCategoryById = async (id: string): Promise<CategoryModel | undefined> => {
+  const query = gql`
+    query GetCategoryById {
+      categories(filters: { id: { eq: "${id}" } }) {
+        nodes {
+          id
+          displayName
+          slug
+          categoryType
+          createdBy
+          createdAt
+          categoryTags {
+            nodes {
+              tags {
+                id
+                name
+                slug
+              }
+            }
+          }
+        }
+      }
+    }`;
+  try {
+    const { data } = await client.query({
+      query
+    });
+    return (data?.categories?.nodes || []).map(mapGraphQlModelToCategoryModel)[0];
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return undefined;
+  }
+};
+
+const mapGraphQlModelToCategoryModel = (
+  graphqlNode: any | undefined
+): CategoryModel | undefined => {
+  return !!graphqlNode
+    ? new CategoryModel(
+        graphqlNode.id,
+        undefined,
+        graphqlNode.displayName,
+        graphqlNode.slug,
+        graphqlNode.categoryType,
+        graphqlNode.createdBy,
+        graphqlNode.createdAt,
+        [],
+        graphqlNode.categoryTags.nodes.map((node: any) => ({
+          id: node.tags.id,
+          name: node.tags.name,
+          slug: node.tags.slug
+        }))
+      )
+    : undefined;
 };
 
 export const createCategory = async (category: any) => {};

@@ -20,7 +20,7 @@ export default async function LeftMenu() {
           </p>
         </div>
       </div>
-      <ul className="menu rounded-box flex-1 mt-4">
+      <ul className="menu rounded-box flex-1 mt-4 w-full">
         <li>
           <MenuItem displayName="Dashboard" slug="/admin/dashboard" />
         </li>

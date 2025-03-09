@@ -1,22 +1,23 @@
-'use client';
-
 import { Home } from 'lucide-react';
 import Breadcrumbs from '@/app/admin/components/my-breadcrumbs';
-import CategoryForm from '../category-form';
+import CategoryForm from '../../category-form';
 
-export default function CreateCategoryPage() {
+export default async function EditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
   return (
     <div className="container mx-auto">
       <Breadcrumbs
         items={[
           { label: 'Admin', href: '/admin', icon: <Home className="w-4 h-4" /> },
           { label: 'Categories', href: '/admin/categories' },
-          { label: 'Create Category' }
+          { label: 'Edit Category' },
+          { label: id }
         ]}
       />
       <div>
-        <h1 className="text-2xl font-bold mb-4">Create Category</h1>
-        <CategoryForm id={undefined} />
+        <h1 className="text-2xl font-bold mb-4">Edit Category</h1>
+        <CategoryForm id={id} />
       </div>
     </div>
   );
