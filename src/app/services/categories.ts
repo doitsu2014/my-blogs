@@ -18,6 +18,7 @@ export class CategoryModel {
   createdBy: string;
   createdAt: string;
   categoryTags: TagModel[];
+  rowVersion: number;
 
   constructor(
     id: string,
@@ -28,7 +29,8 @@ export class CategoryModel {
     createdBy: string,
     createdAt: string,
     selfRefReverse: CategoryModel[],
-    categoryTags: TagModel[]
+    categoryTags: TagModel[],
+    rowVersion: number
   ) {
     this.id = id;
     this.parentId = parentId;
@@ -43,6 +45,7 @@ export class CategoryModel {
     this.categoryTags = categoryTags;
     this.createdBy = createdBy;
     this.createdAt = createdAt;
+    this.rowVersion = rowVersion;
   }
 }
 
@@ -85,6 +88,7 @@ export const getAllCategories = async (): Promise<CategoryModel[]> => {
               categoryType
               createdBy
               createdAt
+              rowVersion
               categoryTags {
                 nodes {
                   tags {
@@ -117,6 +121,7 @@ export const getCategoryById = async (id: string): Promise<CategoryModel | undef
           categoryType
           createdBy
           createdAt
+          rowVersion
           categoryTags {
             nodes {
               tags {
@@ -157,7 +162,8 @@ const mapGraphQlModelToCategoryModel = (
           id: node.tags.id,
           name: node.tags.name,
           slug: node.tags.slug
-        }))
+        })),
+        graphqlNode.rowVersion
       )
     : undefined;
 };

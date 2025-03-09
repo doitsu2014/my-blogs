@@ -151,15 +151,17 @@ export default function CategoriesListPage() {
                   )}
                 </td>
                 <td className="p-3 text-center">
-                  <Link
-                    href={`/admin/categories/edit/${category.id}`}
-                    className="btn btn-sm btn-secondary mr-2"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </Link>
-                  <button className="btn btn-sm btn-error">
-                    <Trash className="w-4 h-4" />
-                  </button>
+                  <div className="flex space-x-1">
+                    <Link
+                      href={`/admin/categories/edit/${category.id}`}
+                      className="btn btn-sm btn-secondary"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Link>
+                    <button className="btn btn-sm btn-error">
+                      <Trash className="w-4 h-4" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

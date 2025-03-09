@@ -19,16 +19,18 @@ export const getRandomColor = () => {
 export default function MultiChipInput({
   chips,
   setChips,
-  className
+  className,
+  loading
 }: {
   chips: { label: string; color: string }[];
   setChips: (chips: { label: string; color: string }[]) => void;
   className?: string;
+  loading: boolean;
 }) {
   const [inputValue, setInputValue] = useState('');
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' || event.key === ',') {
+    if ((event.key === 'Enter' || event.key === ',') && !loading) {
       event.preventDefault();
       const newChips = inputValue
         .split(',')
@@ -42,7 +44,9 @@ export default function MultiChipInput({
   };
 
   const removeChip = (chipToRemove: string) => {
-    setChips(chips.filter((chip) => chip.label !== chipToRemove));
+    if (!loading) {
+      setChips(chips.filter((chip) => chip.label !== chipToRemove));
+    }
   };
 
   return (
@@ -56,6 +60,7 @@ export default function MultiChipInput({
           <button
             className="text-white hover:text-gray-300 font-bold"
             onClick={() => removeChip(chip.label)}
+            disabled={loading}
           >
             &times;
           </button>
@@ -68,6 +73,7 @@ export default function MultiChipInput({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
+        disabled={loading}
       />
     </div>
   );
