@@ -5,6 +5,7 @@ declare module 'next-auth/jwt' {
   interface JWT {
     id: string;
     roles?: string[];
+    accessToken: string;
   }
 }
 
@@ -24,5 +25,6 @@ declare module 'next-auth' {
        * you need to add them back into the newly declared interface.
        */
     } & DefaultSession['user'];
+    accessToken: string;
   }
 }

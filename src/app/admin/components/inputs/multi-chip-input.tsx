@@ -20,12 +20,14 @@ export default function MultiChipInput({
   chips,
   setChips,
   className,
-  loading
+  loading,
+  formControlName
 }: {
   chips: { label: string; color: string }[];
   setChips: (chips: { label: string; color: string }[]) => void;
   className?: string;
   loading: boolean;
+  formControlName: string;
 }) {
   const [inputValue, setInputValue] = useState('');
 
@@ -75,6 +77,7 @@ export default function MultiChipInput({
         onKeyDown={handleKeyDown}
         disabled={loading}
       />
+      <input type="hidden" name={formControlName} value={JSON.stringify(chips)} />
     </div>
   );
 }

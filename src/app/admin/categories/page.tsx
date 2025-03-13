@@ -6,26 +6,28 @@ import { ChevronDown, ChevronUp, Home, Pencil, Trash } from 'lucide-react';
 import Link from 'next/link';
 import Breadcrumbs from '../components/my-breadcrumbs';
 import { TagModel } from '@/app/services/tags';
+import { useLayout } from '../layoutContext';
 
 export default function CategoriesListPage() {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(
     null
   );
   const [slugFilter, setSlugFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
+  const { setLayoutLoading } = useLayout();
 
   useEffect(() => {
     const loadCategories = async () => {
       const data = await getAllCategories();
       setCategories(data);
-      setLoading(false);
+      // setLoading(false);
+      setTimeout(() => setLayoutLoading(false), 1000);
     };
+    setLayoutLoading(true);
     loadCategories();
   }, []);
-
-  if (loading) return <p>Loading categories...</p>;
 
   let filteredCategories = categories;
 
@@ -82,8 +84,7 @@ export default function CategoriesListPage() {
         <select
           className="select select-bordered w-1/3"
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-        >
+          onChange={(e) => setTypeFilter(e.target.value)}>
           <option value="">All Types</option>
           <option value="BLOG">BLOG</option>
           <option value="TUTORIAL">TUTORIAL</option>
@@ -154,8 +155,7 @@ export default function CategoriesListPage() {
                   <div className="flex space-x-1">
                     <Link
                       href={`/admin/categories/edit/${category.id}`}
-                      className="btn btn-sm btn-secondary"
-                    >
+                      className="btn btn-sm btn-secondary">
                       <Pencil className="w-4 h-4" />
                     </Link>
                     <button className="btn btn-sm btn-error">

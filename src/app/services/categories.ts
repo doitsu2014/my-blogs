@@ -1,10 +1,14 @@
 import { gql } from '@apollo/client';
 import client from './graphQlClient';
 import { TagModel } from './tags';
+import { auth } from '@/auth';
+import { useSession } from 'next-auth/react';
+
+const API_URL = process.env.MY_CMS_API_URL;
 
 export enum CategoryTypeEnum {
-  Blog,
-  Other
+  Blog = 'BLOG',
+  Other = 'OTHER'
 }
 
 export class CategoryModel {
@@ -12,8 +16,7 @@ export class CategoryModel {
   parentId: string | undefined;
   displayName: string;
   slug: string;
-  categoryType: string;
-  categoryTypeEnum: CategoryTypeEnum;
+  categoryType: CategoryTypeEnum;
   selfRefReverse: CategoryModel[];
   createdBy: string;
   createdAt: string;
@@ -25,7 +28,7 @@ export class CategoryModel {
     parentId: string | undefined,
     displayName: string,
     slug: string,
-    categoryType: string,
+    categoryType: CategoryTypeEnum,
     createdBy: string,
     createdAt: string,
     selfRefReverse: CategoryModel[],
@@ -38,10 +41,6 @@ export class CategoryModel {
     this.slug = slug;
     this.selfRefReverse = selfRefReverse;
     this.categoryType = categoryType;
-    this.categoryTypeEnum =
-      categoryType === 'BLOG' || categoryType === 'Blog'
-        ? CategoryTypeEnum.Blog
-        : CategoryTypeEnum.Other;
     this.categoryTags = categoryTags;
     this.createdBy = createdBy;
     this.createdAt = createdAt;
@@ -150,22 +149,73 @@ const mapGraphQlModelToCategoryModel = (
 ): CategoryModel | undefined => {
   return !!graphqlNode
     ? new CategoryModel(
-        graphqlNode.id,
-        undefined,
-        graphqlNode.displayName,
-        graphqlNode.slug,
-        graphqlNode.categoryType,
-        graphqlNode.createdBy,
-        graphqlNode.createdAt,
-        [],
-        graphqlNode.categoryTags.nodes.map((node: any) => ({
-          id: node.tags.id,
-          name: node.tags.name,
-          slug: node.tags.slug
-        })),
-        graphqlNode.rowVersion
-      )
+      graphqlNode.id,
+      undefined,
+      graphqlNode.displayName,
+      graphqlNode.slug,
+      graphqlNode.categoryType,
+      graphqlNode.createdBy,
+      graphqlNode.createdAt,
+      [],
+      graphqlNode.categoryTags.nodes.map((node: any) => ({
+        id: node.tags.id,
+        name: node.tags.name,
+        slug: node.tags.slug
+      })),
+      graphqlNode.rowVersion
+    )
     : undefined;
 };
 
-export const createCategory = async (category: any) => {};
+
+export class CreateCategoryModel {
+  displayName: string;
+  categoryType: CategoryTypeEnum;
+  tagNames: string[];
+
+  constructor(displayName: string, categoryType: CategoryTypeEnum, tagNames: string[]) {
+    this.displayName = displayName;
+    this.categoryType = categoryType;
+    this.tagNames = tagNames;
+  }
+}
+
+export const createCategory = async (category: CreateCategoryModel) => {
+  const session = await auth();
+  const request = JSON.stringify({
+    ...category,
+    categoryType: category.categoryType === CategoryTypeEnum.Blog ? 'Blog' : 'Other'
+  });
+  console.log(session?.accessToken)
+
+  const result = await fetch(`${API_URL}/api/categories`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session?.accessToken}`
+    },
+    body: request
+  });
+  console.log(result);
+  return;
+};
+
+export class UpdateCategoryModel {
+  id: string;
+  displayName: string;
+  categoryType: CategoryTypeEnum;
+  tagNames: string[];
+  rowVersion: number;
+
+  constructor(id: string, displayName: string, categoryType: CategoryTypeEnum, tagNames: string[], rowVersion: number) {
+    this.id = id;
+    this.displayName = displayName;
+    this.categoryType = categoryType;
+    this.tagNames = tagNames;
+    this.rowVersion = rowVersion;
+  }
+}
+
+export const updateCategory = async (category: CreateCategoryModel) => {
+  console.log('category', category);
+};

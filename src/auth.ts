@@ -30,6 +30,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.name = identity.name;
         token.roles = accessToken.realm_access.roles;
         token.picture = accessToken.avatar;
+        token.accessToken = account.access_token || '';
       }
       return token;
     },
@@ -37,6 +38,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.roles = token.roles;
       session.user.email = token.email || '';
       session.user.image = token.picture;
+      session.accessToken = token.accessToken;
       return session;
     }
   }
