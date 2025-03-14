@@ -2,16 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import MultiChipInput, { getRandomColor } from '../components/inputs/multi-chip-input';
-import {
-  CategoryTypeEnum,
-  createCategory,
-  CreateCategoryModel,
-  getCategoryById,
-  updateCategory,
-  UpdateCategoryModel
-} from '@/app/services/categories';
-import { TagModel } from '@/app/services/tags';
-import { submitAction } from './category-form.submitAction';
+import { CreateCategoryModel, UpdateCategoryModel } from '@/app/api/admin/categories/route';
+import { CategoryModel, CategoryTypeEnum } from '@/domains/category';
+import { TagModel } from '@/domains/tag';
 
 export default function CategoryForm({ id }: { id?: string }) {
   const [displayName, setDisplayName] = useState('');
@@ -22,23 +15,26 @@ export default function CategoryForm({ id }: { id?: string }) {
 
   useEffect(() => {
     if (id) {
+      const fetchCategories = async () => {
+        const response = await fetch(`/api/admin/categories/${id}`);
+        if (response && response.ok) {
+          const data: CategoryModel = await response.json();
+          setDisplayName(data.displayName);
+          console.log(data.categoryType);
+          setCategoryType(data.categoryType);
+          setCategoryTags(
+            data.categoryTags.map((tag: TagModel) => ({
+              label: tag.name,
+              color: getRandomColor()
+            }))
+          );
+          setRowVersion(data.rowVersion);
+        }
+        setLoading(false);
+      };
+
       setLoading(true);
-      getCategoryById(id)
-        .then((data) => {
-          if (data) {
-            setDisplayName(data.displayName);
-            console.log(data.categoryType);
-            setCategoryType(data.categoryType);
-            setCategoryTags(
-              data.categoryTags.map((tag: TagModel) => ({
-                label: tag.name,
-                color: getRandomColor()
-              }))
-            );
-            setRowVersion(data.rowVersion);
-          }
-        })
-        .finally(() => setLoading(false));
+      fetchCategories();
     } else {
       setDisplayName('');
       setCategoryType(CategoryTypeEnum.Blog);
@@ -47,57 +43,50 @@ export default function CategoryForm({ id }: { id?: string }) {
     }
   }, [id]);
 
-  // const formAction = async (formData: FormData) => {
-  //   'use server';
-  //   console.log(formData);
-  //   console.log(id);
+  const submitHandler = async (event: React.FormEvent) => {
+    event.preventDefault();
+    // setLoading(true);
 
-  //   // event.preventDefault();
-  //   setLoading(true);
+    if (id) {
+      const categoryData: UpdateCategoryModel = {
+        id,
+        displayName,
+        categoryType,
+        tagNames: categoryTags.map((tag) => tag.label),
+        rowVersion
+      };
 
-  //   // if (id) {
-  //   //   const categoryData: UpdateCategoryModel = {
-  //   //     id,
-  //   //     displayName,
-  //   //     categoryType,
-  //   //     tagNames: categoryTags.map((tag) => tag.label),
-  //   //     rowVersion
-  //   //   };
+      const updateResponse = await fetch(`/api/admin/categories`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(categoryData)
+      });
+      setLoading(false);
+    } else {
+      console.log('Creating category');
+      const categoryData: CreateCategoryModel = {
+        displayName,
+        categoryType,
+        tagNames: categoryTags.map((tag) => tag.label)
+      };
 
-  //   //   await updateCategory(categoryData);
-  //   //   setLoading(false);
-  //   // } else {
-  //   //   console.log('Creating category');
-  //   //   const categoryData: CreateCategoryModel = {
-  //   //     displayName,
-  //   //     categoryType,
-  //   //     tagNames: categoryTags.map((tag) => tag.label)
-  //   //   };
+      const createResponse = await fetch(`/api/admin/categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(categoryData)
+      });
+      setLoading(false);
+    }
 
-  //   //   await createCategory(categoryData);
-  //   //   setLoading(false);
-  //   // }
-  //   return 'done';
-
-  //   // const method = id ? 'PUT' : 'POST';
-  //   // const endpoint = id ? `/api/categories/${id}` : '/api/categories';
-  //   //
-  //   // const response = await fetch(endpoint, {
-  //   //   method,
-  //   //   headers: { 'Content-Type': 'application/json' },
-  //   //   body: JSON.stringify(categoryData)
-  //   // });
-  //   //
-  //   // setLoading(false);
-  //   // if (response.ok) {
-  //   //   router.push('/categories');
-  //   // } else {
-  //   //   alert('Failed to save category');
-  //   // }
-  // };
+    return 'done';
+  };
 
   return (
-    <form action={submitAction} className="flex flex-col space-y-4 w-full max-w-md">
+    <form onSubmit={submitHandler} className="flex flex-col space-y-4 w-full max-w-md">
       <label className="form-control w-full">
         <span className="label-text">Display Name</span>
         <input
@@ -120,7 +109,8 @@ export default function CategoryForm({ id }: { id?: string }) {
             setCategoryType(e.target.value as CategoryTypeEnum);
           }}
           className="select select-bordered w-full"
-          disabled={loading}>
+          disabled={loading}
+        >
           <option value={CategoryTypeEnum.Blog}>Blog</option>
           <option value={CategoryTypeEnum.Other}>Other</option>
         </select>
@@ -132,7 +122,7 @@ export default function CategoryForm({ id }: { id?: string }) {
           setChips={setCategoryTags}
           className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg"
           loading={loading}
-          formControlName='categoryTags'
+          formControlName="categoryTags"
         />
       </label>
       <input type="hidden" name="rowVersion" value={rowVersion} />

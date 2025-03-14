@@ -13,6 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           scope: 'my-headless-cms-api-all email openid profile'
         }
       },
+      checks: ['pkce'],
       profile({ profile }) {
         return { ...profile };
       }
@@ -20,6 +21,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     async jwt({ token, account, profile }) {
+      // TOOD: need to implement refresh token
       if (account && profile) {
         // NOTE: There are place to extract information of access_token
         const identity: any = jwt.decode(account.id_token || '');
@@ -31,7 +33,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.roles = accessToken.realm_access.roles;
         token.picture = accessToken.avatar;
         token.accessToken = account.access_token || '';
+        token.refreshToken = account.refresh_token || '';
       }
+
       return token;
     },
     async session({ session, token }) {

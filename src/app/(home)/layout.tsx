@@ -12,7 +12,14 @@ export default async function RootLayout({
 
   return (
     <>
-      <Navbar links={categories}></Navbar>
+      {/* {categories[0].id} */}
+      <Navbar
+        links={categories.map((e) => ({
+          id: e.id,
+          displayName: e.displayName,
+          slug: e.slug
+        }))}
+      ></Navbar>
       <Suspense fallback={<Loading />}>{children}</Suspense>
     </>
   );
