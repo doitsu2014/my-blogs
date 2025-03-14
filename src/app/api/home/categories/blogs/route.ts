@@ -29,5 +29,5 @@ export async function GET(request: any) {
       }
     `
   });
-  return res.data.categories.nodes.map(mapGraphQlModelToCategoryModel);
+  return Response.json(res.data.categories.nodes.map(mapGraphQlModelToCategoryModel));
 }

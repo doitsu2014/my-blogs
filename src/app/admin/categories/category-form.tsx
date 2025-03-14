@@ -5,6 +5,8 @@ import MultiChipInput, { getRandomColor } from '../components/inputs/multi-chip-
 import { CreateCategoryModel, UpdateCategoryModel } from '@/app/api/admin/categories/route';
 import { CategoryModel, CategoryTypeEnum } from '@/domains/category';
 import { TagModel } from '@/domains/tag';
+import { redirect } from 'next/navigation';
+import { create } from 'domain';
 
 export default function CategoryForm({ id }: { id?: string }) {
   const [displayName, setDisplayName] = useState('');
@@ -16,11 +18,12 @@ export default function CategoryForm({ id }: { id?: string }) {
   useEffect(() => {
     if (id) {
       const fetchCategories = async () => {
-        const response = await fetch(`/api/admin/categories/${id}`);
+        const response = await fetch(`/api/admin/categories/${id}`, {
+          cache: 'no-store'
+        });
         if (response && response.ok) {
           const data: CategoryModel = await response.json();
           setDisplayName(data.displayName);
-          console.log(data.categoryType);
           setCategoryType(data.categoryType);
           setCategoryTags(
             data.categoryTags.map((tag: TagModel) => ({
@@ -45,7 +48,7 @@ export default function CategoryForm({ id }: { id?: string }) {
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-    // setLoading(true);
+    setLoading(true);
 
     if (id) {
       const categoryData: UpdateCategoryModel = {
@@ -63,6 +66,12 @@ export default function CategoryForm({ id }: { id?: string }) {
         },
         body: JSON.stringify(categoryData)
       });
+
+      if (updateResponse.ok) {
+        redirect('/admin/categories');
+      } else {
+        console.error(await updateResponse.json(), updateResponse.status);
+      }
       setLoading(false);
     } else {
       console.log('Creating category');
@@ -79,6 +88,12 @@ export default function CategoryForm({ id }: { id?: string }) {
         },
         body: JSON.stringify(categoryData)
       });
+
+      if (createResponse.ok) {
+        redirect('/admin/categories');
+      } else {
+        console.error(await createResponse.json(), createResponse.status);
+      }
       setLoading(false);
     }
 

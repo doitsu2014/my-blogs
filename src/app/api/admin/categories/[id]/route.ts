@@ -31,9 +31,12 @@ export const GET = async (request: Request, { params }: { params: Promise<{ id: 
     }`;
   try {
     const { data } = await client.query({
-      query
+      query,
+      fetchPolicy: 'no-cache'
     });
-    return Response.json((data?.categories?.nodes || []).map(mapGraphQlModelToCategoryModel)[0]);
+
+    const result = (data?.categories?.nodes || []).map(mapGraphQlModelToCategoryModel)[0];
+    return Response.json(result);
   } catch (error) {
     console.error('Error fetching categories:', error);
     return new Response(

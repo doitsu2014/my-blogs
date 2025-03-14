@@ -20,7 +20,11 @@ export default function CategoriesListPage() {
 
   useEffect(() => {
     const loadCategories = async () => {
-      const data: CategoryModel[] = await (await fetch('/api/admin/categories')).json();
+      const data: CategoryModel[] = await (
+        await fetch('/api/admin/categories', {
+          cache: 'no-store'
+        })
+      ).json();
       setCategories(data);
       setTimeout(() => setLayoutLoading(false), 1000);
     };
