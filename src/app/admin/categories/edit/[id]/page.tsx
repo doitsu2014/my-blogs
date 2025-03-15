@@ -6,7 +6,7 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
   const { id } = await params;
 
   return (
-    <div className="container mx-auto">
+    <div className="container-fluid mx-auto">
       <Breadcrumbs
         items={[
           { label: 'Admin', href: '/admin', icon: <Home className="w-4 h-4" /> },

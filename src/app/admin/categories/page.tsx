@@ -91,13 +91,13 @@ export default function CategoriesListPage() {
         >
           <option value="">All Types</option>
           <option value="BLOG">BLOG</option>
-          <option value="TUTORIAL">TUTORIAL</option>
+          <option value="OTHER">OTHER</option>
         </select>
       </div>
 
       {/* Categories Table */}
       <div className="overflow-x-auto">
-        <table className="table table-zebra w-full rounded-lg shadow-lg">
+        <table className="table w-full rounded-lg shadow-lg">
           <thead>
             <tr className="bg-base-300 text-base-content">
               <th className="p-3 cursor-pointer" onClick={() => sortBy('name')}>
