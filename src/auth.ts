@@ -5,9 +5,9 @@ import * as jwt from 'jsonwebtoken';
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Keycloak({
-      clientId: 'my-blogs-admin-localhost',
-      clientSecret: 'jBYbpUPFAeqgbgm6u6ESilDuRNwlyjKN',
-      issuer: 'https://my-ids-admin.ducth.dev/realms/master',
+      clientId: process.env.AUTH_KEYCLOAK_SECRET ,
+      clientSecret: process.env.AUTH_KEYCLOAK_SECRET,
+      issuer: process.env.AUTH_KEYCLOAK_ISSUER,
       authorization: {
         params: {
           scope: 'my-headless-cms-api-all email openid profile'
