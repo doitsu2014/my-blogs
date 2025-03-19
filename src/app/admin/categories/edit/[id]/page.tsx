@@ -2,7 +2,7 @@ import { Home } from 'lucide-react';
 import Breadcrumbs from '@/app/admin/components/my-breadcrumbs';
 import CategoryForm from '../../category-form';
 
-export default async function EditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function AdminEditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   return (

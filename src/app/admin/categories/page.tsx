@@ -8,7 +8,7 @@ import { useLayout } from '../layoutContext';
 import { TagModel } from '@/domains/tag';
 import { CategoryModel } from '@/domains/category';
 
-export default function CategoriesListPage() {
+export default function AdminCategoriesListPage() {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
   // const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(
@@ -17,6 +17,9 @@ export default function CategoriesListPage() {
   const [slugFilter, setSlugFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const { setLayoutLoading } = useLayout();
+  const [categoryToDelete, setCategoryToDelete] = useState<CategoryModel | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -31,6 +34,41 @@ export default function CategoriesListPage() {
     setLayoutLoading(true);
     loadCategories();
   }, []);
+
+  const handleDeleteClick = (category: CategoryModel) => {
+    setCategoryToDelete(category);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!categoryToDelete) return;
+    
+    try {
+      setIsDeleting(true);
+      const response = await fetch(`/api/admin/categories/${categoryToDelete.id}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        // Remove deleted category from the state
+        setCategories(categories.filter(c => c.id !== categoryToDelete.id));
+        setIsDeleteModalOpen(false);
+        setCategoryToDelete(null);
+      } else {
+        console.error('Failed to delete category');
+        // Handle error case, perhaps show a toast notification
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const cancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setCategoryToDelete(null);
+  };
 
   let filteredCategories = categories;
 
@@ -97,7 +135,7 @@ export default function CategoriesListPage() {
 
       {/* Categories Table */}
       <div className="overflow-x-auto">
-        <table className="table w-full rounded-lg shadow-lg">
+        <table className="table w-full">
           <thead>
             <tr className="bg-base-300 text-base-content">
               <th className="p-3 cursor-pointer" onClick={() => sortBy('name')}>
@@ -156,14 +194,17 @@ export default function CategoriesListPage() {
                   )}
                 </td>
                 <td className="p-3 text-center">
-                  <div className="flex space-x-1">
+                  <div className="flex gap-2">
                     <Link
                       href={`/admin/categories/edit/${category.id}`}
-                      className="btn btn-sm btn-secondary"
+                      className="btn btn-sm btn-outline"
                     >
                       <Pencil className="w-4 h-4" />
                     </Link>
-                    <button className="btn btn-sm btn-error">
+                    <button 
+                      className="btn btn-sm btn-outline btn-error"
+                      onClick={() => handleDeleteClick(category)}
+                    >
                       <Trash className="w-4 h-4" />
                     </button>
                   </div>
@@ -173,6 +214,35 @@ export default function CategoriesListPage() {
           </tbody>
         </table>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-base-100 p-6 rounded-lg shadow-xl max-w-md w-full">
+            <h3 className="text-lg font-bold mb-4">Confirm Deletion</h3>
+            <p className="mb-6">
+              Are you sure you want to delete the category "{categoryToDelete?.displayName}"? 
+              This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                className="btn btn-outline" 
+                onClick={cancelDelete}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn btn-error" 
+                onClick={confirmDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

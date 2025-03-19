@@ -2,8 +2,10 @@ import Loading from './loading';
 import { Suspense } from 'react';
 import Navbar from '../components/navbar';
 import { CategoryModel } from '@/domains/category';
-import client, { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQlClient';
 import { gql } from '@apollo/client';
+import graphQLClient from '@/infrastructure/graphQL/graphql-client';
+import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
+import buildGetBlogCategoriesQuery from '@/infrastructure/graphQL/queries/categories/get-blog-categories';
 
 export default async function RootLayout({
   children
@@ -28,31 +30,8 @@ export default async function RootLayout({
 }
 
 const getCategories = async () => {
-  const res = await client.query({
-    query: gql`
-      {
-        categories(filters: { categoryType: { eq: BLOG }, parentId: { is_null: "true" } }) {
-          nodes {
-            id
-            displayName
-            slug
-            categoryType
-            createdBy
-            createdAt
-            rowVersion
-            categoryTags {
-              nodes {
-                tags {
-                  id
-                  name
-                  slug
-                }
-              }
-            }
-          }
-        }
-      }
-    `
+  const res = await graphQLClient.query({
+    query: buildGetBlogCategoriesQuery()
   });
   return res.data.categories.nodes.map(mapGraphQlModelToCategoryModel);
 };

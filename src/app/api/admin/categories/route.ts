@@ -1,10 +1,9 @@
-import { auth } from '@/auth';
-import { CategoryModel, CategoryTypeEnum } from '@/domains/category';
-import client, { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQlClient';
-import { getFetchHeaderWithAuthorization } from '@/infrastructure/utilities.auth';
+import { CategoryTypeEnum } from '@/domains/category';
+import graphQLClient from '@/infrastructure/graphQL/graphql-client';
+import buildGetCategoriesQuery from '@/infrastructure/graphQL/queries/categories/get-categories';
+import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
+import { buildHeader } from '@/infrastructure/utilities.auth';
 import { gql } from '@apollo/client';
-import { Update } from 'next/dist/build/swc/types';
-import { NextRequest } from 'next/server';
 
 const apiUrl = process.env.MY_CMS_API_URL;
 
@@ -25,7 +24,7 @@ export async function POST(req: Request) {
 
   const result = await fetch(`${apiUrl}/categories`, {
     method: 'POST',
-    headers: await getFetchHeaderWithAuthorization(),
+    headers: await buildHeader(),
     body: JSON.stringify({
       ...body,
       categoryType: body.categoryType === CategoryTypeEnum.Blog ? 'Blog' : 'Other'
@@ -68,7 +67,7 @@ export async function PUT(req: Request) {
 
   const result = await fetch(`${apiUrl}/categories`, {
     method: 'PUT',
-    headers: await getFetchHeaderWithAuthorization(),
+    headers: await buildHeader(),
     body: JSON.stringify({
       ...body,
       categoryType: body.categoryType === CategoryTypeEnum.Blog ? 'Blog' : 'Other'
@@ -86,31 +85,8 @@ export async function PUT(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const { data } = await client.query({
-      query: gql`
-        query GetCategories {
-          categories {
-            nodes {
-              id
-              displayName
-              slug
-              categoryType
-              createdBy
-              createdAt
-              rowVersion
-              categoryTags {
-                nodes {
-                  tags {
-                    id
-                    name
-                    slug
-                  }
-                }
-              }
-            }
-          }
-        }
-      `,
+    const { data } = await graphQLClient.query({
+      query: buildGetCategoriesQuery(),
       fetchPolicy: 'no-cache'
     });
     return Response.json((data?.categories?.nodes || []).map(mapGraphQlModelToCategoryModel));

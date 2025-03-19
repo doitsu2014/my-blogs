@@ -5,7 +5,7 @@ import TopBar from './components/top-bar';
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const { isLoading } = useLayout();
   return (
-    <main className="flex-1 px-6 bg-base-100 overflow-auto">
+    <main className="flex-1 px-6 bg-base-100">
       <TopBar />
       {isLoading && (
         <div className="flex justify-center items-center h-full">

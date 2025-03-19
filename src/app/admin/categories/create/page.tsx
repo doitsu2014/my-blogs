@@ -4,7 +4,7 @@ import { Home } from 'lucide-react';
 import Breadcrumbs from '@/app/admin/components/my-breadcrumbs';
 import CategoryForm from '../category-form';
 
-export default function CreateCategoryPage() {
+export default function AdminCreateCategoryPage() {
   return (
     <div className="container-fluid mx-auto">
       <Breadcrumbs

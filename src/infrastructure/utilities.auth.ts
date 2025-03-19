@@ -1,9 +1,18 @@
 import { auth } from '@/auth';
 
-export const getFetchHeaderWithAuthorization = async () => {
+export const buildHeader = async (includeAuthorizedToken: boolean = true, isContentTypeJson: boolean = true) => {
   const session = await auth();
-  return {
-    Authorization: `Bearer ${session?.accessToken}`,
-    'Content-Type': 'application/json'
+  
+  let header: any = {
   };
+
+  if (includeAuthorizedToken && session?.accessToken) {
+    header['Authorization'] = `Bearer ${session.accessToken}`;
+  }
+
+  if (isContentTypeJson) {
+    header["Content-Type"] = 'application/json';
+  }
+
+  return header;
 };
