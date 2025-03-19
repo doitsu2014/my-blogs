@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Keycloak({
-      clientId: process.env.AUTH_KEYCLOAK_SECRET ,
+      clientId: process.env.AUTH_KEYCLOAK_ID ,
       clientSecret: process.env.AUTH_KEYCLOAK_SECRET,
       issuer: process.env.AUTH_KEYCLOAK_ISSUER,
       authorization: {
