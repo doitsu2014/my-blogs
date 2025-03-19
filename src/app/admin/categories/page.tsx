@@ -4,34 +4,39 @@ import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Home, Pencil, Trash } from 'lucide-react';
 import Link from 'next/link';
 import Breadcrumbs from '../components/my-breadcrumbs';
-import { useLayout } from '../layoutContext';
+import TableSkeleton from '../components/skeleton/table-skeleton';
 import { TagModel } from '@/domains/tag';
 import { CategoryModel } from '@/domains/category';
 
 export default function AdminCategoriesListPage() {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
-  // const [loading, setLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(
     null
   );
   const [slugFilter, setSlugFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
-  const { setLayoutLoading } = useLayout();
   const [categoryToDelete, setCategoryToDelete] = useState<CategoryModel | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const loadCategories = async () => {
-      const data: CategoryModel[] = await (
-        await fetch('/api/admin/categories', {
-          cache: 'no-store'
-        })
-      ).json();
-      setCategories(data);
-      setTimeout(() => setLayoutLoading(false), 1000);
+      try {
+        setPageLoading(true);
+        const data: CategoryModel[] = await (
+          await fetch('/api/admin/categories', {
+            cache: 'no-store'
+          })
+        ).json();
+        setCategories(data);
+      } catch (error) {
+        console.error("Failed to load categories:", error);
+      } finally {
+        setPageLoading(false);
+      }
     };
-    setLayoutLoading(true);
+    
     loadCategories();
   }, []);
 
@@ -135,84 +140,93 @@ export default function AdminCategoriesListPage() {
 
       {/* Categories Table */}
       <div className="overflow-x-auto">
-        <table className="table w-full">
-          <thead>
-            <tr className="bg-base-300 text-base-content">
-              <th className="p-3 cursor-pointer" onClick={() => sortBy('name')}>
-                Name{' '}
-                {sortConfig?.key === 'name' ? (
-                  sortConfig.direction === 'asc' ? (
-                    <ChevronUp className="inline w-4 h-4" />
-                  ) : (
-                    <ChevronDown className="inline w-4 h-4" />
-                  )
-                ) : null}
-              </th>
-              <th className="p-3 cursor-pointer" onClick={() => sortBy('slug')}>
-                Slug{' '}
-                {sortConfig?.key === 'slug' ? (
-                  sortConfig.direction === 'asc' ? (
-                    <ChevronUp className="inline w-4 h-4" />
-                  ) : (
-                    <ChevronDown className="inline w-4 h-4" />
-                  )
-                ) : null}
-              </th>
-              <th className="p-3 cursor-pointer" onClick={() => sortBy('categoryType')}>
-                Type{' '}
-                {sortConfig?.key === 'categoryType' ? (
-                  sortConfig.direction === 'asc' ? (
-                    <ChevronUp className="inline w-4 h-4" />
-                  ) : (
-                    <ChevronDown className="inline w-4 h-4" />
-                  )
-                ) : null}
-              </th>
-              <th className="p-3">Created By</th>
-              <th className="p-3">Tags</th>
-              <th className="p-3 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCategories.map((category) => (
-              <tr key={category.id} className="hover:bg-base-200 transition-all">
-                <td className="p-3 font-semibold">{category.displayName}</td>
-                <td className="p-3 text-gray-500">{category.slug}</td>
-                <td className="p-3">
-                  <span className="badge badge-info">{category.categoryType}</span>
-                </td>
-                <td className="p-3 text-gray-600">{category.createdBy}</td>
-                <td className="p-3">
-                  {category.categoryTags?.length > 0 ? (
-                    category.categoryTags?.map((tag: TagModel) => (
-                      <span key={tag.id} className="badge badge-secondary mr-1">
-                        {tag.name}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-gray-400">No Tags</span>
-                  )}
-                </td>
-                <td className="p-3 text-center">
-                  <div className="flex gap-2">
-                    <Link
-                      href={`/admin/categories/edit/${category.id}`}
-                      className="btn btn-sm btn-outline"
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Link>
-                    <button 
-                      className="btn btn-sm btn-outline btn-error"
-                      onClick={() => handleDeleteClick(category)}
-                    >
-                      <Trash className="w-4 h-4" />
-                    </button>
-                  </div>
-                </td>
+        {pageLoading ? (
+          <TableSkeleton 
+            rows={5} 
+            columns={6} 
+            showHeader={true} 
+            className="w-full" 
+          />
+        ) : (
+          <table className="table w-full">
+            <thead>
+              <tr className="bg-base-300 text-base-content">
+                <th className="p-3 cursor-pointer" onClick={() => sortBy('name')}>
+                  Name{' '}
+                  {sortConfig?.key === 'name' ? (
+                    sortConfig.direction === 'asc' ? (
+                      <ChevronUp className="inline w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="inline w-4 h-4" />
+                    )
+                  ) : null}
+                </th>
+                <th className="p-3 cursor-pointer" onClick={() => sortBy('slug')}>
+                  Slug{' '}
+                  {sortConfig?.key === 'slug' ? (
+                    sortConfig.direction === 'asc' ? (
+                      <ChevronUp className="inline w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="inline w-4 h-4" />
+                    )
+                  ) : null}
+                </th>
+                <th className="p-3 cursor-pointer" onClick={() => sortBy('categoryType')}>
+                  Type{' '}
+                  {sortConfig?.key === 'categoryType' ? (
+                    sortConfig.direction === 'asc' ? (
+                      <ChevronUp className="inline w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="inline w-4 h-4" />
+                    )
+                  ) : null}
+                </th>
+                <th className="p-3">Created By</th>
+                <th className="p-3">Tags</th>
+                <th className="p-3 text-center">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredCategories.map((category) => (
+                <tr key={category.id} className="hover:bg-base-200 transition-all">
+                  <td className="p-3 font-semibold">{category.displayName}</td>
+                  <td className="p-3 text-gray-500">{category.slug}</td>
+                  <td className="p-3">
+                    <span className="badge badge-info">{category.categoryType}</span>
+                  </td>
+                  <td className="p-3 text-gray-600">{category.createdBy}</td>
+                  <td className="p-3">
+                    {category.categoryTags?.length > 0 ? (
+                      category.categoryTags?.map((tag: TagModel) => (
+                        <span key={tag.id} className="badge badge-secondary mr-1">
+                          {tag.name}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-400">No Tags</span>
+                    )}
+                  </td>
+                  <td className="p-3 text-center">
+                    <div className="flex gap-2">
+                      <Link
+                        href={`/admin/categories/edit/${category.id}`}
+                        className="btn btn-sm btn-outline"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Link>
+                      <button 
+                        className="btn btn-sm btn-outline btn-error"
+                        onClick={() => handleDeleteClick(category)}
+                      >
+                        <Trash className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Delete Confirmation Modal */}

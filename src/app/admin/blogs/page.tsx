@@ -1,27 +1,27 @@
 'use client';
 
-import { PostModel } from "@/domains/post";
-import { useEffect, useState } from "react";
-import Breadcrumbs from "../components/my-breadcrumbs";
-import { Home, Info, Link, Pencil, Trash2 } from "lucide-react";
-import TableSkeleton from "@/components/skeleton/table-skeleton";
+import { PostModel } from '@/domains/post';
+import { useEffect, useState } from 'react';
+import Breadcrumbs from '../components/my-breadcrumbs';
+import { Home, Info, Link, Pencil, Trash2 } from 'lucide-react';
+import TableSkeleton from '../components/skeleton/table-skeleton';
 
 export default function AdminBlogsPage() {
   const [blogs, setBlogs] = useState<PostModel[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(true);
 
   useEffect(() => {
     async function fetchBlogs() {
-      setIsLoading(true);
       try {
+        setPageLoading(true);
         // Replace with your actual API call
-        const response = await fetch("/api/admin/blogs");
+        const response = await fetch('/api/admin/blogs');
         const data = await response.json();
         setBlogs(data);
       } catch (error) {
-        console.error("Error fetching blogs:", error);
+        console.error('Error fetching blogs:', error);
       } finally {
-        setIsLoading(false);
+        setPageLoading(false);
       }
     }
     fetchBlogs();
@@ -44,44 +44,28 @@ export default function AdminBlogsPage() {
       </div>
 
       <div className="bg-base-100">
-        <table className="table table-zebra w-full">
-          <thead>
-            <tr className="bg-base-300 text-base-content">
-              <th>ID</th>
-              <th>Title</th>
-              <th>Preview</th>
-              <th>Slug</th>
-              <th>Category</th>
-              <th>Status</th>
-              <th>Tags</th>
-              <th>Modified By</th>
-              <th>Last Modified</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <TableSkeleton columns={[
-                { width: 'w-12' },  // ID
-                { width: 'w-12' },  // Title
-                { width: 'w-12' },  // Preview
-                { width: 'w-12' },  // Slug
-                { width: 'w-12' },  // Category
-                { width: 'w-12' },  // Status
-                { width: 'w-12' },  // Tags
-                { width: 'w-12' },  // Modified By
-                { width: 'w-12' },  // Last Modified
-                { width: 'w-12' },   // Version
-                { width: 'w-12' },  // Actions
-              ]} rows={5} />
-            ) : blogs.length === 0 ? (
-              <tr>
-                <td colSpan={11} className="text-center py-4">No blogs found</td>
+        {pageLoading ? (
+          <TableSkeleton columns={11} rows={5} showHeader={true} className="w-full" />
+        ) : (
+          <table className="table table-zebra w-full">
+            <thead>
+              <tr className="bg-base-300 text-base-content">
+                <th>ID</th>
+                <th>Title</th>
+                <th>Preview</th>
+                <th>Slug</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Tags</th>
+                <th>Modified By</th>
+                <th>Last Modified</th>
+                <th>Actions</th>
               </tr>
-            ) : (
-              blogs.map((blog) => (
+            </thead>
+            <tbody>
+              {blogs.map((blog) => (
                 <tr key={blog.id}>
-                  <td className="text-xs">
+                  <td className="p-3 font-semibold">
                     <div className="flex items-center gap-1">
                       {blog.id.substring(0, 8)}
                       <div className="tooltip" data-tip={blog.id}>
@@ -89,7 +73,7 @@ export default function AdminBlogsPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="font-medium">
+                  <td className="p-3 font-semibold">
                     <div className="max-w-xs truncate">{blog.title}</div>
                     {blog.thumbnailPaths && blog.thumbnailPaths.length > 0 && (
                       <div className="avatar mt-1">
@@ -111,9 +95,12 @@ export default function AdminBlogsPage() {
                   </td>
                   <td>
                     <div className="flex flex-wrap gap-1">
-                      {blog.postTags && blog.postTags.map((tag) => (
-                        <span key={tag.id} className="badge badge-sm">{tag.name}</span>
-                      ))}
+                      {blog.postTags &&
+                        blog.postTags.map((tag) => (
+                          <span key={tag.id} className="badge badge-sm">
+                            {tag.name}
+                          </span>
+                        ))}
                     </div>
                   </td>
                   <td className="text-sm">{blog.lastModifiedBy}</td>
@@ -129,10 +116,10 @@ export default function AdminBlogsPage() {
                     </div>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
