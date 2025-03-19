@@ -1,4 +1,4 @@
 {
-    "terminal.integrated.fontFamily": "ComicShannsMono Nerd Font",
-    "editor.fontFamily": "ComicShannsMono Nerd Font"
+    "terminal.integrated.fontFamily": "'ComicShannsMono Nerd Font', 'EnvyCodeR Nerd Font', monospace",
+    "editor.fontFamily": "'ComicShannsMono Nerd Font', 'EnvyCodeR Nerd Font', monospace"
 }
