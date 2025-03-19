@@ -8,3 +8,4 @@ node_modules
 **/*.rs.bk
 
 .next
+.env.local
