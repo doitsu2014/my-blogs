@@ -14,7 +14,7 @@ export default function AdminCategoriesListPage() {
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(
     null
   );
-  const [slugFilter, setSlugFilter] = useState('');
+  const [textFilter, setTextFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [categoryToDelete, setCategoryToDelete] = useState<CategoryModel | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -78,9 +78,13 @@ export default function AdminCategoriesListPage() {
   let filteredCategories = categories;
 
   // Apply Filtering
-  if (slugFilter) {
-    filteredCategories = filteredCategories.filter((c) => c.slug.includes(slugFilter));
+  if (textFilter) {
+    filteredCategories = filteredCategories.filter((c) => 
+      c.slug.toLowerCase().includes(textFilter.toLowerCase()) || 
+      c.displayName.toLowerCase().includes(textFilter.toLowerCase())
+    );
   }
+
   if (typeFilter) {
     filteredCategories = filteredCategories.filter((c) => c.categoryType === typeFilter);
   }
@@ -121,10 +125,10 @@ export default function AdminCategoriesListPage() {
       <div className="flex space-x-4 mb-4">
         <input
           type="text"
-          placeholder="Filter by slug..."
+          placeholder="Filter by name or slug..."
           className="input input-bordered w-1/3"
-          value={slugFilter}
-          onChange={(e) => setSlugFilter(e.target.value)}
+          value={textFilter}
+          onChange={(e) => setTextFilter(e.target.value)}
         />
 
         <select
