@@ -92,8 +92,8 @@ export default function BlogForm({ id }: { id?: string }) {
   };
 
   return (
-    <form onSubmit={submitHandler} className="space-y-2">
-      <div className="flex w-full flex-col space-x-2 lg:flex-row">
+    <form onSubmit={submitHandler} className="flex flex-col space-y-2">
+      <div className="flex flex-col w-full space-x-2 space-y-4 lg:flex-row">
         <div className="grid" id="blog-form-section-metadata">
           {/* Left Section */}
           <div className="flex flex-col space-y-4 w-full">
@@ -180,7 +180,7 @@ export default function BlogForm({ id }: { id?: string }) {
                 value={content}
                 onChange={setContent}
                 name="content"
-                className="!min-h-96"
+                className="!h-128"
               />
             </label>
           </div>
@@ -189,9 +189,11 @@ export default function BlogForm({ id }: { id?: string }) {
 
       <input type="hidden" name="rowVersion" value={rowVersion} />
       <input type="hidden" name="id" value={id} />
-      <button type="submit" className="btn btn-primary" disabled={loading}>
-        {loading ? 'Saving...' : id ? 'Update' : 'Create'}
-      </button>
+      <div className="flex justify-end">
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? 'Saving...' : id ? 'Update' : 'Create'}
+        </button>
+      </div>
     </form>
   );
 }

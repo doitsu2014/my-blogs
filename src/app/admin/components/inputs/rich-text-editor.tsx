@@ -1,6 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.min.css';
+import '@/app/admin/components/inputs/rich-text-editor.css';
 
 interface RichTextEditorProps {
   value: string;
@@ -10,7 +13,13 @@ interface RichTextEditorProps {
   className?: string; // Add className prop for styling
 }
 
-const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, name, onBlur, className }) => {
+const RichTextEditor: React.FC<RichTextEditorProps> = ({
+  value,
+  onChange,
+  name,
+  onBlur,
+  className
+}) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const quillInstance = useRef<Quill | null>(null);
 
@@ -19,26 +28,65 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, name, 
       quillInstance.current = new Quill(editorRef.current, {
         theme: 'snow',
         modules: {
+          syntax: {
+            hljs: hljs,
+            languages: [
+              { label: 'Rust', key: 'rust' },
+              { label: 'YAML', key: 'yaml' }
+            ]
+          },
           toolbar: [
-            ['bold', 'italic', 'underline', 'strike'], // Formatting options
-            [{ list: 'ordered' }, { list: 'bullet' }], // Lists
-            ['link', 'image'], // Links and images
-            [{ header: [1, 2, 3, false] }], // Headers
-            [{ align: [] }], // Alignment
-            ['clean'], // Remove formatting
+            ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+            ['blockquote', 'code-block'],
+            ['link', 'image', 'video', 'formula'],
+            [{ header: 1 }, { header: 2 }], // custom button values
+            [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+            [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+            [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+            [{ direction: 'rtl' }], // text direction
+            [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+            [{ font: [] }],
+            [{ align: [] }],
+            ['clean'] // remove formatting button
           ],
-        },
+          keyboard: {
+            bindings: {
+              bold: {
+                key: 'B',
+                shortKey: true,
+                handler: () => {
+                  const isBold = quillInstance.current?.getFormat()?.bold || false;
+                  quillInstance.current?.format('bold', !isBold);
+                }
+              },
+              codeBlock: {
+                key: 'C',
+                shortKey: true,
+                shiftKey: true,
+                handler: () => {
+                  const isCodeBlock = quillInstance.current?.getFormat()?.['code-block'] || false;
+                  quillInstance.current?.format('code-block', !isCodeBlock);
+                }
+              }
+            }
+          }
+        }
       });
 
-      quillInstance.current.on('text-change', () => {
+      const handleTextChange = () => {
         const html = editorRef.current?.querySelector('.ql-editor')?.innerHTML || '';
         onChange(html);
-      });
-    }
+      };
 
-    return () => {
-      quillInstance.current = null;
-    };
+      quillInstance.current.on('text-change', handleTextChange);
+
+      return () => {
+        quillInstance.current?.off('text-change', handleTextChange); // Remove event listener
+        quillInstance.current = null;
+      };
+    }
   }, [onChange]);
 
   useEffect(() => {
