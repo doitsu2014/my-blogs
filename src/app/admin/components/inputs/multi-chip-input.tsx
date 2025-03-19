@@ -47,7 +47,8 @@ export default function MultiChipInput({
 
   const removeChip = (chipToRemove: string) => {
     if (!loading) {
-      setChips(chips.filter((chip) => chip.label !== chipToRemove));
+      const afterRemove = chips.filter((chip) => chip.label !== chipToRemove)
+      setChips(afterRemove);
     }
   };
 
@@ -56,14 +57,13 @@ export default function MultiChipInput({
       {chips.map((chip, index) => (
         <div
           key={index}
-          className={`inline-flex items-center px-2 py-1 rounded-full text-white ${chip.color}`}
-        >
-          <span className="mr-2">{chip.label}</span>
+          className={`inline-flex items-center px-3 py-1 m-1 rounded-full text-white ${chip.color} hover:opacity-90`}
+          title={chip.label}>
+          <span className="mr-2 truncate max-w-xs">{chip.label}</span>
           <button
             className="text-white hover:text-gray-300 font-bold"
             onClick={() => removeChip(chip.label)}
-            disabled={loading}
-          >
+            disabled={loading}>
             &times;
           </button>
         </div>
@@ -71,7 +71,7 @@ export default function MultiChipInput({
       <input
         type="text"
         placeholder="Enter items..."
-        className="outline-none border-none flex-grow"
+        className="input input-bordered w-full"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}

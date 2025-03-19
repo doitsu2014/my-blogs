@@ -1,4 +1,3 @@
-
 import { TagModel } from './tag';
 
 export interface PostModel {

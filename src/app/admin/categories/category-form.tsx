@@ -135,7 +135,7 @@ export default function CategoryForm({ id }: { id?: string }) {
         <MultiChipInput
           chips={categoryTags}
           setChips={setCategoryTags}
-          className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg"
+          className="flex flex-wrap border border-base-400 rounded-md p-2"
           loading={loading}
           formControlName="categoryTags"
         />
