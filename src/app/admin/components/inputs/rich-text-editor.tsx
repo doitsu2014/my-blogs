@@ -9,17 +9,14 @@ import '@/app/admin/components/inputs/rich-text-editor.css';
 import QuillToggleFullscreenButton from 'quill-toggle-fullscreen-button';
 import htmlEditButton from 'quill-html-edit-button';
 
-const FontAttributor: any = Quill.import('attributors/class/font');
-FontAttributor.whitelist = ['roboto'];
-Quill.register(FontAttributor, true);
 Quill.register('modules/htmlEditButton', htmlEditButton);
 Quill.register('modules/toggleFullscreen', QuillToggleFullscreenButton);
 
 interface RichTextEditorProps {
-  readOnly: boolean;
+  readOnly?: boolean;
   defaultValue: any;
-  onTextChange: (...args: any[]) => void;
-  onSelectionChange: (...args: any[]) => void;
+  onTextChange?: (...args: any[]) => void;
+  onSelectionChange?: (...args: any[]) => void;
   className?: string; // Add className prop for styling
 }
 
@@ -38,12 +35,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const onSelectionChangeRef = useRef(onSelectionChange);
 
   useLayoutEffect(() => {
-    onTextChangeRef.current = onTextChange;
-    onSelectionChangeRef.current = onSelectionChange;
+    onTextChangeRef.current = onTextChange ?? (() => {});
+    onSelectionChangeRef.current = onSelectionChange ?? (() => {});
   });
 
   useEffect(() => {
-    editorRef.current?.enable(!readOnly);
+    if (readOnly !== undefined) {
+      editorRef.current?.enable(!readOnly);
+    }
   }, [readOnly]);
 
   useEffect(() => {
@@ -98,7 +97,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
           [{ header: [1, 2, 3, 4, 5, 6, false] }],
           [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-          [{ font: [] }],
           [{ align: [] }],
           ['clean'] // remove formatting button
         ]
@@ -106,10 +104,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     });
 
     // Add TailwindCSS typography styles to the editor
-    const editorElement = editorContainer.querySelector('.ql-editor');
-    if (editorElement) {
-      editorElement.classList.add('prose', 'prose-sm', 'sm:prose-base', 'lg:prose-lg');
-    }
+    // const editorElement = editorContainer.querySelector('.ql-editor');
+    // if (editorElement) {
+    //   editorElement.classList.add('prose', 'prose-sm', 'sm:prose-base', 'lg:prose-lg');
+    // }
 
     editorRef.current = quill;
 
@@ -118,7 +116,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
 
     quill.on(Quill.events.TEXT_CHANGE, (...args) => {
-      onTextChangeRef.current?.(...args);
+      const finalText = quill.root.innerHTML; // Collect final text content
+      onTextChangeRef.current?.(finalText);
     });
 
     quill.on(Quill.events.SELECTION_CHANGE, (...args) => {

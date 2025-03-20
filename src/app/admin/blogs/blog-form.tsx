@@ -20,6 +20,7 @@ export default function BlogForm({ id }: { id?: string }) {
   const [rowVersion, setRowVersion] = useState(0);
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState<{ label: string; color: string }[]>([]);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -177,12 +178,22 @@ export default function BlogForm({ id }: { id?: string }) {
         </div>
         <div className="grid grow">
           {/* Right Section */}
-          <div className="flex flex-col space-y-4 w-full">
+          <div className="flex flex-col w-full">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setIsPreviewModalOpen(true)}
+              disabled={loading}
+            >
+              Preview Content
+            </button>
             <div className="form-control w-full">
-              <span className="label-text">Content</span>
               <RichTextEditor
                 defaultValue={content}
-                onTextChange={setContent}
+                onTextChange={(e) => {
+                  console.log(e);
+                  setContent(e);
+                }}
                 onSelectionChange={() => {}}
                 readOnly={false}
               />
@@ -190,6 +201,36 @@ export default function BlogForm({ id }: { id?: string }) {
           </div>
         </div>
       </div>
+
+      {/* Modal for Preview */}
+      {isPreviewModalOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-4xl bg-base-200 shadow-xl border border-primary">
+            <div className="modal-header flex justify-between items-center border-b border-primary pb-2">
+              <h3 className="text-lg font-bold text-primary">Content Preview</h3>
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-error"
+                onClick={() => setIsPreviewModalOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modal-body prose max-w-none mt-4 overflow-y-auto h-96">
+              <div dangerouslySetInnerHTML={{ __html: content }} />
+            </div>
+            <div className="modal-action justify-end mt-4">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => setIsPreviewModalOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <input type="hidden" name="rowVersion" value={rowVersion} />
       <input type="hidden" name="id" value={id} />

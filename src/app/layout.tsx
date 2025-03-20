@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Roboto } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
-export const roboto_mono = Roboto({
-  weight: '400'
-});
+const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
+
 
 export const metadata: Metadata = {
   title: 'My Blogs - Home Page',
@@ -17,7 +16,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <head>
         <link
           rel="stylesheet"
@@ -25,7 +24,7 @@ export default async function RootLayout({
         />
       </head>
 
-      <body className={`${roboto_mono.className} antialiased`}>{children}</body>
+      <body className={`antialiased`}>{children}</body>
     </html>
   );
 }
