@@ -85,6 +85,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             { label: 'YAML', key: 'yaml' }
           ]
         },
+        clipboard: {
+          matchVisual: false // Ensures \n is not added during copy/paste
+        },
         toolbar: [
           ['bold', 'italic', 'underline', 'strike'], // toggled buttons
           ['blockquote', 'code-block'],

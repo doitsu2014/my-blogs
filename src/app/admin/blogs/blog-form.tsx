@@ -205,7 +205,7 @@ export default function BlogForm({ id }: { id?: string }) {
       {/* Modal for Preview */}
       {isPreviewModalOpen && (
         <div className="modal modal-open">
-          <div className="modal-box max-w-4xl bg-base-200 shadow-xl border border-primary">
+          <div className="modal-box w-full h-full max-w-none bg-base-200 shadow-xl border border-primary">
             <div className="modal-header flex justify-between items-center border-b border-primary pb-2">
               <h3 className="text-lg font-bold text-primary">Content Preview</h3>
               <button
@@ -216,10 +216,10 @@ export default function BlogForm({ id }: { id?: string }) {
                 ✕
               </button>
             </div>
-            <div className="modal-body prose max-w-none mt-4 overflow-y-auto h-96">
+            <div className="modal-body prose max-w-none mt-4 overflow-y-auto h-[calc(100%-8rem)">
               <div dangerouslySetInnerHTML={{ __html: content }} />
             </div>
-            <div className="modal-action justify-end mt-4">
+            <div className="modal-action justify-end mt-2">
               <button
                 type="button"
                 className="btn btn-primary"
