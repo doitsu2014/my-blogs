@@ -19,6 +19,7 @@
   "devDependencies": {
     "@apollo/client": "^3.12.6",
     "@tailwindcss/postcss": "^4.0.12",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/react": "^19.0.7",

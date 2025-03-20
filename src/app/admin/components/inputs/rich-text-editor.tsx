@@ -9,6 +9,9 @@ import '@/app/admin/components/inputs/rich-text-editor.css';
 import QuillToggleFullscreenButton from 'quill-toggle-fullscreen-button';
 import htmlEditButton from 'quill-html-edit-button';
 
+const FontAttributor: any = Quill.import('attributors/class/font');
+FontAttributor.whitelist = ['roboto'];
+Quill.register(FontAttributor, true);
 Quill.register('modules/htmlEditButton', htmlEditButton);
 Quill.register('modules/toggleFullscreen', QuillToggleFullscreenButton);
 
@@ -102,6 +105,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
     });
 
+    // Add TailwindCSS typography styles to the editor
+    const editorElement = editorContainer.querySelector('.ql-editor');
+    if (editorElement) {
+      editorElement.classList.add('prose', 'prose-sm', 'sm:prose-base', 'lg:prose-lg');
+    }
+
     editorRef.current = quill;
 
     if (defaultValueRef.current) {
@@ -115,8 +124,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     quill.on(Quill.events.SELECTION_CHANGE, (...args) => {
       onSelectionChangeRef.current?.(...args);
     });
-
-    console.log(quill.getModule('keyboard'));
 
     return () => {
       editorRef.current = null;

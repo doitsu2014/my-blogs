@@ -2,9 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Roboto } from 'next/font/google';
 
-const roboto = Roboto({
-  weight: '400',
-  subsets: ['latin']
+export const roboto_mono = Roboto({
+  weight: '400'
 });
 
 export const metadata: Metadata = {
@@ -18,11 +17,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="retro">
+    <html lang="en">
       <head>
-
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Aref+Ruqaa|Mirza|Roboto"
+        />
       </head>
-      <body className={`${roboto.className} antialiased`}>{children}</body>
+
+      <body className={`${roboto_mono.className} antialiased`}>{children}</body>
     </html>
   );
 }
