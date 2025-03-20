@@ -19,7 +19,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="retro">
-      <head></head>
+      <head>
+
+      </head>
       <body className={`${roboto.className} antialiased`}>{children}</body>
     </html>
   );

@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import { PostModel } from '@/domains/post';
 import { redirect } from 'next/navigation';
 import MultiChipInput, { getRandomColor } from '../components/inputs/multi-chip-input';
-import RichTextEditor from '../components/inputs/rich-text-editor';
+
+import dynamic from 'next/dynamic';
+const RichTextEditor = dynamic(() => import('../components/inputs/rich-text-editor'), {
+  ssr: false
+});
 
 export default function BlogForm({ id }: { id?: string }) {
   const [title, setTitle] = useState('');
@@ -174,22 +178,22 @@ export default function BlogForm({ id }: { id?: string }) {
         <div className="grid grow">
           {/* Right Section */}
           <div className="flex flex-col space-y-4 w-full">
-            <label className="form-control w-full">
+            <div className="form-control w-full">
               <span className="label-text">Content</span>
               <RichTextEditor
-                value={content}
-                onChange={setContent}
-                name="content"
-                className="!h-128"
+                defaultValue={content}
+                onTextChange={setContent}
+                onSelectionChange={() => {}}
+                readOnly={false}
               />
-            </label>
+            </div>
           </div>
         </div>
       </div>
 
       <input type="hidden" name="rowVersion" value={rowVersion} />
       <input type="hidden" name="id" value={id} />
-      <div className="flex justify-end">
+      <div className="flex">
         <button type="submit" className="btn btn-primary" disabled={loading}>
           {loading ? 'Saving...' : id ? 'Update' : 'Create'}
         </button>
