@@ -1,11 +1,10 @@
 import Loading from './loading';
 import { Suspense } from 'react';
-import Navbar from '../components/navbar';
 import { CategoryModel } from '@/domains/category';
-import { gql } from '@apollo/client';
 import graphQLClient from '@/infrastructure/graphQL/graphql-client';
 import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
 import buildGetBlogCategoriesQuery from '@/infrastructure/graphQL/queries/categories/get-blog-categories';
+import Navbar from './components/navbar';
 
 export default async function RootLayout({
   children
@@ -22,8 +21,7 @@ export default async function RootLayout({
           id: e.id,
           displayName: e.displayName,
           slug: e.slug
-        }))}
-      ></Navbar>
+        }))}></Navbar>
       <Suspense fallback={<Loading />}>{children}</Suspense>
     </>
   );

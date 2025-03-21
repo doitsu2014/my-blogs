@@ -23,7 +23,6 @@ export interface CreateBlogModel {
   previewContent: string;
   content: string;
   thumbnailPaths: string[];
-  slug: string;
   published: boolean;
   categoryId: string;
   tagNames: string[];
@@ -55,7 +54,6 @@ export interface UpdateBlogModel {
   previewContent: string;
   content: string;
   thumbnailPaths: string[];
-  slug: string;
   published: boolean;
   categoryId: string;
   tagNames: string[];

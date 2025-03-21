@@ -2,7 +2,17 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
+const inter = Inter({ subsets: ["latin"], weight: [
+  "100",
+  "200",
+  "300",
+  "400", 
+  "500", 
+  "600", 
+  "700", 
+  "800", 
+  "900"
+] });
 
 
 export const metadata: Metadata = {

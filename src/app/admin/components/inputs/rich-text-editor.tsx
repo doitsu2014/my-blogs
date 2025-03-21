@@ -23,7 +23,7 @@ interface RichTextEditorProps {
 // Editor is an uncontrolled React component
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
   readOnly,
-  defaultValue: defaultValue, // Destructure value prop
+  defaultValue, // Destructure value prop
   onTextChange,
   onSelectionChange,
   className
@@ -45,10 +45,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   }, [readOnly]);
 
   useEffect(() => {
-    if (editorRef.current && defaultValue !== undefined) {
-      if (editorRef.current.root.innerHTML !== defaultValue) {
-        editorRef.current.root.innerHTML = defaultValue; // Update the editor's content for value
-      }
+    if (editorRef.current) {
+      editorRef.current.root.innerHTML = defaultValue || ''; // Update the editor's content for value
     }
   }, [defaultValue]);
 

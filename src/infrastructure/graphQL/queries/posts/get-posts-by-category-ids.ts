@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export default function buildGetBlogsQuery(blogCategories: string[]) {
+export default function buildGetPostsByCategoryIds(blogCategories: string[]) {
   return gql`
     query GetBlogs {
       posts(filters: {

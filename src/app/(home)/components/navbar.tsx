@@ -11,8 +11,7 @@ export default function Navbar({
   links: { id: string; displayName: string; slug: string }[];
 }>) {
   const pathName = usePathname();
-  const isAdmin = pathName.startsWith('/admin');
-  return !isAdmin ? (
+  return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
         <Link className="btn btn-ghost text-xl" href="/">
@@ -33,16 +32,13 @@ export default function Navbar({
           {links.map((link) => (
             <li key={link.id}>
               <NavbarItem
-                slug={`/blogs/${link.slug}`}
+                slug={`/categories/${link.slug}`}
                 displayName={link.displayName}
-                key={link.id}
-              ></NavbarItem>
+                key={link.id}></NavbarItem>
             </li>
           ))}
         </ul>
       </div>
     </div>
-  ) : (
-    <></>
   );
 }

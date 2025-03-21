@@ -68,7 +68,7 @@ export default function CategoryForm({ id }: { id?: string }) {
       });
 
       if (updateResponse.ok) {
-        redirect('/admin/categories');
+        await redirect('/admin/categories');
       } else {
         console.error(await updateResponse.json(), updateResponse.status);
       }
@@ -90,7 +90,7 @@ export default function CategoryForm({ id }: { id?: string }) {
       });
 
       if (createResponse.ok) {
-        redirect('/admin/categories');
+        await redirect('/admin/categories');
       } else {
         console.error(await createResponse.json(), createResponse.status);
       }
