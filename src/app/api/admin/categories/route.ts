@@ -4,20 +4,10 @@ import buildGetCategoriesQuery from '@/infrastructure/graphQL/queries/categories
 import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
 import { buildHeader } from '@/infrastructure/utilities.auth';
 import { gql } from '@apollo/client';
+import { CreateCategoryModel } from './models/CreateCategoryModel';
+import { UpdateCategoryModel } from './models/UpdateCategoryModel';
 
 const apiUrl = process.env.MY_CMS_API_URL;
-
-export class CreateCategoryModel {
-  displayName: string;
-  categoryType: CategoryTypeEnum;
-  tagNames: string[];
-
-  constructor(displayName: string, categoryType: CategoryTypeEnum, tagNames: string[]) {
-    this.displayName = displayName;
-    this.categoryType = categoryType;
-    this.tagNames = tagNames;
-  }
-}
 
 export async function POST(req: Request) {
   const body: CreateCategoryModel = await req.json();
@@ -38,28 +28,6 @@ export async function POST(req: Request) {
   return new Response(await result.text(), {
     status: result.status
   });
-}
-
-export class UpdateCategoryModel {
-  id: string;
-  displayName: string;
-  categoryType: CategoryTypeEnum;
-  tagNames: string[];
-  rowVersion: number;
-
-  constructor(
-    id: string,
-    displayName: string,
-    categoryType: CategoryTypeEnum,
-    tagNames: string[],
-    rowVersion: number
-  ) {
-    this.id = id;
-    this.displayName = displayName;
-    this.categoryType = categoryType;
-    this.tagNames = tagNames;
-    this.rowVersion = rowVersion;
-  }
 }
 
 export async function PUT(req: Request) {

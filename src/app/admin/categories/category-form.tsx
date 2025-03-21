@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import MultiChipInput, { getRandomColor } from '../components/inputs/multi-chip-input';
-import { CreateCategoryModel, UpdateCategoryModel } from '@/app/api/admin/categories/route';
+import { UpdateCategoryModel } from '@/app/api/admin/categories/models/UpdateCategoryModel';
+import { CreateCategoryModel } from '@/app/api/admin/categories/models/CreateCategoryModel';
 import { CategoryModel, CategoryTypeEnum } from '@/domains/category';
 import { TagModel } from '@/domains/tag';
 import { redirect } from 'next/navigation';

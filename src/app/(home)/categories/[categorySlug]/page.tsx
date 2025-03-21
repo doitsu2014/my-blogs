@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: 'There is my blogs website, and the page is blog detail'
 };
 
-export default async function CategoryDetailPage({ params }: { params: { categorySlug: string } }) {
+export default async function CategoryDetailPage({ params }: { params: Promise<{ categorySlug: string }> }) {
   const { categorySlug } = await params;
   const posts = await getBlogByCategorySlug(categorySlug);
 

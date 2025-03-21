@@ -2,6 +2,8 @@ import graphQLClient from '@/infrastructure/graphQL/graphql-client';
 import buildGetPostsQuery from '@/infrastructure/graphQL/queries/posts/get-posts';
 import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
 import { buildHeader } from '@/infrastructure/utilities.auth';
+import { UpdateBlogModel } from './models/UpdateBlogModel';
+import { CreateBlogModel } from './models/CreateBlogModel';
 
 const apiUrl = process.env.MY_CMS_API_URL;
 
@@ -16,16 +18,6 @@ export async function GET(req: Request) {
     console.error('Error fetching categories:', error);
     return Response.json([]);
   }
-}
-
-export interface CreateBlogModel {
-  title: string;
-  previewContent: string;
-  content: string;
-  thumbnailPaths: string[];
-  published: boolean;
-  categoryId: string;
-  tagNames: string[];
 }
 
 export async function POST(req: Request) {
@@ -46,18 +38,6 @@ export async function POST(req: Request) {
   return new Response(await result.text(), {
     status: result.status
   });
-}
-
-export interface UpdateBlogModel {
-  id: string;
-  title: string;
-  previewContent: string;
-  content: string;
-  thumbnailPaths: string[];
-  published: boolean;
-  categoryId: string;
-  tagNames: string[];
-  rowVersion: number;
 }
 
 export async function PUT(req: Request) {
