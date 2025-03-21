@@ -1,11 +1,11 @@
 import { gql } from '@apollo/client';
 
-export default function buildGetPostByIdQuery(id: string) {
+export default function buildGetPostBySlugQuery(slug: string) {
   return gql`
     query GetBlogs {
       posts(filters: {
-        id: {
-          eq: "${id}" 
+        slug: {
+          eq: "${slug}" 
         }
       }) {
         nodes {

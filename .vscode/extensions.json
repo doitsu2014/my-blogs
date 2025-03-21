@@ -6,6 +6,7 @@
         "github.copilot-chat",
         "esbenp.prettier-vscode",
         "rvest.vs-code-prettier-eslint",
-        "chakrounanas.turbo-console-log"
+        "chakrounanas.turbo-console-log",
+        "bradlc.vscode-tailwindcss"
     ]
 }

@@ -1,7 +1,4 @@
-'use client';
-
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import NavbarItem from './navbar-item';
 import Image from 'next/image';
 
@@ -10,7 +7,6 @@ export default function Navbar({
 }: Readonly<{
   links: { id: string; displayName: string; slug: string }[];
 }>) {
-  const pathName = usePathname();
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
