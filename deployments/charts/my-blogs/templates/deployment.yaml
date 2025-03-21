@@ -41,7 +41,7 @@ spec:
           {{- end }}
           volumeMounts:
             - name: configmap-env-volume
-              mountPath: /app/.next/static/.env
+              mountPath: /app/.env
               subPath: .env
           {{- if .Values.container_readinessProbe }}
           {{- if not (empty .Values.container_readinessProbe) }}
