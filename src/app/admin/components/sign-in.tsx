@@ -5,15 +5,12 @@ export default function SignIn() {
     <form
       action={async (formData: FormData) => {
         'use server';
-        const host = formData.get('host') as string;
-        console.log(host);
         await signIn('keycloak', {
           redirect: true,
-          redirectTo: `${host}/admin`
+          redirectTo: `${process.env.NEXT_PUBLIC_HOST}/admin`
         });
       }}
     >
-      <input type="hidden" name="host" value={process.env.NEXT_PUBLIC_HOST || ''} />
       <button type="submit" className="btn btn-accent w-full">
         Signin with Keycloak
       </button>
