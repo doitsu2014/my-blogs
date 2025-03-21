@@ -29,7 +29,8 @@ export default async function RootLayout({
 
 const getCategories = async () => {
   const res = await graphQLClient.query({
-    query: buildGetBlogCategoriesQuery()
+    query: buildGetBlogCategoriesQuery(),
+    fetchPolicy: 'no-cache'
   });
   return res.data.categories.nodes.map(mapGraphQlModelToCategoryModel);
 };

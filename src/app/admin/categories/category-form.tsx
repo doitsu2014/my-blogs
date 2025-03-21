@@ -134,7 +134,9 @@ export default function CategoryForm({ id }: { id?: string }) {
         <span className="label-text">Tags</span>
         <MultiChipInput
           chips={categoryTags}
-          setChips={setCategoryTags}
+          setChips={(chips: { label: string; color: string }[]) => {
+            setCategoryTags(chips.map((chip) => ({ label: chip.label.toLowerCase(), color: chip.color })));
+          }}
           className="flex flex-wrap border border-base-400 rounded-md p-2"
           loading={loading}
           formControlName="categoryTags"

@@ -48,7 +48,7 @@ export default async function CategoryDetailPage({ params }: { params: { categor
                   <p className="text-base-content my-2">{post.previewContent}</p>
                   <div className="flex justify-between items-center flex-wrap gap-2 mt-2">
                     <span className="badge badge-secondary badge-outline">{createdDate}</span>
-                    <button className="btn btn-primary btn-sm">Read More</button>
+                    <a href={`/categories/${categorySlug}/blogs/${post.slug}`} className="btn btn-primary btn-sm">Read More</a>
                   </div>
                 </div>
               )}
@@ -67,7 +67,7 @@ export default async function CategoryDetailPage({ params }: { params: { categor
                   <p className="text-base-content my-2">{post.previewContent}</p>
                   <div className="flex justify-between items-center flex-wrap gap-2 mt-2">
                     <span className="badge badge-primary badge-outline">{createdDate}</span>
-                    <button className="btn btn-secondary btn-sm">Read More</button>
+                    <a href={`/categories/${categorySlug}/blogs/${post.slug}`} className="btn btn-secondary btn-sm">Read More</a>
                   </div>
                 </div>
               )}

@@ -293,7 +293,14 @@ export default function BlogForm({ id }: { id?: string }) {
                     </div>
                     <MultiChipInput
                       chips={tags}
-                      setChips={setTags}
+                      setChips={(chips: { label: string; color: string }[]) => {
+                        setTags(
+                          chips.map((chip) => ({
+                            label: chip.label.toLowerCase(),
+                            color: chip.color
+                          }))
+                        );
+                      }}
                       className="flex flex-wrap border border-base-300 rounded-md p-2 min-h-16 bg-base-200"
                       loading={loading}
                       formControlName="tags"
