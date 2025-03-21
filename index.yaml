@@ -3,6 +3,16 @@ entries:
   my-blogs:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2025-03-21T10:31:57.152726671Z"
+    description: A helm chart for my-blogs
+    digest: 94a6dcfedf2e80509da414bdfcc4d3073093cec2c6d86b550f7e318183eaf379
+    name: my-blogs
+    type: application
+    urls:
+    - https://github.com/doitsu2014/my-blogs/releases/download/my-blogs-1.0.1/my-blogs-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-03-21T10:19:38.141124489Z"
     description: A helm chart for my-blogs
     digest: 11a991ce00fe22941c619c6821ca3d6a8c6b92a884d2b713eb44c4d4d4fe460b
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/doitsu2014/my-blogs/releases/download/my-blogs-1.0.0/my-blogs-1.0.0.tgz
     version: 1.0.0
-generated: "2025-03-21T10:19:38.141128797Z"
+generated: "2025-03-21T10:31:57.152735468Z"
