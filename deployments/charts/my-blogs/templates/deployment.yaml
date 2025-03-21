@@ -41,11 +41,8 @@ spec:
           {{- end }}
           volumeMounts:
             - name: configmap-env-volume
-              mountPath: /usr/share/nginx/html/.env
+              mountPath: /app/.next/static/.env
               subPath: .env
-            - name: secret-configurations
-              mountPath: /usr/share/nginx/html/configs
-              readOnly: true
           {{- if .Values.container_readinessProbe }}
           {{- if not (empty .Values.container_readinessProbe) }}
           readinessProbe:
@@ -80,7 +77,3 @@ spec:
           items:
             - key: .env
               path: .env
-      - name: secret-configurations
-        secret:
-            secretName: {{ .Chart.Name }}-secret-configurations
-

@@ -6,11 +6,11 @@ Change Directory: `cd deployments/charts`
 
 ```bash
 # Run helm uninstall charts, if you did install it before
-helm uninstall my-cms-ui
+helm uninstall my-blogs
 
 # Run helm install charts
-helm install my-cms-ui ./my-cms-ui --namespace test
-helm install my-cms-ui my-cms-ui -f ./my-cms-ui/secret.values.yaml --namespace test
+helm install my-blogs ./my-blogs --namespace test
+helm install my-blogs my-blogs -f ./my-blogs/secret.values.yaml --namespace test
 
 # Note: please prepare namespace `test` before running helm install
 ```
@@ -71,7 +71,7 @@ ingress:
         nginx.ingress.kubernetes.io/client-body-buffer-size: 1m
         nginx.ingress.kubernetes.io/affinity: 'cookie'
     hosts:
-        - host: my-cms-ui.doitsu.tech
+        - host: my-blogs.doitsu.tech
           paths:
               - path: /
                 pathType: Prefix

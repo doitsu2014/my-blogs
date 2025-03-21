@@ -4,7 +4,7 @@
 replicaCount: 1
 
 image:
-    repository: registry.hub.docker.com/doitsu2014/my-cms-ui
+    repository: registry.hub.docker.com/doitsu2014/my-blogs
     pullPolicy: Always
     tag: latest
 
