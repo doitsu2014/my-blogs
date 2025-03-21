@@ -1,5 +1,5 @@
 import { PostModel } from '@/domains/post';
-import graphQLClient from '@/infrastructure/graphQL/graphql-client';
+import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
 import buildGetCategoryIdsBySlugs from '@/infrastructure/graphQL/queries/categories/get-category-ids-by-slugs';
 import buildGetPostsByCategoryIds from '@/infrastructure/graphQL/queries/posts/get-posts-by-category-ids';
 import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
@@ -83,7 +83,7 @@ export default async function CategoryDetailPage({ params }: { params: Promise<{
 }
 
 const getCategoryIdBySlug = async (categorySlug: string): Promise<string> => {
-  const res = await graphQLClient.query({
+  const res = await buildGraphQLClient().query({
     query: buildGetCategoryIdsBySlugs([categorySlug])
   });
   return res.data.categories.nodes[0].id;
@@ -92,7 +92,7 @@ const getCategoryIdBySlug = async (categorySlug: string): Promise<string> => {
 const getBlogByCategorySlug = async (categorySlug: string): Promise<PostModel[]> => {
   const categoryId = await getCategoryIdBySlug(categorySlug);
 
-  const res = await graphQLClient.query({
+  const res = await buildGraphQLClient().query({
     query: buildGetPostsByCategoryIds([categoryId])
   });
   return res.data.posts.nodes.map(mapGraphQlModelToPostModel);

@@ -1,4 +1,4 @@
-import graphQLClient from '@/infrastructure/graphQL/graphql-client';
+import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
 import buildGetBlogCategoryIdsQuery from '@/infrastructure/graphQL/queries/categories/get-blog-category-ids';
 import buildGetPostsByCategoryIds from '@/infrastructure/graphQL/queries/posts/get-posts-by-category-ids';
 import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
@@ -6,7 +6,7 @@ import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
 export async function GET(req: Request) {
   try {
     const blogCategoryIds = await getBlogCategoryIds();
-    const { data } = await graphQLClient.query({
+    const { data } = await buildGraphQLClient().query({
       query: buildGetPostsByCategoryIds(blogCategoryIds),
       fetchPolicy: 'no-cache'
     });
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
 
 const getBlogCategoryIds = async (): Promise<string[]> => {
   try {
-    const { data } = await graphQLClient.query({
+    const { data } = await buildGraphQLClient().query({
       query: buildGetBlogCategoryIdsQuery(),
       fetchPolicy: 'no-cache'
     });

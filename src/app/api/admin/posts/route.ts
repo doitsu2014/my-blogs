@@ -1,4 +1,4 @@
-import graphQLClient from '@/infrastructure/graphQL/graphql-client';
+import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
 import buildGetPostsQuery from '@/infrastructure/graphQL/queries/posts/get-posts';
 import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
 import { buildHeader } from '@/infrastructure/utilities.auth';
@@ -9,7 +9,7 @@ const apiUrl = process.env.MY_CMS_API_URL;
 
 export async function GET(req: Request) {
   try {
-    const { data } = await graphQLClient.query({
+    const { data } = await buildGraphQLClient().query({
       query: buildGetPostsQuery(),
       fetchPolicy: 'no-cache'
     });

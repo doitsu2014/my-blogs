@@ -1,7 +1,7 @@
 import Loading from './loading';
 import { Suspense } from 'react';
 import { CategoryModel } from '@/domains/category';
-import graphQLClient from '@/infrastructure/graphQL/graphql-client';
+import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
 import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
 import buildGetBlogCategoriesQuery from '@/infrastructure/graphQL/queries/categories/get-blog-categories';
 import Navbar from './components/navbar';
@@ -28,9 +28,20 @@ export default async function RootLayout({
 }
 
 const getCategories = async () => {
-  const res = await graphQLClient.query({
-    query: buildGetBlogCategoriesQuery(),
-    fetchPolicy: 'no-cache'
-  });
-  return res.data.categories.nodes.map(mapGraphQlModelToCategoryModel);
+  try {
+    const res = await buildGraphQLClient().query({
+      query: buildGetBlogCategoriesQuery(),
+      fetchPolicy: 'no-cache'
+    });
+
+    if (res.errors) {
+      console.error(res.errors);
+      return [];
+    } else {
+      return res.data.categories.nodes.map(mapGraphQlModelToCategoryModel);
+    }
+  } catch (ex) {
+    console.error(ex);
+    return [];
+  }
 };

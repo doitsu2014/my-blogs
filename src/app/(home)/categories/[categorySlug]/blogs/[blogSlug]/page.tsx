@@ -1,5 +1,5 @@
 import { PostModel } from '@/domains/post';
-import graphQLClient from '@/infrastructure/graphQL/graphql-client';
+import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
 import buildGetPostBySlugQuery from '@/infrastructure/graphQL/queries/posts/get-post-by-slug';
 import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
 import { Metadata } from 'next';
@@ -46,7 +46,7 @@ export default async function BlogDetailPage({
 }
 
 const getBlogBySlug = async (blogSlug: string): Promise<PostModel> => {
-  const res = await graphQLClient.query({
+  const res = await buildGraphQLClient().query({
     query: buildGetPostBySlugQuery(blogSlug),
     fetchPolicy: 'no-cache'
   });

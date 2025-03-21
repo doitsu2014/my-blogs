@@ -1,4 +1,4 @@
-import graphQLClient from '@/infrastructure/graphQL/graphql-client';
+import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
 import buildGetCategoryByIdQuery from '@/infrastructure/graphQL/queries/categories/get-categories-by-id';
 import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
 import { buildHeader } from '@/infrastructure/utilities.auth';
@@ -7,7 +7,7 @@ export const GET = async (request: Request, { params }: { params: Promise<{ id: 
   const id = (await params).id;
 
   try {
-    const { data } = await graphQLClient.query({
+    const { data } = await buildGraphQLClient().query({
       query: buildGetCategoryByIdQuery(id),
       fetchPolicy: 'no-cache'
     });

@@ -1,5 +1,5 @@
 import { CategoryTypeEnum } from '@/domains/category';
-import graphQLClient from '@/infrastructure/graphQL/graphql-client';
+import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
 import buildGetCategoriesQuery from '@/infrastructure/graphQL/queries/categories/get-categories';
 import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
 import { buildHeader } from '@/infrastructure/utilities.auth';
@@ -53,7 +53,7 @@ export async function PUT(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const { data } = await graphQLClient.query({
+    const { data } = await buildGraphQLClient().query({
       query: buildGetCategoriesQuery(),
       fetchPolicy: 'no-cache'
     });
