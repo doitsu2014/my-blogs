@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import MultiChipInput, { getRandomColor } from '../components/inputs/multi-chip-input';
 
 import dynamic from 'next/dynamic';
+import { CategoryModel } from '@/domains/category';
 const RichTextEditor = dynamic(() => import('../components/inputs/rich-text-editor'), {
   ssr: false
 });
@@ -14,6 +15,7 @@ export default function BlogForm({ id }: { id?: string }) {
   const [title, setTitle] = useState('');
   const [previewContent, setPreviewContent] = useState('');
   const [content, setContent] = useState('');
+  const [originalContent, setOriginalContent] = useState('');
   const [thumbnailPaths, setThumbnailPaths] = useState<string[]>([]);
   const [slug, setSlug] = useState('');
   const [published, setPublished] = useState(false);
@@ -21,6 +23,8 @@ export default function BlogForm({ id }: { id?: string }) {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState<{ label: string; color: string }[]>([]);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [categories, setCategories] = useState<CategoryModel[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
 
   useEffect(() => {
     if (id) {
@@ -33,6 +37,7 @@ export default function BlogForm({ id }: { id?: string }) {
           setTitle(data.title);
           setPreviewContent(data.previewContent);
           setContent(data.content);
+          setOriginalContent(data.content);
           setThumbnailPaths(data.thumbnailPaths);
           setSlug(data.slug);
           setPublished(data.published);
@@ -43,6 +48,7 @@ export default function BlogForm({ id }: { id?: string }) {
               color: getRandomColor()
             }))
           );
+          setSelectedCategoryId(data.categoryId); // Set the category ID
         }
         setLoading(false);
       };
@@ -61,6 +67,22 @@ export default function BlogForm({ id }: { id?: string }) {
     }
   }, [id]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/admin/categories/blogs', { cache: 'no-store' });
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
@@ -74,7 +96,8 @@ export default function BlogForm({ id }: { id?: string }) {
       slug,
       published,
       rowVersion,
-      tagNames: tags.map((tag) => tag.label)
+      tagNames: tags.map((tag) => tag.label),
+      categoryId: selectedCategoryId // Include selected categoryId
     };
 
     const method = id ? 'PUT' : 'POST';
@@ -155,6 +178,25 @@ export default function BlogForm({ id }: { id?: string }) {
               />
             </label>
             <label className="form-control w-full">
+              <span className="label-text">Categories</span>
+              <select
+                className="select select-bordered w-full"
+                disabled={loading || categories.length === 0}
+                name="category"
+                required
+                value={selectedCategoryId}
+                onChange={(e) => setSelectedCategoryId(e.target.value)}>
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.displayName}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="form-control w-full">
               <span className="label-text">Tags</span>
               <MultiChipInput
                 chips={tags}
@@ -183,15 +225,13 @@ export default function BlogForm({ id }: { id?: string }) {
               type="button"
               className="btn btn-secondary"
               onClick={() => setIsPreviewModalOpen(true)}
-              disabled={loading}
-            >
+              disabled={loading}>
               Preview Content
             </button>
             <div className="form-control w-full">
               <RichTextEditor
-                defaultValue={content}
+                defaultValue={originalContent}
                 onTextChange={(e) => {
-                  console.log(e);
                   setContent(e);
                 }}
                 onSelectionChange={() => {}}
@@ -211,8 +251,7 @@ export default function BlogForm({ id }: { id?: string }) {
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-error"
-                onClick={() => setIsPreviewModalOpen(false)}
-              >
+                onClick={() => setIsPreviewModalOpen(false)}>
                 ✕
               </button>
             </div>
@@ -223,8 +262,7 @@ export default function BlogForm({ id }: { id?: string }) {
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={() => setIsPreviewModalOpen(false)}
-              >
+                onClick={() => setIsPreviewModalOpen(false)}>
                 Close
               </button>
             </div>
