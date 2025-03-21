@@ -1,8 +1,7 @@
-
 import graphQLClient from '@/infrastructure/graphQL/graphql-client';
 import buildGetBlogCategoryIdsQuery from '@/infrastructure/graphQL/queries/categories/get-blog-category-ids';
 import buildGetBlogsQuery from '@/infrastructure/graphQL/queries/posts/get-blogs';
-import { mapGraphQlModelToCategoryModel, mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
+import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
 
 export async function GET(req: Request) {
   try {
@@ -24,11 +23,9 @@ const getBlogCategoryIds = async (): Promise<string[]> => {
       query: buildGetBlogCategoryIdsQuery(),
       fetchPolicy: 'no-cache'
     });
-    return (data?.categories?.nodes || [])
-    .map((category: {id: string}) => category.id);
+    return (data?.categories?.nodes || []).map((category: { id: string }) => category.id);
   } catch (error) {
     console.error('Error fetching blog category ids:', error);
-    return ([]);
+    return [];
   }
-   
-}
+};

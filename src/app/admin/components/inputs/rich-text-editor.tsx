@@ -14,7 +14,7 @@ Quill.register('modules/toggleFullscreen', QuillToggleFullscreenButton);
 
 interface RichTextEditorProps {
   readOnly?: boolean;
-  defaultValue: any;
+  defaultValue?: string; // Keep value prop for controlled behavior
   onTextChange?: (...args: any[]) => void;
   onSelectionChange?: (...args: any[]) => void;
   className?: string; // Add className prop for styling
@@ -23,14 +23,13 @@ interface RichTextEditorProps {
 // Editor is an uncontrolled React component
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
   readOnly,
-  defaultValue,
+  defaultValue: defaultValue, // Destructure value prop
   onTextChange,
   onSelectionChange,
   className
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef<Quill | null>(null);
-  const defaultValueRef = useRef(defaultValue);
   const onTextChangeRef = useRef(onTextChange);
   const onSelectionChangeRef = useRef(onSelectionChange);
 
@@ -44,6 +43,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       editorRef.current?.enable(!readOnly);
     }
   }, [readOnly]);
+
+  useEffect(() => {
+    if (editorRef.current && defaultValue !== undefined) {
+      if (editorRef.current.root.innerHTML !== defaultValue) {
+        editorRef.current.root.innerHTML = defaultValue; // Update the editor's content for value
+      }
+    }
+  }, [defaultValue]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -106,17 +113,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
     });
 
-    // Add TailwindCSS typography styles to the editor
-    // const editorElement = editorContainer.querySelector('.ql-editor');
-    // if (editorElement) {
-    //   editorElement.classList.add('prose', 'prose-sm', 'sm:prose-base', 'lg:prose-lg');
-    // }
-
     editorRef.current = quill;
-
-    if (defaultValueRef.current) {
-      quill.setContents(defaultValueRef.current);
-    }
 
     quill.on(Quill.events.TEXT_CHANGE, (...args) => {
       const finalText = quill.root.innerHTML; // Collect final text content

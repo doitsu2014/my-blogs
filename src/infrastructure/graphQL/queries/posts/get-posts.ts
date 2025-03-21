@@ -1,13 +1,9 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-export default function buildGetBlogsQuery(blogCategories: string[]) {
+export default function buildGetPostsQuery() {
   return gql`
     query GetBlogs {
-      posts(filters: {
-        categoryId: {
-          is_in: ${JSON.stringify(blogCategories)} 
-        }
-      }) {
+      posts {
         nodes {
           id,
           title,
@@ -38,4 +34,4 @@ export default function buildGetBlogsQuery(blogCategories: string[]) {
         }
       }
     }`;
-} 
+}
