@@ -1,5 +1,8 @@
 # syntax=docker.io/docker/dockerfile:1
 
+# Accept NODE_ENV as a build argument
+ARG NODE_ENV=development
+
 FROM node:18-alpine AS base
 
 # Install dependencies only when needed
@@ -29,9 +32,6 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-# Accept NODE_ENV as a build argument
-ARG NODE_ENV=development
-ENV NODE_ENV=$NODE_ENV
 
 RUN \
     if [ -f yarn.lock ]; then yarn run build; \
@@ -45,7 +45,8 @@ FROM base AS runner
 WORKDIR /app
 
 
-ENV NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
+
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
