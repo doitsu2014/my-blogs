@@ -21,7 +21,13 @@ const nextConfig: NextConfig = {
       }
     ];
   },
-  output: 'standalone'
+  output: 'standalone',
+  logging: {
+    fetches: {
+      fullUrl: true,
+      hmrRefreshes: true
+    },
+  }
 };
 
 export default nextConfig;

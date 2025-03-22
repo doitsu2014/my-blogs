@@ -21,7 +21,7 @@ export default middleware((req) => {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  const userRoles: string[] = auth.user.roles || [];
+  const userRoles: string[] = auth?.user?.roles || [];
 
   // Check required roles for the path
   for (const [route, allowedRoles] of Object.entries(routePermissions)) {

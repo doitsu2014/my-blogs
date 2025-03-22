@@ -2,7 +2,10 @@ import NextAuth from 'next-auth';
 import Keycloak from 'next-auth/providers/keycloak';
 import * as jwt from 'jsonwebtoken';
 
+const trustHost = (process.env.AUTH_TRUST_HOST || '') === 'true' ? true : false;
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost,
   providers: [
     Keycloak({
       clientId: process.env.AUTH_KEYCLOAK_ID ,
