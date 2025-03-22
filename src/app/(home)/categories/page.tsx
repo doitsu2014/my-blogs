@@ -5,6 +5,8 @@ import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utiliti
 import React from 'react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 const getCategories = async (): Promise<CategoryModel[]> => {
   try {
     const res = await buildGraphQLClient().query({
