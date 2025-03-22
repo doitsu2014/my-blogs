@@ -3,6 +3,8 @@ name: Release image of my-blogs
 on:
     workflow_dispatch:
     push:
+        branches:
+            - main
         tags:
             - 'v*.*.*'
 
