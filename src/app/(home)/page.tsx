@@ -1,4 +1,32 @@
 import Image from 'next/image';
+import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Home | ducth.dev',
+  description: 'Welcome to ducth.dev! Explore insights, tutorials, and discussions on technology and software engineering.',
+  openGraph: {
+    title: 'Home | ducth.dev',
+    description: 'Explore insights, tutorials, and discussions on technology and software engineering.',
+    url: 'https://ducth.dev',
+    images: [
+      {
+        url: '/images/duc-tran.png',
+        width: 640,
+        height: 1080,
+        alt: 'Doitsu Technology Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Home | ducth.dev',
+    description: 'Explore insights, tutorials, and discussions on technology and software engineering.',
+    images: ['/images/duc-tran.png'],
+  },
+};
 
 export default function Home() {
   return (
@@ -24,7 +52,10 @@ export default function Home() {
           on technology and software engineering. Whether you're a seasoned developer or just
           starting out, let's learn and grow together in the world of tech.
         </p>
-        <button className="btn btn-primary mt-6">Explore Articles</button>
+
+        <Link href={`/categories`} className="btn btn-primary mt-6">
+          Explore Articles
+        </Link>
       </div>
     </div>
   );
