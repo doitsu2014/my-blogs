@@ -30,7 +30,7 @@ COPY . .
 # ENV NEXT_TELEMETRY_DISABLED=1
 
 # Accept NODE_ENV as a build argument
-ARG NODE_ENV=production
+ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
 
 RUN \
