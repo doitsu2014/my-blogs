@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1
 
 # Accept NODE_ENV as a build argument
-ARG NODE_ENV=development
+ARG NODE_ENV=production
 
 FROM node:18-alpine AS base
 
@@ -45,7 +45,7 @@ FROM base AS runner
 WORKDIR /app
 
 # Accept NODE_ENV as a build argument
-ARG NODE_ENV=development
+ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
@@ -64,7 +64,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 
 EXPOSE 3000
-
 ENV PORT=3000
 
 # server.js is created by next build from the standalone output
