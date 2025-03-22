@@ -44,7 +44,8 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
-
+# Accept NODE_ENV as a build argument
+ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
