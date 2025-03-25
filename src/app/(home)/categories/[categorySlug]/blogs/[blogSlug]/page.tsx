@@ -6,6 +6,9 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react'; // Importing an icon from lucide-react
 
+import 'quill/dist/quill.snow.css';
+import 'highlight.js/styles/github-dark.min.css';
+
 export const metadata: Metadata = {
   title: 'My Blogs - Blog Detail Page',
   description: 'There is my blogs website, and the page is blog detail'
@@ -14,7 +17,7 @@ export const metadata: Metadata = {
 export default async function BlogDetailPage({
   params
 }: {
-  params: Promise<{ categorySlug: string; blogSlug: string }>
+  params: Promise<{ categorySlug: string; blogSlug: string }>;
 }) {
   const { categorySlug, blogSlug } = await params;
   const blog = await getBlogBySlug(blogSlug);
@@ -23,8 +26,9 @@ export default async function BlogDetailPage({
     <div className="flex flex-col items-center min-h-screen bg-base-100 text-base-content p-4">
       <div className="w-full max-w-3xl">
         <h1 className="text-4xl font-bold mb-2">{blog.title}</h1>
+
         <div
-          className="prose max-w-none w-full"
+          className="ql-editor !prose max-w-none w-full "
           dangerouslySetInnerHTML={{ __html: blog.content }}></div>
         <div className="flex justify-between items-center w-full mt-4 text-sm">
           <p className="border border-base-400 rounded p-2">By {blog.createdBy}</p>

@@ -94,22 +94,26 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           matchVisual: false // Ensures \n is not added during copy/paste
         },
         toolbar: [
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
           ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+          [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
           ['blockquote', 'code-block'],
           ['link', 'image', 'video', 'formula'],
           [{ header: 1 }, { header: 2 }], // custom button values
           [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
           [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
-          [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
           [{ direction: 'rtl' }], // text direction
-          [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
           [{ color: [] }, { background: [] }], // dropdown with defaults from theme
           [{ align: [] }],
           ['clean'] // remove formatting button
         ]
       }
     });
+
+    // Handlers can also be added post initialization
+    const toolbar: any = quill.getModule('toolbar');
+    toolbar.addHandler('image', handleImageUpload);
 
     editorRef.current = quill;
 
@@ -127,6 +131,39 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       container.innerHTML = '';
     };
   }, []);
+
+  const handleImageUpload = () => {
+    const quill = editorRef.current;
+
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+          const response = await fetch('/api/admin/media/images', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!response.ok) {
+            throw new Error('Image upload failed');
+          }
+
+          const json = await response.json();
+          const range = quill?.getSelection();
+          quill?.insertEmbed(range?.index || 0, 'image', json.data.imgproxy_url);
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
+      }
+    };
+    input.click();
+  };
 
   return <div ref={containerRef} className={className}></div>;
 };
