@@ -225,7 +225,7 @@ export default function BlogForm({ id }: { id?: string }) {
 
                   <div className="form-control mt-4">
                     <div className="label">
-                      <span className="label-text font-medium">Published Status</span>
+                      <span className="label-text font-medium">Published Status: </span>
                     </div>
                     <label className="cursor-pointer label justify-start gap-3 bg-base-100 rounded-md p-3">
                       <input

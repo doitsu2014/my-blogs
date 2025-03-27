@@ -8,9 +8,11 @@ import 'highlight.js/styles/github-dark.min.css';
 import '@/app/admin/components/inputs/rich-text-editor.css';
 import QuillToggleFullscreenButton from 'quill-toggle-fullscreen-button';
 import htmlEditButton from 'quill-html-edit-button';
+import QuillResizeImage from 'quill-resize-image';
 
 Quill.register('modules/htmlEditButton', htmlEditButton);
 Quill.register('modules/toggleFullscreen', QuillToggleFullscreenButton);
+Quill.register("modules/resize", QuillResizeImage);
 
 interface RichTextEditorProps {
   readOnly?: boolean;
@@ -59,6 +61,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     const quill = new Quill(editorContainer, {
       theme: 'snow',
       modules: {
+        resize: {
+          locale: {},
+        },
         toggleFullscreen: {
           buttonTitle: 'Toggle fullscreen',
           buttonHTML: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
@@ -95,20 +100,27 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         },
         toolbar: [
           [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+          [{ align: [
+            'center',
+            'right',
+            'justify'
+          ] }],
           ['bold', 'italic', 'underline', 'strike'], // toggled buttons
           [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
           ['blockquote', 'code-block'],
           ['link', 'image', 'video', 'formula'],
-          [{ header: 1 }, { header: 2 }], // custom button values
           [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
-          [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
-          [{ direction: 'rtl' }], // text direction
-          [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-          [{ align: [] }],
           ['clean'] // remove formatting button
+
+          // [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+          // [{ direction: 'rtl' }], // text direction
+          // [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+          // [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
         ]
-      }
+      },
+      // formats: [
+      //   'image',
+      // ],
     });
 
     // Handlers can also be added post initialization
