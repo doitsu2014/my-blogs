@@ -1,4 +1,5 @@
 import { auth as middleware } from '@/auth';
+import { signOut } from 'next-auth/react';
 import { NextResponse } from 'next/server';
 
 // 1. Specify protected and public routes
@@ -16,13 +17,21 @@ export default middleware((req) => {
     return NextResponse.next();
   }
 
+  // Logic to check for auth in the middleware
   const auth = req.auth;
   if (!auth) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  const userRoles: string[] = auth?.user?.roles || [];
+  // Logic to check expired token
+  const expires = auth?.accessTokenExp;
+  if (expires && new Date(expires) <= new Date()) {
+    console.info('Token expired, redirecting to login');
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
 
+  // Logic to check user roles
+  const userRoles: string[] = auth?.user?.roles || [];
   // Check required roles for the path
   for (const [route, allowedRoles] of Object.entries(routePermissions)) {
     if (path.startsWith(route)) {

@@ -8,7 +8,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost,
   providers: [
     Keycloak({
-      clientId: process.env.AUTH_KEYCLOAK_ID ,
+      clientId: process.env.AUTH_KEYCLOAK_ID,
       clientSecret: process.env.AUTH_KEYCLOAK_SECRET,
       issuer: process.env.AUTH_KEYCLOAK_ISSUER,
       authorization: {
@@ -37,6 +37,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.picture = accessToken.avatar;
         token.accessToken = account.access_token || '';
         token.refreshToken = account.refresh_token || '';
+        // Need to convert to milliseconds
+        token.accessTokenExp = accessToken.exp * 1000;
       }
 
       return token;
@@ -46,6 +48,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.email = token.email || '';
       session.user.image = token.picture;
       session.accessToken = token.accessToken;
+      session.refreshToken = token.refreshToken;
+      session.accessTokenExp = token.accessTokenExp;
+
       return session;
     }
   }

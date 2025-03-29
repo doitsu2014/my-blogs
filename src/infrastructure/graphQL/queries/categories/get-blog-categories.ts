@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export default function buildGetBlogCategoriesQuery() {
   return gql`
     query GetBlogCategoryIds {
-      categories(filters: { categoryType: { eq: BLOG }, parentId: { is_null: "true" } }) {
+      categories(filters: { categoryType: { eq: Blog }, parentId: { is_null: "true" } }) {
         nodes {
           id
           displayName

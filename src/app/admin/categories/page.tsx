@@ -136,9 +136,9 @@ export default function AdminCategoriesListPage() {
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
         >
-          <option value="">All Types</option>
-          <option value="BLOG">BLOG</option>
-          <option value="OTHER">OTHER</option>
+          <option value="">All</option>
+          <option value="Blog">Blog</option>
+          <option value="Other">Other</option>
         </select>
       </div>
 

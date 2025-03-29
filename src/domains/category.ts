@@ -1,8 +1,8 @@
 import { TagModel } from './tag';
 
 export enum CategoryTypeEnum {
-  Blog = 'BLOG',
-  Other = 'OTHER'
+  Blog = 'Blog',
+  Other = 'Other'
 }
 
 export interface CategoryModel {
