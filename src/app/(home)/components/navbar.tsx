@@ -1,10 +1,7 @@
 import Link from 'next/link';
 import NavbarItem from './navbar-item';
 import Image from 'next/image';
-import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
-import buildGetBlogCategoriesQuery from '@/infrastructure/graphQL/queries/categories/get-blog-categories';
-import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
-import { CategoryModel } from '@/domains/category';
+import { getCategories } from '../server-actions/category.actions';
 
 export default async function Navbar() {
   const categories = await getCategories();
@@ -45,22 +42,3 @@ export default async function Navbar() {
     </div>
   );
 }
-
-const getCategories = async (): Promise<CategoryModel[]> => {
-  try {
-    const res = await buildGraphQLClient().query({
-      query: buildGetBlogCategoriesQuery(),
-      fetchPolicy: 'no-cache'
-    });
-
-    if (res.errors) {
-      console.error(res.errors);
-      return [];
-    } else {
-      return res.data.categories.nodes.map(mapGraphQlModelToCategoryModel);
-    }
-  } catch (ex) {
-    console.error(ex);
-    return [];
-  }
-};
