@@ -3,7 +3,6 @@ import { signInAction } from './sign-in.form-action';
 
 export default function SignIn() {
   const t = useTranslations('components.signInKeycloak')
-
   return (
     <form
       action={signInAction}

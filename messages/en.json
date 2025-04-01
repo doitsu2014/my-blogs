@@ -3,6 +3,10 @@
     "title": "Login",
     "subtitle": "Sign in to access the dashboard"
   },
+  "home": {
+    "introduction": "Hi, I’m Duc! This blog is your go-to destination for insights, tutorials, and discussions on technology and software engineering. Whether you're a seasoned developer or juststarting out, let's learn and grow together in the world of tech.",
+    "exploreArticles": "Explore Articles"
+  },
   "components": {
     "signInKeycloak": {
       "title": "Sign in with Keycloak",

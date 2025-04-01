@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { useTranslations } from 'next-intl';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +35,7 @@ export default function Home({
   params: { locale: string };
 }) {
   const { locale } = params;
-  console.log('locale', locale);
+  const t = useTranslations('home');
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -55,13 +56,11 @@ export default function Home({
           Welcome to <span className="text-secondary">ducth.dev</span>!
         </h1>
         <p className="mt-4 text-lg text-base-content">
-          Hi, I’m Duc! This blog is your go-to destination for insights, tutorials, and discussions
-          on technology and software engineering. Whether you're a seasoned developer or just
-          starting out, let's learn and grow together in the world of tech.
+          {t('introduction')}
         </p>
 
         <Link href={`/categories`} className="btn btn-primary mt-6">
-          Explore Articles
+          {t('exploreArticles')}
         </Link>
       </div>
     </div>

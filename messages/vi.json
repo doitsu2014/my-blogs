@@ -3,6 +3,10 @@
     "title": "Đăng nhập",
     "subtitle": "Đăng nhập để truy cập bảng điều khiển"
   },
+  "home": {
+    "introduction": "Chào bạn, mình là Đức! Blog này là nơi lý tưởng để bạn tìm hiểu về công nghệ và kỹ thuật phần mềm. Dù bạn là một lập trình viên dày dạn kinh nghiệm hay mới bắt đầu, hãy cùng nhau học hỏi và phát triển trong thế giới công nghệ.",
+    "exploreArticles": "Khám phá các bài viết"
+  },
   "components": {
     "signInKeycloak": {
       "title": "Đăng nhập với Keycloak",
