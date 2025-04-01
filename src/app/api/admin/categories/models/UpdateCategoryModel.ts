@@ -1,24 +1,10 @@
-import { CategoryTypeEnum } from '@/domains/category';
+import { CategoryTranslationModel, CategoryTypeEnum } from '@/domains/category';
 
-
-export class UpdateCategoryModel {
+export interface UpdateCategoryModel {
   id: string;
   displayName: string;
   categoryType: CategoryTypeEnum;
   tagNames: string[];
   rowVersion: number;
-
-  constructor(
-    id: string,
-    displayName: string,
-    categoryType: CategoryTypeEnum,
-    tagNames: string[],
-    rowVersion: number
-  ) {
-    this.id = id;
-    this.displayName = displayName;
-    this.categoryType = categoryType;
-    this.tagNames = tagNames;
-    this.rowVersion = rowVersion;
-  }
+  categoryTranslations: CategoryTranslationModel[];
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { Home } from 'lucide-react';
-import Breadcrumbs from '@/app/admin/components/my-breadcrumbs';
+import Breadcrumbs from '@/app/[locale]/admin/components/my-breadcrumbs';
 import CategoryForm from '../category-form';
 
 export default function AdminCreateCategoryPage() {

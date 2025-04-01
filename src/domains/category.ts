@@ -15,4 +15,11 @@ export interface CategoryModel {
   createdAt: string;
   categoryTags: TagModel[];
   rowVersion: number;
+  categoryTranslations: CategoryTranslationModel[];
+}
+
+export interface CategoryTranslationModel {
+  id: string;
+  languageCode: string;
+  displayName: string;
 }

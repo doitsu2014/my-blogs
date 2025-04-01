@@ -15,6 +15,8 @@ export default function CategoryForm({ id }: { id?: string }) {
   const [categoryTags, setCategoryTags] = useState<{ label: string; color: string }[]>([]);
   const [rowVersion, setRowVersion] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [categoryTranslations, setCategoryTranslations] = useState<{ lang: string; displayName: string }[]>([]);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -57,7 +59,8 @@ export default function CategoryForm({ id }: { id?: string }) {
         displayName,
         categoryType,
         tagNames: categoryTags.map((tag) => tag.label),
-        rowVersion
+        rowVersion,
+        categoryTranslations: []
       };
 
       const updateResponse = await fetch(`/api/admin/categories`, {
@@ -79,7 +82,8 @@ export default function CategoryForm({ id }: { id?: string }) {
       const categoryData: CreateCategoryModel = {
         displayName,
         categoryType,
-        tagNames: categoryTags.map((tag) => tag.label)
+        tagNames: categoryTags.map((tag) => tag.label),
+        categoryTranslations: []
       };
 
       const createResponse = await fetch(`/api/admin/categories`, {
@@ -99,6 +103,21 @@ export default function CategoryForm({ id }: { id?: string }) {
     }
 
     return 'done';
+  };
+
+  const addTranslationTab = () => {
+    setCategoryTranslations([...categoryTranslations, { lang: '', displayName: '' }]);
+  };
+
+  const updateTranslation = (index: number, field: 'lang' | 'displayName', value: string) => {
+    const updatedTranslations = [...categoryTranslations];
+    updatedTranslations[index][field] = value;
+    setCategoryTranslations(updatedTranslations);
+  };
+
+  const handleTabClick = (index: number) => {
+    console.log(index);
+    setActiveTab(index);
   };
 
   return (
@@ -138,11 +157,71 @@ export default function CategoryForm({ id }: { id?: string }) {
           setChips={(chips: { label: string; color: string }[]) => {
             setCategoryTags(chips.map((chip) => ({ label: chip.label.toLowerCase(), color: chip.color })));
           }}
-          className="flex flex-wrap border border-base-400 rounded-md p-2"
+          className="flex flex-wrap border border-base-300 rounded-md p-2"
           loading={loading}
           formControlName="categoryTags"
         />
       </label>
+      <div className="form-control w-full">
+        <span className="label-text">Category Translations</span>
+        <div className="tabs">
+          <div className="tabs-box">
+            {categoryTranslations.map((translation, index) => (
+              <button
+                key={index}
+                className={`tab ${activeTab === index ? 'tab-active' : ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleTabClick(index);
+                }}
+              >
+                {translation.lang || 'New Tab'}
+              </button>
+            ))}
+            <button
+              type="button"
+              className="btn btn-sm btn-outline ml-2"
+              onClick={addTranslationTab}
+            >
+              + Add Tab
+            </button>
+          </div>
+          <div className="mt-2">
+            {categoryTranslations.map((translation, index) => (
+              <div
+                key={index}
+                className={`p-4 border border-base-300 rounded-md ${activeTab === index ? '' : 'hidden'}`}
+              >
+                <label className="form-control w-full">
+                  <span className="label-text">Language Code</span>
+                  <input
+                    type="text"
+                    value={translation.lang}
+                    onChange={(e) => updateTranslation(index, 'lang', e.target.value)}
+                    className="input input-bordered w-full"
+                    placeholder="Enter language code (e.g., vi, cn)"
+                    required
+                    disabled={loading}
+                  />
+                </label>
+                <label className="form-control w-full mt-4">
+                  <span className="label-text">Display Name</span>
+                  <input
+                    type="text"
+                    value={translation.displayName}
+                    onChange={(e) => updateTranslation(index, 'displayName', e.target.value)}
+                    className="input input-bordered w-full"
+                    placeholder="Enter translated display name"
+                    required
+                    disabled={loading}
+                  />
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <input type="hidden" name="categoryTranslations" value={JSON.stringify(categoryTranslations)} />
       <input type="hidden" name="rowVersion" value={rowVersion} />
       <input type="hidden" name="id" value={id} />
       <button type="submit" className="btn btn-primary" disabled={loading}>

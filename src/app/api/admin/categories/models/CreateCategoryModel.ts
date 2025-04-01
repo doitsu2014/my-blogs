@@ -1,14 +1,8 @@
-import { CategoryTypeEnum } from '@/domains/category';
+import { CategoryTranslationModel, CategoryTypeEnum } from '@/domains/category';
 
-
-export class CreateCategoryModel {
+export interface CreateCategoryModel {
   displayName: string;
   categoryType: CategoryTypeEnum;
   tagNames: string[];
-
-  constructor(displayName: string, categoryType: CategoryTypeEnum, tagNames: string[]) {
-    this.displayName = displayName;
-    this.categoryType = categoryType;
-    this.tagNames = tagNames;
-  }
+  categoryTranslations: {languageCode: string, displayName: string}[];
 }
