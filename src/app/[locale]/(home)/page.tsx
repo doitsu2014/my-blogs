@@ -28,7 +28,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default function Home({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const { locale } = params;
+  console.log('locale', locale);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="text-center">

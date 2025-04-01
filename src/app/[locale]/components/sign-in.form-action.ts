@@ -6,7 +6,7 @@ export async function signInAction(formData: FormData) {
   const host = process.env.PROXY_HOST || '';
 
   return await signIn('keycloak', {
-    redirect: true,
+    // redirect: true,
     redirectTo: `${host}/admin`,
   });
 }

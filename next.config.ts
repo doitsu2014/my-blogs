@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   webpack: (config, options) => {
     config.module.rules.push({
       test: /\.(graphql|gql)/,
@@ -14,11 +14,6 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       // Basic redirect
-      {
-        source: '/admin',
-        destination: '/admin/dashboard',
-        permanent: true
-      }
     ];
   },
   output: 'standalone',
@@ -26,8 +21,10 @@ const nextConfig: NextConfig = {
     fetches: {
       fullUrl: true,
       hmrRefreshes: true
-    },
+    }
   }
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin();
+export default withNextIntl(nextConfig);
+// export default nextConfig;

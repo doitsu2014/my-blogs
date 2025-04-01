@@ -1,5 +1,5 @@
 import { Home, BookOpen, FolderTree, TrendingUp, Users, Eye } from 'lucide-react';
-import Breadcrumbs from '../components/my-breadcrumbs';
+import Breadcrumbs from './components/my-breadcrumbs';
 
 export default async function AdminHomePage() {
   // Mock data - in a real app you would fetch this from your database

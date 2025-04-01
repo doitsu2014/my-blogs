@@ -5,7 +5,10 @@ import GoogleAnalytics from './components/google-analytics';
 import GoogleAdsense from './components/google-adsense';
 import Footer from './components/footer';
 
-export default function RootLayout({
+import { notFound } from 'next/navigation';
+import { NextIntlClientProvider, hasLocale } from 'next-intl';
+
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
@@ -20,5 +23,3 @@ export default function RootLayout({
     </>
   );
 }
-
-

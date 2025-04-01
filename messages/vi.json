@@ -1,0 +1,12 @@
+{
+  "login": {
+    "title": "Đăng nhập",
+    "subtitle": "Đăng nhập để truy cập bảng điều khiển"
+  },
+  "components": {
+    "signInKeycloak": {
+      "title": "Đăng nhập với Keycloak",
+      "subtitle": "Vui lòng đăng nhập để tiếp tục"
+    }
+  }
+}

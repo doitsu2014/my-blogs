@@ -1,0 +1,13 @@
+{
+  "login": {
+    "title": "Login",
+    "subtitle": "Sign in to access the dashboard"
+  },
+  "components": {
+    "signInKeycloak": {
+      "title": "Sign in with Keycloak",
+      "subtitle": "Please sign in to continue"
+    }
+  }
+}
+

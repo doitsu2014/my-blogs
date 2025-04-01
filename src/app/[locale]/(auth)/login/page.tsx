@@ -1,4 +1,4 @@
-import SignIn from '../../admin/components/sign-in';
+import SignIn from "../../components/sign-in";
 
 export default async function AuthLogin() {
   return (
