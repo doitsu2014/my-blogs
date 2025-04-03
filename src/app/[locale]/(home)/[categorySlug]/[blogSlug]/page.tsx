@@ -1,6 +1,8 @@
 import { PostModel } from '@/domains/post';
 import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
-import buildGetPostBySlugQuery from '@/infrastructure/graphQL/queries/posts/get-post-by-slug';
+import buildGetPostBySlugQuery, {
+  buildGetPostIdBySlugQuery
+} from '@/infrastructure/graphQL/queries/posts/get-post-by-slug';
 import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -9,6 +11,8 @@ import { ArrowLeft } from 'lucide-react'; // Importing an icon from lucide-react
 import 'quill/dist/quill.snow.css';
 import 'highlight.js/styles/github-dark.min.css';
 import { getHomePageCacheEnabled } from '@/infrastructure/utilities';
+import { getLocale } from 'next-intl/server';
+import { routing } from '@/i18n/routing';
 
 export const metadata: Metadata = {
   title: 'My Blogs - Blog Detail Page',
@@ -40,7 +44,14 @@ export default async function BlogDetailPage({
 }: {
   params: Promise<{ categorySlug: string; blogSlug: string }>;
 }) {
+  const locale = await getLocale(); // Assuming the locale is 'en' for this example
+  const isDefaultLocale = locale === routing.defaultLocale; // Replace with your actual default locale check
+
   const { categorySlug, blogSlug } = await params;
+  const postId = await (isDefaultLocale
+    ? getPostIdBySlug(blogSlug)
+    : getPostIdFromTranslationsBySlug(blogSlug));
+
   const blog = await getBlogBySlug(blogSlug);
 
   return (
@@ -69,6 +80,16 @@ export default async function BlogDetailPage({
     </div>
   );
 }
+
+const getPostIdBySlug = async (blogSlug: string): Promise<PostModel> => {
+  const res = await buildGraphQLClient().query({
+    // CURRENT
+    query: buildGetPostIdBySlugQuery(blogSlug),
+    fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache'
+  });
+
+  return res.data.posts.nodes.map(mapGraphQlModelToPostModel)[0];
+};
 
 const getBlogBySlug = async (blogSlug: string): Promise<PostModel> => {
   const res = await buildGraphQLClient().query({

@@ -6,7 +6,10 @@ import {
 import { Metadata } from 'next';
 import { BookOpenText } from 'lucide-react'; // Import the BookOpenText icon
 import { CategoryModel } from '@/domains/category';
-import { getPostsByCategoryId } from '../server-actions/post.actions';
+import {
+  getPostsByCategoryId,
+  getPostsWithTranslationsByCategoryId
+} from '../server-actions/post.actions';
 import { getLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import buildGetCategoryByIdQuery, {
@@ -41,7 +44,9 @@ export default async function CategoryDetailPage({
     : category?.categoryTranslations?.find((translation) => translation.languageCode === locale)
         ?.displayName;
 
-  const posts = await getPostsByCategoryId(categoryId);
+  const posts = isDefaultLocale
+    ? await getPostsByCategoryId(categoryId)
+    : await getPostsWithTranslationsByCategoryId(categoryId);
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 bg-base-100">
@@ -65,6 +70,18 @@ export default async function CategoryDetailPage({
               })
             : 'Unknown date';
 
+          const matchedTranslation = post.postTranslations?.find(
+            (translation) => translation.languageCode === locale
+          );
+
+          const postSlug = isDefaultLocale ? post.slug : matchedTranslation?.slug || post.slug;
+
+          const postTitle = isDefaultLocale ? post.title : matchedTranslation?.title || post.title;
+
+          const postPreviewContent = isDefaultLocale
+            ? post.previewContent
+            : matchedTranslation?.previewContent || post.previewContent;
+
           return (
             <li key={post.id}>
               {/* Add connecting line except for the last item */}
@@ -73,12 +90,12 @@ export default async function CategoryDetailPage({
               {/* Apply timeline-start only for even indexed posts */}
               {index % 2 === 0 && (
                 <div className="timeline-start timeline-box bg-base-200 hover:bg-base-300 transition-colors duration-300 shadow-xl p-4">
-                  <h2 className="font-bold text-lg text-primary">{post.title}</h2>
-                  <p className="text-base-content my-2">{post.previewContent}</p>
+                  <h2 className="font-bold text-lg text-primary">{postTitle}</h2>
+                  <p className="text-base-content my-2">{postPreviewContent}</p>
                   <div className="flex justify-between items-center flex-wrap gap-2 mt-2">
                     <span className="badge badge-secondary badge-outline">{createdDate}</span>
                     <a
-                      href={`/categories/${categorySlug}/blogs/${post.slug}`}
+                      href={`/${locale}/${categorySlug}/${postSlug}`}
                       className="btn btn-primary btn-sm">
                       Read More
                     </a>
@@ -101,12 +118,12 @@ export default async function CategoryDetailPage({
               {/* Apply timeline-end only for odd indexed posts */}
               {index % 2 === 1 && (
                 <div className="timeline-end timeline-box bg-base-200 hover:bg-base-300 transition-colors duration-300 shadow-xl p-4">
-                  <h2 className="font-bold text-lg text-accent">{post.title}</h2>
-                  <p className="text-base-content my-2">{post.previewContent}</p>
+                  <h2 className="font-bold text-lg text-accent">{postTitle}</h2>
+                  <p className="text-base-content my-2">{postPreviewContent}</p>
                   <div className="flex justify-between items-center flex-wrap gap-2 mt-2">
                     <span className="badge badge-primary badge-outline">{createdDate}</span>
                     <a
-                      href={`/categories/${categorySlug}/blogs/${post.slug}`}
+                      href={`/${locale}/${categorySlug}/${postSlug}`}
                       className="btn btn-secondary btn-sm">
                       Read More
                     </a>

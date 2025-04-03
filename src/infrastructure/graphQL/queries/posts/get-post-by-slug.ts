@@ -40,3 +40,33 @@ export default function buildGetPostBySlugQuery(slug: string) {
       }
     }`;
 }
+
+export function buildGetPostIdBySlugQuery(slug: string) {
+  return gql`
+    query GetBlogs {
+      posts(filters: {
+        slug: {
+          eq: "${slug}" 
+        }
+      }) {
+        nodes {
+          id
+        }
+      }
+    }`;
+}
+
+export function buildGetPostIdFromTranslationsBySlugQuery(slug: string) {
+  return gql`
+    query GetBlogsFromTranslations {
+      postTranslations(filters: {
+        slug: {
+          eq: "${slug}" 
+        }
+      }) {
+        nodes {
+          postId
+        }
+      }
+    }`;
+}
