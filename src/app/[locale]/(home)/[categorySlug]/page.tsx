@@ -1,20 +1,18 @@
-import { PostModel } from '@/domains/post';
 import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
-import buildGetCategoryBySlugs, {
+import {
   buildGetCategoryIdsBySlugs,
   buildGetCategoryIdsFromTranslationsBySlugs
 } from '@/infrastructure/graphQL/queries/categories/get-category-ids-by-slugs';
-import buildGetPostsByCategoryIds from '@/infrastructure/graphQL/queries/posts/get-posts-by-category-ids';
-import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
 import { Metadata } from 'next';
 import { BookOpenText } from 'lucide-react'; // Import the BookOpenText icon
 import { CategoryModel } from '@/domains/category';
-import { getPostsByCategoryId } from '../../server-actions/post.actions';
+import { getPostsByCategoryId } from '../server-actions/post.actions';
 import { getLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import buildGetCategoryByIdQuery, {
   buildGetCategoryWithTranslationsByIdQuery
 } from '@/infrastructure/graphQL/queries/categories/get-categories-by-id';
+import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
 
 export const metadata: Metadata = {
   title: 'My Blogs - Category Detail Page',
@@ -37,10 +35,12 @@ export default async function CategoryDetailPage({
   const category = isDefaultLocale
     ? await getCategoryById(categoryId)
     : await getCategoryWithTranslationsById(categoryId);
+
   const categoryDisplayName = isDefaultLocale
-    ? category.displayName
-    : category.categoryTranslations.find((translation) => translation.languageCode === locale)
-        ?.displayName;
+    ? category?.displayName
+    : category?.categoryTranslations?.find(
+        (translation) => translation.languageCode === locale
+      )?.displayName;
 
   const posts = await getPostsByCategoryId(categoryId);
 
@@ -146,9 +146,11 @@ const getCategoryById = async (categoryId: string): Promise<CategoryModel> => {
   return res.data.categories.nodes[0];
 };
 
-const getCategoryWithTranslationsById = async (categoryId: string): Promise<CategoryModel> => {
+const getCategoryWithTranslationsById = async (
+  categoryId: string
+): Promise<CategoryModel | undefined> => {
   const res = await buildGraphQLClient().query({
     query: buildGetCategoryWithTranslationsByIdQuery(categoryId)
   });
-  return res.data.categories.nodes[0];
+  return mapGraphQlModelToCategoryModel(res.data.categories.nodes[0]);
 };

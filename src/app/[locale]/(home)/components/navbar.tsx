@@ -2,14 +2,14 @@ import Link from 'next/link';
 import NavbarItem from './navbar-item';
 import Image from 'next/image';
 import { getCategories } from '../server-actions/category.actions';
-import { useLocale, useTranslations } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import { getLocale } from 'next-intl/server';
+import LanguageSwitcher from '../../components/language-switcher';
 
 export default async function Navbar() {
   const locale = await getLocale(); // Get the current locale
   const defaultLocale = routing.defaultLocale; // Assuming 'defaultLocale' is defined in your translations
-  const isDefaultLocale = locale === defaultLocale;
+  const isDefaultLocale = locale === defaultLocale; // Precompute the language state on the server
 
   const categories = await getCategories();
   const links = isDefaultLocale
@@ -31,7 +31,7 @@ export default async function Navbar() {
 
   return (
     <div className="navbar bg-base-100">
-      <div className="flex-1">
+      <div className="flex-none">
         <Link className="btn btn-ghost text-xl" href={`/${locale}/`}>
           <div className="w-10 rounded-full">
             <Image
@@ -45,17 +45,20 @@ export default async function Navbar() {
           Duc Tran
         </Link>
       </div>
-      <div className="flex-none">
+      <div className="flex-1 flex justify-center">
         <ul className="menu menu-horizontal px-1 space-x-1">
           {links.map((link) => (
             <li key={link.id}>
               <NavbarItem
-                slug={`/${locale}/categories/${link.slug}`}
+                slug={`/${locale}/${link.slug}`}
                 displayName={link.displayName}
                 key={link.id}></NavbarItem>
             </li>
           ))}
         </ul>
+      </div>
+      <div className="flex-none">
+        <LanguageSwitcher />
       </div>
     </div>
   );
