@@ -6,6 +6,7 @@ import React from 'react';
 import Link from 'next/link';
 import { getLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
+import { getHomePageCacheEnabled } from '@/infrastructure/utilities';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +14,7 @@ const getCategories = async (): Promise<CategoryModel[]> => {
   try {
     const res = await buildGraphQLClient().query({
       query: buildGetBlogCategoriesQuery(),
-      fetchPolicy: 'no-cache'
+      fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache'
     });
 
     if (res.errors) {

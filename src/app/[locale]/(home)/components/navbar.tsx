@@ -45,7 +45,38 @@ export default async function Navbar() {
           Duc Tran
         </Link>
       </div>
-      <div className="flex-1 flex justify-center">
+      {/* Mobile Menu Toggle */}
+      <div className="flex-1 lg:hidden">
+        <details className="dropdown">
+          <summary className="btn btn-ghost lg:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 5.25h16.5m-16.5 6h16.5m-16.5 6h16.5"
+              />
+            </svg>
+          </summary>
+          <ul className="dropdown-content menu mt-3 p-4 shadow-lg bg-primary text-primary-content rounded-lg border border-primary-focus min-w-40">
+            {links.map((link) => (
+              <li key={link.id}>
+                <NavbarItem
+                  slug={`/${locale}/${link.slug}`}
+                  displayName={link.displayName}
+                  key={link.id}></NavbarItem>
+              </li>
+            ))}
+          </ul>
+        </details>
+      </div>
+      {/* Categories for larger screens */}
+      <div className="hidden lg:flex flex-1 justify-end px-2">
         <ul className="menu menu-horizontal px-1 space-x-1">
           {links.map((link) => (
             <li key={link.id}>
@@ -57,6 +88,7 @@ export default async function Navbar() {
           ))}
         </ul>
       </div>
+      {/* Language Switcher */}
       <div className="flex-none">
         <LanguageSwitcher />
       </div>

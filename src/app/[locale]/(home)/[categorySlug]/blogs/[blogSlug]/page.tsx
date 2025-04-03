@@ -8,6 +8,7 @@ import { ArrowLeft } from 'lucide-react'; // Importing an icon from lucide-react
 
 import 'quill/dist/quill.snow.css';
 import 'highlight.js/styles/github-dark.min.css';
+import { getHomePageCacheEnabled } from '@/infrastructure/utilities';
 
 export const metadata: Metadata = {
   title: 'My Blogs - Blog Detail Page',
@@ -72,7 +73,7 @@ export default async function BlogDetailPage({
 const getBlogBySlug = async (blogSlug: string): Promise<PostModel> => {
   const res = await buildGraphQLClient().query({
     query: buildGetPostBySlugQuery(blogSlug),
-    fetchPolicy: 'no-cache'
+    fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache'
   });
 
   return res.data.posts.nodes.map(mapGraphQlModelToPostModel)[0];

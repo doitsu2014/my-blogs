@@ -32,7 +32,9 @@ export default function LanguageSwitcher() {
         disabled={isLoading} // Disable input while loading
       />
       {isLoading ? (
-        <div className="loading loading-spinner loading-md"></div>
+        <div className="text-center border border-primary px-3 py-1 rounded-lg bg-primary text-primary-content shadow-md hover:shadow-lg transition-all">
+          <div className="loading loading-spinner loading-md"></div>
+        </div>
       ) : (
         <>
           <div className="swap-on text-center border border-primary px-3 py-1 rounded-lg bg-primary text-primary-content shadow-md hover:shadow-lg transition-all">

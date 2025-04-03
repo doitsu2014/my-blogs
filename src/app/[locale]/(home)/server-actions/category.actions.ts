@@ -3,12 +3,13 @@ import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
 import buildGetBlogCategoriesQuery from '@/infrastructure/graphQL/queries/categories/get-blog-categories';
 import buildGetBlogCategoryIdsQuery from '@/infrastructure/graphQL/queries/categories/get-blog-category-ids';
 import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
+import { getHomePageCacheEnabled } from '@/infrastructure/utilities';
 
 export const getCategories = async (): Promise<CategoryModel[]> => {
   try {
     const res = await buildGraphQLClient().query({
       query: buildGetBlogCategoriesQuery(),
-      fetchPolicy: 'no-cache'
+      fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache'
     });
 
     if (res.errors) {
@@ -27,7 +28,7 @@ export const getBlogCategoryIds = async (): Promise<string[]> => {
   try {
     const res = await buildGraphQLClient().query({
       query: buildGetBlogCategoryIdsQuery(),
-      fetchPolicy: 'no-cache'
+      fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache'
     });
 
     if (res.errors) {

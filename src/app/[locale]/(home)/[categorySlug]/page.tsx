@@ -38,9 +38,8 @@ export default async function CategoryDetailPage({
 
   const categoryDisplayName = isDefaultLocale
     ? category?.displayName
-    : category?.categoryTranslations?.find(
-        (translation) => translation.languageCode === locale
-      )?.displayName;
+    : category?.categoryTranslations?.find((translation) => translation.languageCode === locale)
+        ?.displayName;
 
   const posts = await getPostsByCategoryId(categoryId);
 
