@@ -42,7 +42,7 @@ export default function AdminBlogsPage() {
     try {
       setIsDeleting(true);
       const response = await fetch(`/api/admin/posts/${blogToDelete.id}`, {
-        method: 'DELETE',
+        method: 'DELETE'
       });
 
       if (response.ok) {
@@ -66,13 +66,14 @@ export default function AdminBlogsPage() {
   };
 
   // Filter blogs based on search term
-  const filteredBlogs = blogs.filter(blog => 
-    blog.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    blog.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredBlogs = blogs.filter(
+    (blog) =>
+      blog.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div>
+    <div className='container max-w-[102rem]'>
       <Breadcrumbs
         items={[
           { label: 'Admin', href: '/admin', icon: <Home className="w-4 h-4" /> },
@@ -100,11 +101,11 @@ export default function AdminBlogsPage() {
         </div>
       </div>
 
-      <div className="bg-base-100">
+      <div className="bg-base-100 flex w-full max-w-full overflow-x-auto">
         {pageLoading ? (
           <TableSkeleton columns={11} rows={5} showHeader={true} className="w-full" />
         ) : (
-          <table className="table table-zebra w-full">
+          <table className="table table-zebra">
             <thead>
               <tr className="bg-base-300 text-base-content">
                 <th>ID</th>
@@ -131,7 +132,7 @@ export default function AdminBlogsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-3 font-semibold">
+                    <td className="max-w-48 p-3 font-semibold">
                       <div className="max-w-xs truncate">{blog.title}</div>
                       {blog.thumbnailPaths && blog.thumbnailPaths.length > 0 && (
                         <div className="avatar mt-1">
@@ -142,7 +143,7 @@ export default function AdminBlogsPage() {
                       )}
                     </td>
                     <td>
-                      <div className="max-w-xs truncate text-sm">{blog.previewContent}</div>
+                      <div className="max-w-32 truncate text-sm">{blog.previewContent}</div>
                     </td>
                     <td className="text-sm">{blog.slug}</td>
                     <td>{blog.categoryDisplayName || 'Uncategorized'}</td>
@@ -162,7 +163,9 @@ export default function AdminBlogsPage() {
                       </div>
                     </td>
                     <td className="text-sm">{blog.lastModifiedBy}</td>
-                    <td className="text-sm">{new Date(blog.lastModifiedAt).toLocaleDateString()}</td>
+                    <td className="text-sm">
+                      {new Date(blog.lastModifiedAt).toLocaleDateString()}
+                    </td>
                     <td>
                       <div className="flex gap-2">
                         <a href={`/admin/blogs/edit/${blog.id}`} className="btn btn-sm btn-outline">
@@ -170,8 +173,7 @@ export default function AdminBlogsPage() {
                         </a>
                         <button
                           className="btn btn-sm btn-outline btn-error"
-                          onClick={() => handleDeleteClick(blog)}
-                        >
+                          onClick={() => handleDeleteClick(blog)}>
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -196,22 +198,14 @@ export default function AdminBlogsPage() {
           <div className="bg-base-100 p-6 rounded-lg shadow-xl max-w-md w-full">
             <h3 className="text-lg font-bold mb-4">Confirm Deletion</h3>
             <p className="mb-6">
-              Are you sure you want to delete the blog "{blogToDelete?.title}"? 
-              This action cannot be undone.
+              Are you sure you want to delete the blog "{blogToDelete?.title}"? This action cannot
+              be undone.
             </p>
             <div className="flex justify-end gap-3">
-              <button 
-                className="btn btn-outline" 
-                onClick={cancelDelete}
-                disabled={isDeleting}
-              >
+              <button className="btn btn-outline" onClick={cancelDelete} disabled={isDeleting}>
                 Cancel
               </button>
-              <button 
-                className="btn btn-error" 
-                onClick={confirmDelete}
-                disabled={isDeleting}
-              >
+              <button className="btn btn-error" onClick={confirmDelete} disabled={isDeleting}>
                 {isDeleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>

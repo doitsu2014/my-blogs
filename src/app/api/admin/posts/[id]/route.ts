@@ -1,5 +1,5 @@
 import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
-import buildGetPostByIdQuery from '@/infrastructure/graphQL/queries/posts/get-post-by-id';
+import { buildGetPostWithTranslationsByIdQuery } from '@/infrastructure/graphQL/queries/posts/get-post-by-id';
 import { mapGraphQlModelToPostModel } from '@/infrastructure/graphQL/utilities';
 import { buildHeader } from '@/infrastructure/utilities.auth';
 
@@ -8,7 +8,7 @@ export const GET = async (request: Request, { params }: { params: Promise<{ id: 
 
   try {
     const { data } = await buildGraphQLClient().query({
-      query: buildGetPostByIdQuery(id),
+      query: buildGetPostWithTranslationsByIdQuery(id),
       fetchPolicy: 'no-cache'
     });
 
@@ -38,7 +38,7 @@ export const DELETE = async (request: Request, { params }: { params: Promise<{ i
       body: JSON.stringify([id])
     });
 
-    if(!result.ok) {
+    if (!result.ok) {
       return new Response(await result.text(), {
         status: result.status
       });

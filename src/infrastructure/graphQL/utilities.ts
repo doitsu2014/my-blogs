@@ -28,6 +28,13 @@ export const mapGraphQlModelToPostModel = (graphqlNode: any | undefined): PostMo
         ...graphqlNode,
         categoryDisplayName: graphqlNode.categories.displayName,
         categorySlug: graphqlNode.categories.slug,
+        postTranslations: graphqlNode.postTranslations?.nodes.map((node: any) => ({
+          id: node.id,
+          languageCode: node.languageCode,
+          title: node.title,
+          previewContent: node.previewContent,
+          content: node.content
+        })),
         postTags: graphqlNode.postTags.nodes.map((node: any) => ({
           id: node.tags.id,
           name: node.tags.name,

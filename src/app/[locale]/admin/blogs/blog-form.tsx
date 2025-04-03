@@ -12,6 +12,8 @@ const RichTextEditor = dynamic(() => import('../components/inputs/rich-text-edit
   ssr: false
 });
 
+const AVAILABLE_LANGUAGES = [{ code: 'vi', displayName: 'Vietnamese (vi)' }];
+
 export default function BlogForm({ id }: { id?: string }) {
   const router = useRouter();
   const [title, setTitle] = useState('');
@@ -26,6 +28,17 @@ export default function BlogForm({ id }: { id?: string }) {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [categories, setCategories] = useState<CategoryModel[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  const [translations, setTranslations] = useState<
+    {
+      id: string;
+      languageCode: string;
+      title: string;
+      previewContent?: string;
+      originalContent: string;
+      content: string;
+    }[]
+  >([]);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -49,6 +62,16 @@ export default function BlogForm({ id }: { id?: string }) {
             }))
           );
           setSelectedCategoryId(data.categoryId); // Set the category ID
+          setTranslations(
+            data.postTranslations.map((translation) => ({
+              id: translation.id,
+              languageCode: translation.languageCode,
+              title: translation.title,
+              previewContent: translation.previewContent,
+              originalContent: translation.content,
+              content: translation.content
+            }))
+          );
         }
         setLoading(false);
       };
@@ -87,6 +110,32 @@ export default function BlogForm({ id }: { id?: string }) {
     fetchCategories();
   }, [id, selectedCategoryId]);
 
+  const handleTranslationChange = (index: number, field: string, value: string) => {
+    setTranslations((prev) =>
+      prev.map((translation, i) => (i === index ? { ...translation, [field]: value } : translation))
+    );
+  };
+
+  const addTranslationTab = () => {
+    setTranslations((prev) => [
+      ...prev,
+      { id: '', languageCode: '', title: '', previewContent: '', originalContent: '', content: '' }
+    ]);
+  };
+
+  const isAddTabDisabled = () => {
+    const usedLanguages = translations.map((t) => t.languageCode);
+    const conditionEveryLanguageCodesUsed = AVAILABLE_LANGUAGES.every((lang) =>
+      usedLanguages.includes(lang.code)
+    );
+    const conditionMaxTabs = translations.length >= AVAILABLE_LANGUAGES.length;
+    return conditionEveryLanguageCodesUsed || conditionMaxTabs;
+  };
+
+  const handleTabClick = (index: number) => {
+    setActiveTab(index);
+  };
+
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
@@ -100,7 +149,18 @@ export default function BlogForm({ id }: { id?: string }) {
       published,
       rowVersion,
       tagNames: tags.map((tag) => tag.label),
-      categoryId: selectedCategoryId // Include selected categoryId
+      categoryId: selectedCategoryId,
+      translations: [
+        ...translations.map((e) => {
+          return {
+            id: e.id ? e.id : undefined,
+            languageCode: e.languageCode,
+            title: e.title,
+            previewContent: e.previewContent,
+            content: e.content
+          };
+        })
+      ]
     };
 
     const method = id ? 'PUT' : 'POST';
@@ -366,6 +426,120 @@ export default function BlogForm({ id }: { id?: string }) {
                       onSelectionChange={() => {}}
                       readOnly={false}
                     />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <label className="tab">
+              <input type="radio" name="blog_form_tabs" className="tab" />
+              <Settings className="size-4 me-2" />
+              Translations
+            </label>
+            <div className="tab-content bg-base-100 rounded-box p-6 border border-base-300">
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold flex items-center gap-2 mb-4">
+                  <Settings size={18} />
+                  Translations
+                </h3>
+                <div className="tabs">
+                  <div className="tabs-box">
+                    {translations?.map((translation, index) => (
+                      <button
+                        key={index}
+                        className={`tab ${activeTab === index ? 'tab-active' : ''}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleTabClick(index);
+                        }}>
+                        {translation.languageCode || `Tab ${index + 1}`}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline ml-2"
+                      onClick={addTranslationTab}
+                      disabled={isAddTabDisabled()}>
+                      + Add Tab
+                    </button>
+                  </div>
+                  <div className="mt-2 w-full">
+                    {translations.map((translation, index) => (
+                      <div
+                        key={index}
+                        className={`p-4 border border-base-300 rounded-md ${
+                          activeTab === index ? '' : 'hidden'
+                        }`}>
+                        <div className="form-control w-full">
+                          <div className="label flex items-center gap-2 mb-2">
+                            <Settings size={18} />
+                            <span className="label-text font-medium">Language Code</span>
+                          </div>
+                          <select
+                            value={translation.languageCode}
+                            onChange={(e) =>
+                              handleTranslationChange(index, 'languageCode', e.target.value)
+                            }
+                            className="select select-bordered w-full"
+                            required
+                            disabled={loading}>
+                            <option value="">Select Language</option>
+                            {AVAILABLE_LANGUAGES.map((lang) => (
+                              <option key={lang.code} value={lang.code}>
+                                {lang.displayName}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="form-control w-full mt-4">
+                          <div className="label flex items-center gap-2 mb-2">
+                            <Info size={18} />
+                            <span className="label-text font-medium">Title</span>
+                          </div>
+                          <input
+                            type="text"
+                            value={translation.title}
+                            onChange={(e) =>
+                              handleTranslationChange(index, 'title', e.target.value)
+                            }
+                            className="input input-bordered w-full"
+                            placeholder="Enter translated title"
+                            required
+                            disabled={loading}
+                          />
+                        </div>
+                        <div className="form-control w-full mt-4">
+                          <div className="label flex items-center gap-2 mb-2">
+                            <BookOpen size={18} />
+                            <span className="label-text font-medium">Preview Content</span>
+                            <span className="label-text-alt">This will appear in blog lists</span>
+                          </div>
+                          <textarea
+                            value={translation.previewContent || ''}
+                            onChange={(e) =>
+                              handleTranslationChange(index, 'previewContent', e.target.value)
+                            }
+                            className="textarea textarea-bordered w-full min-h-24"
+                            placeholder="Enter translated preview content"
+                            required
+                            disabled={loading}
+                          />
+                        </div>
+                        <div className="form-control w-full mt-4">
+                          <div className="label flex items-center gap-2 mb-2">
+                            <FileText size={18} />
+                            <span className="label-text font-medium">Content</span>
+                          </div>
+                          <div className="form-control w-full bg-base-100 rounded-md border border-base-300">
+                            <RichTextEditor
+                              defaultValue={translation.originalContent}
+                              onTextChange={(e) => handleTranslationChange(index, 'content', e)}
+                              readOnly={loading}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
