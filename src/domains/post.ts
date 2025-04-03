@@ -1,3 +1,4 @@
+import { CategoryModel } from './category';
 import { TagModel } from './tag';
 
 export interface PostModel {
@@ -9,12 +10,31 @@ export interface PostModel {
   slug: string;
   published: boolean;
   createdBy: string;
-  createdAt: string; // ISO 8601 format
+  createdAt: string;
   lastModifiedBy: string;
-  lastModifiedAt: string; // ISO 8601 format
+  lastModifiedAt: string;
   categoryId: string;
   categoryDisplayName: string;
   categorySlug: string;
   rowVersion: number;
   postTags: TagModel[];
+  postTranslations: PostTranslationModel[];
+}
+
+export interface PostTranslationModel {
+  id: string;
+  languageCode: string;
+  title: string;
+  previewContent: string;
+  content: string;
+  slug: string;
+}
+
+export interface PostInFooterModel {
+  id: string;
+  title: string;
+  previewContent: string;
+  slug: string;
+  category: CategoryModel;
+  postTranslations: PostTranslationModel[];
 }

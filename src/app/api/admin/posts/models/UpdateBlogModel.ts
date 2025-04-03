@@ -9,4 +9,11 @@ export interface UpdateBlogModel {
   categoryId: string;
   tagNames: string[];
   rowVersion: number;
+  translations: {
+    id: string;
+    languageCode: string;
+    title: string;
+    previewContent: string;
+    content: string;
+  }[];
 }

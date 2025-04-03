@@ -1,6 +1,7 @@
 import { auth as middleware } from '@/auth';
-import { signOut } from 'next-auth/react';
 import { NextResponse } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/routing';
 
 // 1. Specify protected and public routes
 const routePermissions: Record<string, string[]> = {
@@ -9,25 +10,29 @@ const routePermissions: Record<string, string[]> = {
   '/admin': ['my-blogs-admin', 'my-blogs-publisher'] // General /admin access for both roles
 };
 
-export default middleware((req) => {
-  // 2. Check if the current route is protected or public
-  const path = req.nextUrl.pathname;
+const intlMiddleware = createMiddleware(routing);
 
-  if (!path.startsWith('/admin')) {
-    return NextResponse.next();
+export default middleware((req) => {
+  const path = req.nextUrl.pathname;
+  // Check if the path starts with /locale/admin
+  const regexp = new RegExp(`^/${routing.locales.join('|')}/admin`);
+
+  if (!path.includes('admin')) {
+    return intlMiddleware(req);
   }
 
   // Logic to check for auth in the middleware
   const auth = req.auth;
   if (!auth) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    console.log('No auth found, redirecting to login');
+    return NextResponse.redirect(new URL(`/login`, req.url));
   }
 
   // Logic to check expired token
   const expires = auth?.accessTokenExp;
   if (expires && new Date(expires) <= new Date()) {
     console.info('Token expired, redirecting to login');
-    return NextResponse.redirect(new URL('/login', req.url));
+    return NextResponse.redirect(new URL(`/login`, req.url));
   }
 
   // Logic to check user roles
@@ -37,12 +42,12 @@ export default middleware((req) => {
     if (path.startsWith(route)) {
       const isAllowed = allowedRoles.some((role) => userRoles.includes(role));
       if (!isAllowed) {
-        return NextResponse.redirect(new URL('/403', req.url)); // Redirect unauthorized users
+        return NextResponse.redirect(new URL(`/403`, req.url)); // Redirect unauthorized users
       }
     }
   }
 
-  return NextResponse.next();
+  return intlMiddleware(req);
 });
 
 // Routes Middleware should not run on
@@ -50,6 +55,6 @@ export const config = {
   // matcher: ['/admin/:path*'] // Apply middleware only to /admin routes
   matcher: [
     // match all routes except static files and APIs
-    '/((?!api|_next/static|_next/image|favicon.ico).*)'
+    '/((?!api|_next/static|_next/image|trpc|_vercel|favicon.ico).*)'
   ]
 };

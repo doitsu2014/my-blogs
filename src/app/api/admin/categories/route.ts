@@ -1,6 +1,8 @@
 import { CategoryTypeEnum } from '@/domains/category';
 import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
-import buildGetCategoriesQuery from '@/infrastructure/graphQL/queries/categories/get-categories';
+import buildGetCategoriesQuery, {
+  buildGetCategoriesWithTranslationsQuery
+} from '@/infrastructure/graphQL/queries/categories/get-categories';
 import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
 import { buildHeader } from '@/infrastructure/utilities.auth';
 import { gql } from '@apollo/client';
@@ -54,7 +56,7 @@ export async function PUT(req: Request) {
 export async function GET(req: Request) {
   try {
     const { data } = await buildGraphQLClient().query({
-      query: buildGetCategoriesQuery(),
+      query: buildGetCategoriesWithTranslationsQuery(),
       fetchPolicy: 'no-cache'
     });
     return Response.json((data?.categories?.nodes || []).map(mapGraphQlModelToCategoryModel));

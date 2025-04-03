@@ -7,4 +7,10 @@ export interface CreateBlogModel {
   published: boolean;
   categoryId: string;
   tagNames: string[];
+  translations: {
+    languageCode: string;
+    title: string;
+    previewContent: string;
+    content: string;
+  }[];
 }
