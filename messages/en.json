@@ -7,6 +7,27 @@
     "introduction": "Hi, I’m Duc! This blog is your go-to destination for insights, tutorials, and discussions on technology and software engineering. Whether you're a seasoned developer or juststarting out, let's learn and grow together in the world of tech.",
     "exploreArticles": "Explore Articles"
   },
+  "blogDetail": {
+    "publishedOn": "Published on",
+    "by": "By",
+    "backToCategory": "Back to categories"
+  },
+  "categories": {
+    "title": "Categories",
+    "viewBlogs": "View blogs"
+  },
+  "categoryDetail": {
+    "readMore": "Read more"
+  },
+  "notFound": {
+    "message": "Sorry, the page you are looking for does not exist.",
+    "home": "Back to home"
+  },
+  "footer": {
+    "categories": "Categories",
+    "top5Articles": "Top 5 Articles",
+    "social": "Social"
+  },
   "components": {
     "signInKeycloak": {
       "title": "Sign in with Keycloak",
@@ -14,4 +35,3 @@
     }
   }
 }
-

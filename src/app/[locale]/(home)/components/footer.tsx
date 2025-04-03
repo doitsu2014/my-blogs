@@ -1,10 +1,66 @@
 import { getBlogCategoryIds, getCategories } from '../server-actions/category.actions';
 import Link from 'next/link';
-import { getAllBlogPosts } from '../server-actions/post.actions';
+import { getAllBlogPostsInFooter } from '../server-actions/post.actions';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { routing } from '@/i18n/routing';
 
 export default async function Footer() {
+  const t = await getTranslations('footer');
+  const locale = await getLocale();
+  const isDefaultLocale = locale === routing.defaultLocale;
+
   const categories = await getCategories();
-  const allBlogs = await getAllBlogPosts();
+  const categoryInformationToShow = isDefaultLocale
+    ? categories.map((e) => ({
+        displayName: e.displayName,
+        slug: e.slug,
+        id: e.id
+      }))
+    : categories
+        .filter((category) =>
+          category.categoryTranslations.some((translation) => translation.languageCode === locale)
+        )
+        .map((e) => {
+          const matchedTranslation = e.categoryTranslations.find(
+            (translation) => translation.languageCode === locale
+          );
+          return {
+            displayName: matchedTranslation?.displayName,
+            slug: matchedTranslation?.slug,
+            id: e.id
+          };
+        });
+
+  const allBlogs = await getAllBlogPostsInFooter();
+  const blogInformationToShow = isDefaultLocale
+    ? allBlogs.map((e) => ({
+        title: e.title,
+        slug: e.slug,
+        id: e.id,
+        categorySlug: e.category.slug
+      }))
+    : allBlogs
+        .filter(
+          (blog) =>
+            blog.category?.categoryTranslations.some(
+              (translation) => translation.languageCode === locale
+            ) && blog.postTranslations?.some((translation) => translation.languageCode === locale)
+        )
+        .map((e) => {
+          const matchedTranslation = e.postTranslations.find(
+            (translation) => translation.languageCode === locale
+          );
+          const matchedCategoryTranslation = e.category.categoryTranslations.find(
+            (translation) => translation.languageCode === locale
+          );
+
+          return {
+            title: matchedTranslation?.title,
+            slug: matchedTranslation?.slug,
+            id: e.id,
+            categorySlug: matchedCategoryTranslation?.slug
+          };
+        });
 
   const social_link_github = process.env.SOCIAL_LINK_GITHUB;
   const social_link_linkedin = process.env.SOCIAL_LINK_LINKEDIN;
@@ -15,12 +71,12 @@ export default async function Footer() {
     <footer className="footer p-8 bg-base-200 text-base-content w-full">
       <div className="flex justify-between w-full">
         <div className="flex-1">
-          <span className="footer-title font-bold uppercase">Categories</span>
+          <span className="footer-title font-bold uppercase">{t('categories')}</span>
           <div className="flex flex-col">
-            {categories.slice(0, 5).map((category) => (
+            {categoryInformationToShow.slice(0, 5).map((category) => (
               <Link
                 key={category.id}
-                href={`/categories/${category.slug}`}
+                href={`/${locale}/${category.slug}`}
                 className="link link-hover">
                 {category.displayName}
               </Link>
@@ -29,12 +85,12 @@ export default async function Footer() {
         </div>
 
         <div className="flex-1">
-          <span className="footer-title font-bold uppercase">Top 5 blogs</span>
+          <span className="footer-title font-bold uppercase">{t('top5Articles')}</span>
           <div className="flex flex-col">
-            {allBlogs.slice(0, 5).map((blog) => (
+            {blogInformationToShow.slice(0, 5).map((blog) => (
               <Link
                 key={blog.id}
-                href={`/categories/${blog.categorySlug}/blogs/${blog.slug}`}
+                href={`/${locale}/${blog.categorySlug}`}
                 className="link link-hover">
                 {blog.title}
               </Link>
@@ -43,7 +99,7 @@ export default async function Footer() {
         </div>
 
         <div className="flex-1 text-right">
-          <span className="footer-title font-bold uppercase">Social</span>
+          <span className="footer-title font-bold uppercase">{t('social')}</span>
           <div className="flex justify-end space-x-4 mt-2">
             {social_link_github && (
               <Link

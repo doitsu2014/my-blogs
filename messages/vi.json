@@ -7,6 +7,27 @@
     "introduction": "Chào bạn, mình là Đức! Blog này là nơi lý tưởng để bạn tìm hiểu về công nghệ và kỹ thuật phần mềm. Dù bạn là một lập trình viên dày dạn kinh nghiệm hay mới bắt đầu, hãy cùng nhau học hỏi và phát triển trong thế giới công nghệ.",
     "exploreArticles": "Khám phá các bài viết"
   },
+  "blogDetail": {
+    "publishedOn": "Xuất bản vào",
+    "by": "Bởi",
+    "backToCategory": "Quay lại danh mục"
+  },
+  "categories": {
+    "title": "Danh mục",
+    "viewBlogs": "Xem các bài viết"
+  },
+  "categoryDetail": {
+    "readMore": "Đọc thêm"
+  },
+  "notFound": {
+    "message": "Xin lỗi, trang bạn đang tìm kiếm không tồn tại.",
+    "home": "Quay lại trang chủ"
+  },
+  "footer": {
+    "categories": "Danh mục",
+    "top5Articles": "5 bài viết hàng đầu",
+    "social": "Mạng xã hội"
+  },
   "components": {
     "signInKeycloak": {
       "title": "Đăng nhập với Keycloak",

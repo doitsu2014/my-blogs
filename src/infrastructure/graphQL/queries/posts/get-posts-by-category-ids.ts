@@ -1,13 +1,16 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-export default function buildGetPostsByCategoryIds(blogCategories: string[], isFilterByPublished: boolean = false) {
+export default function buildGetPostsByCategoryIds(
+  blogCategories: string[],
+  isFilterByPublished: boolean = false
+) {
   return gql`
     query GetBlogs {
       posts(filters: {
         categoryId: {
           is_in: ${JSON.stringify(blogCategories)}
         },
-        ${isFilterByPublished ? "published: { eq: true }" : ""},
+        ${isFilterByPublished ? 'published: { eq: true }' : ''},
       }) {
         nodes {
           id,
@@ -35,20 +38,22 @@ export default function buildGetPostsByCategoryIds(blogCategories: string[], isF
               }
             }
           }
-          
         }
       }
     }`;
-} 
+}
 
-export function buildGetPostsWithTranslationsByCategoryIds(blogCategories: string[], isFilterByPublished: boolean = false) {
+export function buildGetPostsWithTranslationsByCategoryIds(
+  blogCategories: string[],
+  isFilterByPublished: boolean = false
+) {
   return gql`
     query GetBlogs {
       posts(filters: {
         categoryId: {
           is_in: ${JSON.stringify(blogCategories)}
         },
-        ${isFilterByPublished ? "published: { eq: true }" : ""},
+        ${isFilterByPublished ? 'published: { eq: true }' : ''},
       }) {
         nodes {
           id,
@@ -88,4 +93,47 @@ export function buildGetPostsWithTranslationsByCategoryIds(blogCategories: strin
         }
       }
     }`;
-} 
+}
+
+export function buildGetPostsByCategoryIdsInFooter(
+  blogCategories: string[],
+  isFilterByPublished: boolean = false
+) {
+  return gql`
+    query GetBlogs {
+      posts(filters: {
+        categoryId: {
+          is_in: ${JSON.stringify(blogCategories)}
+        },
+        ${isFilterByPublished ? 'published: { eq: true }' : ''},
+      }) {
+        nodes {
+          id
+          title
+          slug
+          categories {
+            id
+            displayName
+            slug
+            categoryType
+            categoryTranslations {
+              nodes {
+                id
+                displayName
+                languageCode
+                slug
+              }
+            }
+          }
+          postTranslations {
+            nodes {
+              id
+              languageCode
+              title
+              slug
+            }
+          }
+        }
+      }
+    }`;
+}

@@ -35,6 +35,15 @@ export default function buildGetPostByIdQuery(id: string) {
               }
             }
           }
+          postTranslations {
+            nodes {
+              id
+              languageCode
+              title
+              previewContent
+              content
+            }
+          }
         }
       }
     }`;

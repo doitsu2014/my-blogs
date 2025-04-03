@@ -1,3 +1,4 @@
+import { CategoryModel } from './category';
 import { TagModel } from './tag';
 
 export interface PostModel {
@@ -27,4 +28,13 @@ export interface PostTranslationModel {
   previewContent: string;
   content: string;
   slug: string;
+}
+
+export interface PostInFooterModel {
+  id: string;
+  title: string;
+  previewContent: string;
+  slug: string;
+  category: CategoryModel;
+  postTranslations: PostTranslationModel[];
 }
