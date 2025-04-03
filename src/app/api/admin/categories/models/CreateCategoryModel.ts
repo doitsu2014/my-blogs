@@ -4,5 +4,5 @@ export interface CreateCategoryModel {
   displayName: string;
   categoryType: CategoryTypeEnum;
   tagNames: string[];
-  categoryTranslations: {languageCode: string, displayName: string}[];
+  translations: {languageCode: string, displayName: string}[];
 }

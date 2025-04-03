@@ -22,4 +22,5 @@ export interface CategoryTranslationModel {
   id: string;
   languageCode: string;
   displayName: string;
+  slug: string;
 }

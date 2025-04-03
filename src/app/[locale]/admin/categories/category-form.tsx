@@ -7,7 +7,8 @@ import { CreateCategoryModel } from '@/app/api/admin/categories/models/CreateCat
 import { CategoryModel, CategoryTypeEnum } from '@/domains/category';
 import { TagModel } from '@/domains/tag';
 import { redirect } from 'next/navigation';
-import { create } from 'domain';
+
+const AVAILABLE_LANGUAGES = [{ code: 'vi', displayName: 'Vietnamese (vi)' }];
 
 export default function CategoryForm({ id }: { id?: string }) {
   const [displayName, setDisplayName] = useState('');
@@ -15,7 +16,9 @@ export default function CategoryForm({ id }: { id?: string }) {
   const [categoryTags, setCategoryTags] = useState<{ label: string; color: string }[]>([]);
   const [rowVersion, setRowVersion] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [categoryTranslations, setCategoryTranslations] = useState<{ lang: string; displayName: string }[]>([]);
+  const [categoryTranslations, setCategoryTranslations] = useState<
+    { id: string; languageCode: string; displayName: string }[]
+  >([]);
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
@@ -34,6 +37,11 @@ export default function CategoryForm({ id }: { id?: string }) {
               color: getRandomColor()
             }))
           );
+          setCategoryTranslations(
+            data.categoryTranslations.map((ct) => ({
+              ...ct
+            }))
+          );
           setRowVersion(data.rowVersion);
         }
         setLoading(false);
@@ -45,6 +53,7 @@ export default function CategoryForm({ id }: { id?: string }) {
       setDisplayName('');
       setCategoryType(CategoryTypeEnum.Blog);
       setCategoryTags([]);
+      setCategoryTranslations([]);
       setRowVersion(0);
     }
   }, [id]);
@@ -60,7 +69,11 @@ export default function CategoryForm({ id }: { id?: string }) {
         categoryType,
         tagNames: categoryTags.map((tag) => tag.label),
         rowVersion,
-        categoryTranslations: []
+        translations: categoryTranslations.map((translation) => ({
+          displayName: translation.displayName,
+          id: translation.id || undefined,
+          languageCode: translation.languageCode
+        }))
       };
 
       const updateResponse = await fetch(`/api/admin/categories`, {
@@ -78,12 +91,15 @@ export default function CategoryForm({ id }: { id?: string }) {
       }
       setLoading(false);
     } else {
-      console.log('Creating category');
+      console.info('Creating category');
       const categoryData: CreateCategoryModel = {
         displayName,
         categoryType,
         tagNames: categoryTags.map((tag) => tag.label),
-        categoryTranslations: []
+        translations: categoryTranslations.map((translation) => ({
+          displayName: translation.displayName,
+          languageCode: translation.languageCode
+        }))
       };
 
       const createResponse = await fetch(`/api/admin/categories`, {
@@ -106,17 +122,32 @@ export default function CategoryForm({ id }: { id?: string }) {
   };
 
   const addTranslationTab = () => {
-    setCategoryTranslations([...categoryTranslations, { lang: '', displayName: '' }]);
+    setCategoryTranslations([
+      ...categoryTranslations,
+      { id: '', languageCode: '', displayName: '' }
+    ]);
   };
 
-  const updateTranslation = (index: number, field: 'lang' | 'displayName', value: string) => {
+  const isAddTabDisabled = () => {
+    const usedLanguages = categoryTranslations.map((t) => t.languageCode);
+    const conditionEveryLanguageCodesUsed = AVAILABLE_LANGUAGES.every((lang) =>
+      usedLanguages.includes(lang.code)
+    );
+    const conditionMaxTabs = categoryTranslations.length >= AVAILABLE_LANGUAGES.length;
+    return conditionEveryLanguageCodesUsed || conditionMaxTabs;
+  };
+
+  const updateTranslation = (
+    index: number,
+    field: 'languageCode' | 'displayName',
+    value: string
+  ) => {
     const updatedTranslations = [...categoryTranslations];
     updatedTranslations[index][field] = value;
     setCategoryTranslations(updatedTranslations);
   };
 
   const handleTabClick = (index: number) => {
-    console.log(index);
     setActiveTab(index);
   };
 
@@ -144,8 +175,7 @@ export default function CategoryForm({ id }: { id?: string }) {
             setCategoryType(e.target.value as CategoryTypeEnum);
           }}
           className="select select-bordered w-full"
-          disabled={loading}
-        >
+          disabled={loading}>
           <option value={CategoryTypeEnum.Blog}>Blog</option>
           <option value={CategoryTypeEnum.Other}>Other</option>
         </select>
@@ -155,7 +185,9 @@ export default function CategoryForm({ id }: { id?: string }) {
         <MultiChipInput
           chips={categoryTags}
           setChips={(chips: { label: string; color: string }[]) => {
-            setCategoryTags(chips.map((chip) => ({ label: chip.label.toLowerCase(), color: chip.color })));
+            setCategoryTags(
+              chips.map((chip) => ({ label: chip.label.toLowerCase(), color: chip.color }))
+            );
           }}
           className="flex flex-wrap border border-base-300 rounded-md p-2"
           loading={loading}
@@ -166,43 +198,52 @@ export default function CategoryForm({ id }: { id?: string }) {
         <span className="label-text">Category Translations</span>
         <div className="tabs">
           <div className="tabs-box">
-            {categoryTranslations.map((translation, index) => (
+            {categoryTranslations?.map((translation, index) => (
               <button
                 key={index}
                 className={`tab ${activeTab === index ? 'tab-active' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
                   handleTabClick(index);
-                }}
-              >
-                {translation.lang || 'New Tab'}
+                }}>
+                {translation.languageCode || `Tab ${index + 1}`}
               </button>
             ))}
             <button
               type="button"
               className="btn btn-sm btn-outline ml-2"
               onClick={addTranslationTab}
-            >
+              disabled={isAddTabDisabled()}>
               + Add Tab
             </button>
           </div>
           <div className="mt-2">
-            {categoryTranslations.map((translation, index) => (
+            {categoryTranslations?.map((translation, index) => (
               <div
                 key={index}
-                className={`p-4 border border-base-300 rounded-md ${activeTab === index ? '' : 'hidden'}`}
-              >
+                className={`p-4 border border-base-300 rounded-md ${
+                  activeTab === index ? '' : 'hidden'
+                }`}>
                 <label className="form-control w-full">
                   <span className="label-text">Language Code</span>
-                  <input
-                    type="text"
-                    value={translation.lang}
-                    onChange={(e) => updateTranslation(index, 'lang', e.target.value)}
-                    className="input input-bordered w-full"
-                    placeholder="Enter language code (e.g., vi, cn)"
+                  <select
+                    value={translation.languageCode}
+                    onChange={(e) => {
+                      updateTranslation(index, 'languageCode', e.target.value);
+                      if (activeTab === index) {
+                        handleTabClick(index); // Ensure tab name updates dynamically
+                      }
+                    }}
+                    className="select select-bordered w-full"
                     required
-                    disabled={loading}
-                  />
+                    disabled={loading}>
+                    <option value="">Select Language</option>
+                    {AVAILABLE_LANGUAGES.map((lang) => (
+                      <option key={lang.code} value={lang.code}>
+                        {lang.displayName}
+                      </option>
+                    ))}
+                  </select>
                 </label>
                 <label className="form-control w-full mt-4">
                   <span className="label-text">Display Name</span>
@@ -221,7 +262,11 @@ export default function CategoryForm({ id }: { id?: string }) {
           </div>
         </div>
       </div>
-      <input type="hidden" name="categoryTranslations" value={JSON.stringify(categoryTranslations)} />
+      <input
+        type="hidden"
+        name="categoryTranslations"
+        value={JSON.stringify(categoryTranslations)}
+      />
       <input type="hidden" name="rowVersion" value={rowVersion} />
       <input type="hidden" name="id" value={id} />
       <button type="submit" className="btn btn-primary" disabled={loading}>

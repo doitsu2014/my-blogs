@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default function buildGetBlogCategoriesQuery() {
   return gql`
@@ -21,7 +21,16 @@ export default function buildGetBlogCategoriesQuery() {
               }
             }
           }
+          categoryTranslations {
+            nodes {
+              id
+              languageCode
+              displayName
+              slug
+            }
+          }
         }
       }
-    }`;
-} 
+    }
+  `;
+}

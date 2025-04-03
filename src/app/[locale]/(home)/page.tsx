@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,13 +30,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home({
+export default async function Home({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = params;
-  const t = useTranslations('home');
+  const { locale } = await params;
+  const t = await getTranslations('home');
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">

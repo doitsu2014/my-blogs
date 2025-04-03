@@ -6,5 +6,5 @@ export interface UpdateCategoryModel {
   categoryType: CategoryTypeEnum;
   tagNames: string[];
   rowVersion: number;
-  categoryTranslations: CategoryTranslationModel[];
+  translations: {id?: string, languageCode: string, displayName: string}[];
 }
