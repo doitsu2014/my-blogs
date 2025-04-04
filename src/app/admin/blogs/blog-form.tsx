@@ -7,12 +7,18 @@ import MultiChipInput, { getRandomColor } from '../components/inputs/multi-chip-
 import dynamic from 'next/dynamic';
 import { CategoryModel } from '@/domains/category';
 import { Info, ImagePlus, Tag, BookOpen, Save, FileText, Settings } from 'lucide-react';
-
-const RichTextEditor = dynamic(() => import('../components/inputs/rich-text-editor'), {
-  ssr: false
-});
+import { RichTextEditorWrapper } from '../components/inputs/rich-text-editor-wrapper';
 
 const AVAILABLE_LANGUAGES = [{ code: 'vi', displayName: 'Vietnamese (vi)' }];
+
+const postTranslationEditors: any[] = [];
+for (let i = 0; i < AVAILABLE_LANGUAGES.length; i++) {
+  postTranslationEditors.push(
+    dynamic(() => import('../components/inputs/rich-text-editor'), {
+      ssr: false
+    }) as any
+  );
+}
 
 export default function BlogForm({ id }: { id?: string }) {
   const router = useRouter();
@@ -38,6 +44,7 @@ export default function BlogForm({ id }: { id?: string }) {
       content: string;
     }[]
   >([]);
+
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
@@ -207,6 +214,8 @@ export default function BlogForm({ id }: { id?: string }) {
       </div>
     );
   };
+
+  const TranslationEditorX = postTranslationEditors[1];
 
   return (
     <form onSubmit={submitHandler} className="flex flex-col space-y-4 max-w-6xl mx-auto">
@@ -418,9 +427,10 @@ export default function BlogForm({ id }: { id?: string }) {
                   </div>
 
                   <div className="form-control w-full bg-base-100 rounded-md border border-base-300">
-                    <RichTextEditor
+                    <RichTextEditorWrapper
+                      id="content-editor"
                       defaultValue={originalContent}
-                      onTextChange={(e) => {
+                      onTextChange={(e: any) => {
                         setContent(e);
                       }}
                       onSelectionChange={() => {}}
@@ -464,82 +474,91 @@ export default function BlogForm({ id }: { id?: string }) {
                     </button>
                   </div>
                   <div className="mt-2 w-full">
-                    {translations.map((translation, index) => (
-                      <div
-                        key={index}
-                        className={`p-4 border border-base-300 rounded-md ${
-                          activeTab === index ? '' : 'hidden'
-                        }`}>
-                        <div className="form-control w-full">
-                          <div className="label flex items-center gap-2 mb-2">
-                            <Settings size={18} />
-                            <span className="label-text font-medium">Language Code</span>
+                    {translations?.map((translation, index) => {
+                      const TranslationEditor = postTranslationEditors[index];
+                      return (
+                        <div
+                          key={index}
+                          className={`p-4 border border-base-300 rounded-md ${
+                            activeTab === index ? '' : 'hidden'
+                          }`}>
+                          <div className="form-control w-full">
+                            <div className="label flex items-center gap-2 mb-2">
+                              <Settings size={18} />
+                              <span className="label-text font-medium">Language Code</span>
+                            </div>
+                            <select
+                              value={translation.languageCode}
+                              onChange={(e) =>
+                                handleTranslationChange(index, 'languageCode', e.target.value)
+                              }
+                              className="select select-bordered w-full"
+                              required
+                              disabled={loading}>
+                              <option value="">Select Language</option>
+                              {AVAILABLE_LANGUAGES.map((lang) => (
+                                <option key={lang.code} value={lang.code}>
+                                  {lang.displayName}
+                                </option>
+                              ))}
+                            </select>
                           </div>
-                          <select
-                            value={translation.languageCode}
-                            onChange={(e) =>
-                              handleTranslationChange(index, 'languageCode', e.target.value)
-                            }
-                            className="select select-bordered w-full"
-                            required
-                            disabled={loading}>
-                            <option value="">Select Language</option>
-                            {AVAILABLE_LANGUAGES.map((lang) => (
-                              <option key={lang.code} value={lang.code}>
-                                {lang.displayName}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="form-control w-full mt-4">
-                          <div className="label flex items-center gap-2 mb-2">
-                            <Info size={18} />
-                            <span className="label-text font-medium">Title</span>
-                          </div>
-                          <input
-                            type="text"
-                            value={translation.title}
-                            onChange={(e) =>
-                              handleTranslationChange(index, 'title', e.target.value)
-                            }
-                            className="input input-bordered w-full"
-                            placeholder="Enter translated title"
-                            required
-                            disabled={loading}
-                          />
-                        </div>
-                        <div className="form-control w-full mt-4">
-                          <div className="label flex items-center gap-2 mb-2">
-                            <BookOpen size={18} />
-                            <span className="label-text font-medium">Preview Content</span>
-                            <span className="label-text-alt">This will appear in blog lists</span>
-                          </div>
-                          <textarea
-                            value={translation.previewContent || ''}
-                            onChange={(e) =>
-                              handleTranslationChange(index, 'previewContent', e.target.value)
-                            }
-                            className="textarea textarea-bordered w-full min-h-24"
-                            placeholder="Enter translated preview content"
-                            required
-                            disabled={loading}
-                          />
-                        </div>
-                        <div className="form-control w-full mt-4">
-                          <div className="label flex items-center gap-2 mb-2">
-                            <FileText size={18} />
-                            <span className="label-text font-medium">Content</span>
-                          </div>
-                          <div className="form-control w-full bg-base-100 rounded-md border border-base-300">
-                            <RichTextEditor
-                              defaultValue={translation.originalContent}
-                              onTextChange={(e) => handleTranslationChange(index, 'content', e)}
-                              readOnly={loading}
+                          <div className="form-control w-full mt-4">
+                            <div className="label flex items-center gap-2 mb-2">
+                              <Info size={18} />
+                              <span className="label-text font-medium">Title</span>
+                            </div>
+                            <input
+                              type="text"
+                              value={translation.title}
+                              onChange={(e) =>
+                                handleTranslationChange(index, 'title', e.target.value)
+                              }
+                              className="input input-bordered w-full"
+                              placeholder="Enter translated title"
+                              required
+                              disabled={loading}
                             />
                           </div>
+                          <div className="form-control w-full mt-4">
+                            <div className="label flex items-center gap-2 mb-2">
+                              <BookOpen size={18} />
+                              <span className="label-text font-medium">Preview Content</span>
+                              <span className="label-text-alt">This will appear in blog lists</span>
+                            </div>
+                            <textarea
+                              value={translation.previewContent || ''}
+                              onChange={(e) =>
+                                handleTranslationChange(index, 'previewContent', e.target.value)
+                              }
+                              className="textarea textarea-bordered w-full min-h-24"
+                              placeholder="Enter translated preview content"
+                              required
+                              disabled={loading}
+                            />
+                          </div>
+                          <div className="form-control w-full mt-4">
+                            <div className="label flex items-center gap-2 mb-2">
+                              <FileText size={18} />
+                              <span className="label-text font-medium">Content</span>
+                            </div>
+                            <div className="form-control w-full bg-base-100 rounded-md border border-base-300">
+                              {TranslationEditor && (
+                                <TranslationEditor
+                                  id="translation-xx-content-editor"
+                                  defaultValue={translation.originalContent}
+                                  onTextChange={(e: any) =>
+                                    handleTranslationChange(index, 'content', e)
+                                  }
+                                  onSelectionChange={() => {}}
+                                  readOnly={loading}
+                                />
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>

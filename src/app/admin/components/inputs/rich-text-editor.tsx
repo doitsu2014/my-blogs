@@ -12,9 +12,9 @@ import QuillResizeImage from 'quill-resize-image';
 
 Quill.register('modules/htmlEditButton', htmlEditButton);
 Quill.register('modules/toggleFullscreen', QuillToggleFullscreenButton);
-Quill.register("modules/resize", QuillResizeImage);
-
-interface RichTextEditorProps {
+Quill.register('modules/resize', QuillResizeImage);
+export interface RichTextEditorProps {
+  id?: string; // Optional id prop for the container
   readOnly?: boolean;
   defaultValue?: string; // Keep value prop for controlled behavior
   onTextChange?: (...args: any[]) => void;
@@ -24,6 +24,7 @@ interface RichTextEditorProps {
 
 // Editor is an uncontrolled React component
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
+  id,
   readOnly,
   defaultValue, // Destructure value prop
   onTextChange,
@@ -47,22 +48,21 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   }, [readOnly]);
 
   useEffect(() => {
-    if (editorRef.current) {
-      editorRef.current.root.innerHTML = defaultValue || ''; // Update the editor's content for value
-    }
-  }, [defaultValue]);
-
-  useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const editorContainer = container.appendChild(container.ownerDocument.createElement('div'));
+    // Clear any existing content in the container to avoid conflicts
+    container.innerHTML = '';
+
+    // Create a unique editor container
+    const editorContainer = document.createElement('div');
+    container.appendChild(editorContainer);
 
     const quill = new Quill(editorContainer, {
       theme: 'snow',
       modules: {
         resize: {
-          locale: {},
+          locale: {}
         },
         toggleFullscreen: {
           buttonTitle: 'Toggle fullscreen',
@@ -100,11 +100,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         },
         toolbar: [
           [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          [{ align: [
-            'center',
-            'right',
-            'justify'
-          ] }],
+          [{ align: ['center', 'right', 'justify'] }],
           ['bold', 'italic', 'underline', 'strike'], // toggled buttons
           [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
           ['blockquote', 'code-block'],
@@ -117,7 +113,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           // [{ color: [] }, { background: [] }], // dropdown with defaults from theme
           // [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
         ]
-      },
+      }
       // formats: [
       //   'image',
       // ],
@@ -138,7 +134,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       onSelectionChangeRef.current?.(...args);
     });
 
+    const defaultValueDelta = editorRef.current?.clipboard.convert({ html: defaultValue });
+    quill.setContents(defaultValueDelta); // Update the editor's content for value
+    editorRef.current.setContents(defaultValueDelta); // Update the editor's content for value
+
     return () => {
+      // Cleanup editor instance and container
       editorRef.current = null;
       container.innerHTML = '';
     };
@@ -177,7 +178,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     input.click();
   };
 
-  return <div ref={containerRef} className={className}></div>;
+  return <div id={id} ref={containerRef} className={className}></div>;
 };
 
 export default RichTextEditor;
