@@ -13,8 +13,7 @@ import QuillResizeImage from 'quill-resize-image';
 Quill.register('modules/htmlEditButton', htmlEditButton);
 Quill.register('modules/toggleFullscreen', QuillToggleFullscreenButton);
 Quill.register('modules/resize', QuillResizeImage);
-
-interface RichTextEditorProps {
+export interface RichTextEditorProps {
   id?: string; // Optional id prop for the container
   readOnly?: boolean;
   defaultValue?: string; // Keep value prop for controlled behavior
@@ -47,12 +46,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       editorRef.current?.enable(!readOnly);
     }
   }, [readOnly]);
-
-  useEffect(() => {
-    if (editorRef.current) {
-      editorRef.current.root.innerHTML = defaultValue || ''; // Update the editor's content for value
-    }
-  }, [defaultValue]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -140,6 +133,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     quill.on(Quill.events.SELECTION_CHANGE, (...args) => {
       onSelectionChangeRef.current?.(...args);
     });
+
+    const defaultValueDelta = editorRef.current?.clipboard.convert({ html: defaultValue });
+    quill.setContents(defaultValueDelta); // Update the editor's content for value
+    editorRef.current.setContents(defaultValueDelta); // Update the editor's content for value
 
     return () => {
       // Cleanup editor instance and container
