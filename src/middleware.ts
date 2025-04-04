@@ -1,5 +1,5 @@
-import { auth as middleware } from '@/auth';
-import { NextResponse } from 'next/server';
+import { auth } from '@/auth';
+import { NextRequest, NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
 
@@ -10,16 +10,8 @@ const routePermissions: Record<string, string[]> = {
   '/admin': ['my-blogs-admin', 'my-blogs-publisher'] // General /admin access for both roles
 };
 
-const intlMiddleware = createMiddleware(routing);
-
-export default middleware((req) => {
+const authMiddleware = auth((req) => {
   const path = req.nextUrl.pathname;
-  // Check if the path starts with /locale/admin
-  const regexp = new RegExp(`^/${routing.locales.join('|')}/admin`);
-
-  if (!path.includes('admin')) {
-    return intlMiddleware(req);
-  }
 
   // Logic to check for auth in the middleware
   const auth = req.auth;
@@ -47,8 +39,19 @@ export default middleware((req) => {
     }
   }
 
-  return intlMiddleware(req);
+  return NextResponse.next(req);
 });
+
+const intlMiddleware = createMiddleware(routing);
+
+export default function middleware(req: NextRequest) {
+  const path = req.nextUrl.pathname;
+  if (!path.includes('admin')) {
+    return intlMiddleware(req);
+  } else {
+    return authMiddleware;
+  }
+}
 
 // Routes Middleware should not run on
 export const config = {
