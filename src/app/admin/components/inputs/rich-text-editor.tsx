@@ -5,7 +5,7 @@ import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.min.css';
-import '@/app/[locale]/admin/components/inputs/rich-text-editor.css';
+import '@/app/admin/components/inputs/rich-text-editor.css';
 import QuillToggleFullscreenButton from 'quill-toggle-fullscreen-button';
 import htmlEditButton from 'quill-html-edit-button';
 import QuillResizeImage from 'quill-resize-image';

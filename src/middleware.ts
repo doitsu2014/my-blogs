@@ -39,7 +39,7 @@ const authMiddleware = auth((req) => {
     }
   }
 
-  return NextResponse.next(req);
+  return NextResponse.next();
 });
 
 const intlMiddleware = createMiddleware(routing);
@@ -49,7 +49,7 @@ export default function middleware(req: NextRequest) {
   if (!path.includes('admin')) {
     return intlMiddleware(req);
   } else {
-    return authMiddleware;
+    return authMiddleware(req, {});
   }
 }
 
