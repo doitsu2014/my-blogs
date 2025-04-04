@@ -55,6 +55,6 @@ export const config = {
   // matcher: ['/admin/:path*'] // Apply middleware only to /admin routes
   matcher: [
     // match all routes except static files and APIs
-    '/((?!api|_next/static|_next/image|trpc|_vercel|favicon.ico).*)'
+    '/((?!api|trpc|_next|_vercel|.*\\..*).*)'
   ]
 };
