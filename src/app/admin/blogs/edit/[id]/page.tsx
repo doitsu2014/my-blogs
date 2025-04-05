@@ -10,7 +10,7 @@ export default async function AdminEditBlogPage({ params }: { params: Promise<{ 
       <Breadcrumbs
         items={[
           { label: 'Admin', href: '/admin', icon: <Home className="w-4 h-4" /> },
-          { label: 'Categories', href: '/admin/blogs' },
+          { label: 'Blogs', href: '/admin/blogs' },
           { label: 'Edit Blog' },
           { label: id }
         ]}
