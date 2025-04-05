@@ -4,21 +4,11 @@ import { useEffect, useState } from 'react';
 import { PostModel } from '@/domains/post';
 import { useRouter } from 'next/navigation';
 import MultiChipInput, { getRandomColor } from '../components/inputs/multi-chip-input';
-import dynamic from 'next/dynamic';
 import { CategoryModel } from '@/domains/category';
 import { Info, ImagePlus, Tag, BookOpen, Save, FileText, Settings } from 'lucide-react';
 import { RichTextEditorWrapper } from '../components/inputs/rich-text-editor-wrapper';
 
 const AVAILABLE_LANGUAGES = [{ code: 'vi', displayName: 'Vietnamese (vi)' }];
-
-const postTranslationEditors: any[] = [];
-for (let i = 0; i < AVAILABLE_LANGUAGES.length; i++) {
-  postTranslationEditors.push(
-    dynamic(() => import('../components/inputs/rich-text-editor'), {
-      ssr: false
-    }) as any
-  );
-}
 
 export default function BlogForm({ id }: { id?: string }) {
   const router = useRouter();
@@ -215,22 +205,8 @@ export default function BlogForm({ id }: { id?: string }) {
     );
   };
 
-  const TranslationEditorX = postTranslationEditors[1];
-
   return (
     <form onSubmit={submitHandler} className="flex flex-col space-y-4 max-w-6xl mx-auto">
-      {/* Form header */}
-      {/* <div className="card bg-base-200 shadow-sm">
-        <div className="card-body p-4">
-          <h2 className="card-title text-2xl">
-            {id ? 'Edit Blog Post' : 'Create New Blog Post'}
-          </h2>
-          <p className="text-sm text-base-content/70">
-            Fill in the details below to {id ? 'update your' : 'create a new'} blog post
-          </p>
-        </div>
-      </div> */}
-
       {/* Tabs with DaisyUI tab-content implementation */}
       <div className="card bg-base-200 shadow-sm">
         <div className="card-body p-4">
@@ -426,8 +402,11 @@ export default function BlogForm({ id }: { id?: string }) {
                     </button>
                   </div>
 
-                  <div className="form-control w-full bg-base-100 rounded-md border border-base-300">
+                  <div
+                    className="form-control w-full bg-base-100 rounded-md border border-base-300"
+                    key="main-editor">
                     <RichTextEditorWrapper
+                      key={`editor-${id}`}
                       id="content-editor"
                       defaultValue={originalContent}
                       onTextChange={(e: any) => {
@@ -475,7 +454,6 @@ export default function BlogForm({ id }: { id?: string }) {
                   </div>
                   <div className="mt-2 w-full">
                     {translations?.map((translation, index) => {
-                      const TranslationEditor = postTranslationEditors[index];
                       return (
                         <div
                           key={index}
@@ -543,17 +521,16 @@ export default function BlogForm({ id }: { id?: string }) {
                               <span className="label-text font-medium">Content</span>
                             </div>
                             <div className="form-control w-full bg-base-100 rounded-md border border-base-300">
-                              {TranslationEditor && (
-                                <TranslationEditor
-                                  id="translation-xx-content-editor"
-                                  defaultValue={translation.originalContent}
-                                  onTextChange={(e: any) =>
-                                    handleTranslationChange(index, 'content', e)
-                                  }
-                                  onSelectionChange={() => {}}
-                                  readOnly={loading}
-                                />
-                              )}
+                              <RichTextEditorWrapper
+                                id={`translation-${index}`}
+                                key={`translation-${index}`}
+                                defaultValue={translation.originalContent}
+                                onTextChange={(e: any) =>
+                                  handleTranslationChange(index, 'content', e)
+                                }
+                                onSelectionChange={() => {}}
+                                readOnly={loading}
+                              />
                             </div>
                           </div>
                         </div>

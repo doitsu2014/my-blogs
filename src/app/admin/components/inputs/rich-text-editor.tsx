@@ -13,7 +13,9 @@ import QuillResizeImage from 'quill-resize-image';
 Quill.register('modules/htmlEditButton', htmlEditButton);
 Quill.register('modules/toggleFullscreen', QuillToggleFullscreenButton);
 Quill.register('modules/resize', QuillResizeImage);
+
 export interface RichTextEditorProps {
+  key?: string; // Optional key prop for React
   id?: string; // Optional id prop for the container
   readOnly?: boolean;
   defaultValue?: string; // Keep value prop for controlled behavior
@@ -24,6 +26,7 @@ export interface RichTextEditorProps {
 
 // Editor is an uncontrolled React component
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
+  key,
   id,
   readOnly,
   defaultValue, // Destructure value prop
@@ -122,7 +125,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     // Handlers can also be added post initialization
     const toolbar: any = quill.getModule('toolbar');
     toolbar.addHandler('image', handleImageUpload);
-
     editorRef.current = quill;
 
     quill.on(Quill.events.TEXT_CHANGE, (...args) => {
@@ -178,7 +180,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     input.click();
   };
 
-  return <div id={id} ref={containerRef} className={className}></div>;
+  return <div id={id} ref={containerRef} className={className} key={key}></div>;
 };
 
 export default RichTextEditor;
