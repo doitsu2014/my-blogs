@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://ducth.dev
+
+# Sitemaps
+Sitemap: https://ducth.dev/sitemap.xml

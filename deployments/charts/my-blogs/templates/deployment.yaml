@@ -43,6 +43,9 @@ spec:
             - name: configmap-env-volume
               mountPath: /app/.env
               subPath: .env
+            - name: configmap-additional-sitemap-volume
+              mountPath: /app/public/additional-sitemap.xml
+              subPath: additional-sitemap.xml
           {{- if .Values.container_readinessProbe }}
           {{- if not (empty .Values.container_readinessProbe) }}
           readinessProbe:
@@ -77,3 +80,9 @@ spec:
           items:
             - key: .env
               path: .env
+      - name: configmap-additional-sitemap-volume
+        configMap:
+          name: {{ .Chart.Name }}-configmap-additional-sitemap
+          items:
+            - key: additional-sitemap
+              path: additional-sitemap.xml
