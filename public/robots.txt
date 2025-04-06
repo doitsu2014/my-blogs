@@ -7,3 +7,4 @@ Host: https://ducth.dev
 
 # Sitemaps
 Sitemap: https://ducth.dev/sitemap.xml
+Sitemap: https://ducth.dev/additional-sitemap.xml
