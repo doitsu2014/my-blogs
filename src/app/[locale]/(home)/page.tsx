@@ -7,10 +7,10 @@ import { getTranslations } from 'next-intl/server';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Home | ducth.dev',
+  title: 'Website - ducth.dev - Home',
   description: 'Welcome to ducth.dev! Explore insights, tutorials, and discussions on technology and software engineering.',
   openGraph: {
-    title: 'Home | ducth.dev',
+    title: 'Website - ducth.dev - Home',
     description: 'Explore insights, tutorials, and discussions on technology and software engineering.',
     url: 'https://ducth.dev',
     images: [
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Home | ducth.dev',
+    title: 'Website - ducth.dev - Home',
     description: 'Explore insights, tutorials, and discussions on technology and software engineering.',
     images: ['/images/duc-tran.png'],
   },

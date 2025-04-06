@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { getHomePageCacheEnabled } from '@/infrastructure/utilities';
+import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +29,31 @@ const getCategories = async (): Promise<CategoryModel[]> => {
     return [];
   }
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const categories = await getCategories();
+  const hostname = process.env.PROXY_HOST || 'https://ducth.dev';
+  const locale = await getLocale();
+
+  const categoryNames = categories.map((category) => category.displayName).join(', ');
+
+  return {
+    title: 'Website - ducth.dev - Categories',
+    description: `Explore various blog categories: ${categoryNames}.`,
+    keywords: `categories, blogs, ${categoryNames}`,
+    openGraph: {
+      title: 'Website - ducth.dev - Categories',
+      description: `Explore various blog categories: ${categoryNames}.`,
+      type: 'website',
+      url: `${hostname}/${locale}/categories`
+    },
+    twitter: {
+      card: 'summary',
+      title: 'Website - ducth.dev - Categories',
+      description: `Explore various blog categories: ${categoryNames}.`
+    }
+  };
+}
 
 export default async function CategoriesPage() {
   const categories = await getCategories();

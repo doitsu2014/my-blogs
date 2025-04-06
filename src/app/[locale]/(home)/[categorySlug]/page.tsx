@@ -18,10 +18,57 @@ import buildGetCategoryByIdQuery, {
 import { mapGraphQlModelToCategoryModel } from '@/infrastructure/graphQL/utilities';
 import { notFound } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: 'My Blogs - Category Detail Page',
-  description: 'There is my blogs website, and the page is blog detail'
-};
+export async function generateMetadata({
+  params
+}: {
+  params: { categorySlug: string };
+}): Promise<Metadata> {
+  const { categorySlug } = params;
+  const hostname = process.env.PROXY_HOST || 'https://ducth.dev';
+  const locale = await getLocale();
+  const isDefaultLocale = locale === routing.defaultLocale;
+
+  const categoryId = await (isDefaultLocale
+    ? getCategoryIdBySlug(categorySlug)
+    : getCategoryIdFromTranslationBySlug(categorySlug));
+
+  if (!categoryId) {
+    return {
+      title: 'Category Not Found',
+      description: 'The requested category could not be found.',
+      keywords: 'not found, category'
+    };
+  }
+
+  const category = isDefaultLocale
+    ? await getCategoryById(categoryId)
+    : await getCategoryWithTranslationsById(categoryId);
+
+  const categoryDisplayName = isDefaultLocale
+    ? category?.displayName
+    : category?.categoryTranslations?.find((translation) => translation.languageCode === locale)
+        ?.displayName;
+
+  const categoryDescription = `Explore blogs in the ${categoryDisplayName} category.`;
+  const categoryTags = category?.categoryTags.join(', '); // Join tags with commas
+
+  return {
+    title: `Website - ducth.dev - ${categoryDisplayName}`,
+    description: categoryDescription,
+    keywords: categoryTags,
+    openGraph: {
+      title: categoryDisplayName,
+      description: categoryDescription,
+      type: 'website',
+      url: `${hostname}/${locale}/${categorySlug}`
+    },
+    twitter: {
+      card: 'summary',
+      title: categoryDisplayName,
+      description: categoryDescription
+    }
+  };
+}
 
 export default async function CategoryDetailPage({
   params

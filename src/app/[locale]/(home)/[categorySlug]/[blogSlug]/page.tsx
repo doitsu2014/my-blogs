@@ -1,6 +1,6 @@
 import { PostModel } from '@/domains/post';
 import { buildGraphQLClient } from '@/infrastructure/graphQL/graphql-client';
-import buildGetPostBySlugQuery, {
+import {
   buildGetPostIdBySlugQuery,
   buildGetPostIdFromTranslationsBySlugQuery
 } from '@/infrastructure/graphQL/queries/posts/get-post-by-slug';
@@ -17,30 +17,59 @@ import { routing } from '@/i18n/routing';
 import buildGetPostByIdQuery from '@/infrastructure/graphQL/queries/posts/get-post-by-id';
 import { notFound } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: 'My Blogs - Blog Detail Page',
-  description: 'There is my blogs website, and the page is blog detail',
-  openGraph: {
-    title: 'My Blogs - Blog Detail Page',
-    description: 'Read this blog post on My Blogs website.',
-    type: 'article',
-    url: 'https://ducth.dev', // Replace with your actual site URL
-    images: [
-      {
-        url: '/images/duc-tran.png',
-        width: 1200,
-        height: 630,
-        alt: 'Blog Thumbnail'
-      }
-    ]
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'My Blogs - Blog Detail Page',
-    description: 'Read this blog post on My Blogs website.',
-    images: ['https://ducth.dev/images/duc-tran.png'] // Replace with a default thumbnail URL
+export async function generateMetadata({
+  params
+}: {
+  params: { categorySlug: string; blogSlug: string };
+}): Promise<Metadata> {
+  const { blogSlug } = params;
+  const hostname = process.env.PROXY_HOST || 'https://ducth.dev';
+  const locale = await getLocale(); // Assuming the locale is 'en' for this example
+  const isDefaultLocale = locale === routing.defaultLocale; // Replace with your actual default locale check
+
+  const postId = await (isDefaultLocale
+    ? getPostIdBySlug(blogSlug)
+    : getPostIdFromTranslationsBySlug(blogSlug));
+  if (!postId) {
+    return {
+      title: 'Blog Not Found',
+      description: 'The requested blog could not be found.',
+      keywords: 'not found, blog'
+    };
   }
-};
+
+  const blog = await getBlogById(postId); // Fetch the blog details
+  const blogTitle = blog.title;
+  const blogDescription = blog.previewContent || blog.content.slice(0, 150); // Fallback to content snippet
+  const blogTags = blog.postTags.join(', '); // Join tags with commas
+  const blogThumbnails = blog.thumbnailPaths || ['/images/duc-tran.png']; // Assuming thumbnailPaths is an array
+
+  return {
+    title: `Website - ducth.dev - ${blogTitle}`,
+    description: blogDescription,
+    keywords: blogTags, // Add blog tags to metadata
+    openGraph: {
+      title: blogTitle,
+      description: blogDescription,
+      type: 'article',
+      url: `${hostname}/${params.categorySlug}/${blogSlug}`,
+      images: [
+        ...blogThumbnails.map((thumbnail) => ({
+          url: thumbnail,
+          width: 1200,
+          height: 630,
+          alt: blogTitle
+        }))
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: blogTitle,
+      description: blogDescription,
+      images: [...blogThumbnails]
+    }
+  };
+}
 
 export default async function BlogDetailPage({
   params
@@ -56,8 +85,7 @@ export default async function BlogDetailPage({
     ? getPostIdBySlug(blogSlug)
     : getPostIdFromTranslationsBySlug(blogSlug));
 
-  if(!postId)
-  {
+  if (!postId) {
     return notFound();
   }
 
@@ -77,7 +105,9 @@ export default async function BlogDetailPage({
           className="ql-editor !prose !max-w-full w-full"
           dangerouslySetInnerHTML={{ __html: blogContent }}></div>
         <div className="flex justify-between items-center w-full mt-4 text-sm">
-          <p className="border border-base-400 rounded p-2">{t('by')} {blog.createdBy}</p>
+          <p className="border border-base-400 rounded p-2">
+            {t('by')} {blog.createdBy}
+          </p>
           <p className="border border-base-400 rounded p-2">
             {t('publishedOn')} {new Date(blog.createdAt).toLocaleDateString()}
           </p>
@@ -99,7 +129,7 @@ const getPostIdBySlug = async (blogSlug: string): Promise<string> => {
   const res = await buildGraphQLClient().query({
     // CURRENT
     query: buildGetPostIdBySlugQuery(blogSlug),
-    fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache',
+    fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache'
   });
 
   return res.data.posts.nodes.map(mapGraphQlModelToPostModel)[0].id;
@@ -109,7 +139,7 @@ const getPostIdFromTranslationsBySlug = async (blogSlug: string): Promise<string
   const res = await buildGraphQLClient().query({
     // CURRENT
     query: buildGetPostIdFromTranslationsBySlugQuery(blogSlug),
-    fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache',
+    fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache'
   });
 
   return res.data.postTranslations?.nodes[0]?.postId;
@@ -118,7 +148,7 @@ const getPostIdFromTranslationsBySlug = async (blogSlug: string): Promise<string
 const getBlogById = async (id: string): Promise<PostModel> => {
   const res = await buildGraphQLClient().query({
     query: buildGetPostByIdQuery(id),
-    fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache',
+    fetchPolicy: getHomePageCacheEnabled() ? 'cache-first' : 'no-cache'
   });
 
   return res.data.posts.nodes.map(mapGraphQlModelToPostModel)[0];
