@@ -1,4 +1,4 @@
-import { getBlogCategoryIds, getCategories } from '../server-actions/category.actions';
+import { getCategories } from '../server-actions/category.actions';
 import Link from 'next/link';
 import { getAllBlogPostsInFooter } from '../server-actions/post.actions';
 import { getLocale, getTranslations } from 'next-intl/server';
@@ -61,6 +61,7 @@ export default async function Footer() {
             categorySlug: matchedCategoryTranslation?.slug
           };
         });
+  console.log(blogInformationToShow);
 
   const social_link_github = process.env.SOCIAL_LINK_GITHUB;
   const social_link_linkedin = process.env.SOCIAL_LINK_LINKEDIN;
@@ -90,7 +91,7 @@ export default async function Footer() {
             {blogInformationToShow.slice(0, 5).map((blog) => (
               <Link
                 key={blog.id}
-                href={`/${locale}/${blog.categorySlug}`}
+                href={`/${locale}/${blog.categorySlug}/${blog.slug}`}
                 className="link link-hover">
                 {blog.title}
               </Link>

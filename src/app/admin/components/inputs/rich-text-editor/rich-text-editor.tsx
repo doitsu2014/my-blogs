@@ -5,12 +5,13 @@ import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.min.css';
-import '@/app/admin/components/inputs/rich-text-editor.css';
+import '@/app/admin/components/inputs/rich-text-editor/rich-text-editor.css';
 import QuillToggleFullscreenButton from 'quill-toggle-fullscreen-button';
 import htmlEditButton from 'quill-html-edit-button';
 import QuillResizeImage from 'quill-resize-image';
 import QuillTableBetter from 'quill-table-better';
 import 'quill-table-better/dist/quill-table-better.css';
+import { HeaderHashLink } from './custom-modules/header-hash-link';
 
 Quill.register('modules/htmlEditButton', htmlEditButton);
 Quill.register('modules/toggleFullscreen', QuillToggleFullscreenButton);
@@ -21,6 +22,7 @@ Quill.register(
   },
   true
 );
+Quill.register('modules/headerHashLink', HeaderHashLink);
 
 export interface RichTextEditorProps {
   key?: string; // Optional key prop for React
@@ -133,7 +135,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           keyboard: {
             bindings: QuillTableBetter.keyboardBindings
           }
-        }
+        },
+        headerHashLink: true // Enable the custom module
       }
       // formats: [
       //   'image',
