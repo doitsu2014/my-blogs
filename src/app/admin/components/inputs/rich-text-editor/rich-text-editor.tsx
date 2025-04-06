@@ -5,14 +5,24 @@ import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.min.css';
-import '@/app/admin/components/inputs/rich-text-editor.css';
+import '@/app/admin/components/inputs/rich-text-editor/rich-text-editor.css';
 import QuillToggleFullscreenButton from 'quill-toggle-fullscreen-button';
 import htmlEditButton from 'quill-html-edit-button';
 import QuillResizeImage from 'quill-resize-image';
+import QuillTableBetter from 'quill-table-better';
+import 'quill-table-better/dist/quill-table-better.css';
+import { HeaderHashLink } from './custom-modules/header-hash-link';
 
 Quill.register('modules/htmlEditButton', htmlEditButton);
 Quill.register('modules/toggleFullscreen', QuillToggleFullscreenButton);
 Quill.register('modules/resize', QuillResizeImage);
+Quill.register(
+  {
+    'modules/table-better': QuillTableBetter
+  },
+  true
+);
+Quill.register('modules/headerHashLink', HeaderHashLink);
 
 export interface RichTextEditorProps {
   key?: string; // Optional key prop for React
@@ -67,6 +77,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         resize: {
           locale: {}
         },
+        'table-better': {
+          language: 'en_US',
+          menus: ['column', 'row', 'merge', 'table', 'cell', 'wrap', 'copy', 'delete'],
+          toolbarTable: true
+        },
         toggleFullscreen: {
           buttonTitle: 'Toggle fullscreen',
           buttonHTML: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
@@ -109,13 +124,19 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           ['blockquote', 'code-block'],
           ['link', 'image', 'video', 'formula'],
           [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
-          ['clean'] // remove formatting button
-
+          ['clean'], // remove formatting button
+          ['table-better']
           // [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
           // [{ direction: 'rtl' }], // text direction
           // [{ color: [] }, { background: [] }], // dropdown with defaults from theme
           // [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
-        ]
+        ],
+        keyboard: {
+          keyboard: {
+            bindings: QuillTableBetter.keyboardBindings
+          }
+        },
+        headerHashLink: true // Enable the custom module
       }
       // formats: [
       //   'image',
@@ -128,17 +149,21 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     editorRef.current = quill;
 
     quill.on(Quill.events.TEXT_CHANGE, (...args) => {
-      const finalText = quill.root.innerHTML; // Collect final text content
-      onTextChangeRef.current?.(finalText);
+      const module: any = quill.getModule('table-better');
+      module.deleteTableTemporary();
+      const html = quill.getSemanticHTML();
+      onTextChangeRef.current?.(html);
     });
 
     quill.on(Quill.events.SELECTION_CHANGE, (...args) => {
       onSelectionChangeRef.current?.(...args);
     });
 
-    const defaultValueDelta = editorRef.current?.clipboard.convert({ html: defaultValue });
-    quill.setContents(defaultValueDelta); // Update the editor's content for value
-    editorRef.current.setContents(defaultValueDelta); // Update the editor's content for value
+    const defaultValueDelta = quill.clipboard.convert({ html: defaultValue });
+    const [range] = quill.selection.getRange();
+    quill.updateContents(defaultValueDelta, Quill.sources.USER);
+    quill.setSelection(defaultValueDelta.length() - (range?.length || 0), Quill.sources.SILENT);
+    quill.scrollSelectionIntoView();
 
     return () => {
       // Cleanup editor instance and container
