@@ -41,7 +41,7 @@ export async function generateMetadata({
   const blog = await getBlogById(postId); // Fetch the blog details
   const blogTitle = blog.title;
   const blogDescription = blog.previewContent || blog.content.slice(0, 150); // Fallback to content snippet
-  const blogTags = blog.postTags.join(', '); // Join tags with commas
+  const blogTags = blog?.postTags?.map(t => t.name)?.join(', ') || ''; // Join tags with commas
   const blogThumbnails = blog.thumbnailPaths || ['/images/duc-tran.png']; // Assuming thumbnailPaths is an array
 
   return {

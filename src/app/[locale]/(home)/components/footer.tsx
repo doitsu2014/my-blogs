@@ -61,7 +61,6 @@ export default async function Footer() {
             categorySlug: matchedCategoryTranslation?.slug
           };
         });
-  console.log(blogInformationToShow);
 
   const social_link_github = process.env.SOCIAL_LINK_GITHUB;
   const social_link_linkedin = process.env.SOCIAL_LINK_LINKEDIN;

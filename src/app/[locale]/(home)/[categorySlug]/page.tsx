@@ -50,7 +50,7 @@ export async function generateMetadata({
         ?.displayName;
 
   const categoryDescription = `Explore blogs in the ${categoryDisplayName} category.`;
-  const categoryTags = category?.categoryTags.join(', '); // Join tags with commas
+  const categoryTags = category?.categoryTags?.map(t => t.name)?.join(', ') || ''; // Join tags with commas
 
   return {
     title: `Website - ducth.dev - ${categoryDisplayName}`,
@@ -225,11 +225,13 @@ const getCategoryIdFromTranslationBySlug = async (categorySlug: string): Promise
   }
 };
 
-const getCategoryById = async (categoryId: string): Promise<CategoryModel> => {
+const getCategoryById = async (categoryId: string): Promise<CategoryModel | undefined> => {
   const res = await buildGraphQLClient().query({
     query: buildGetCategoryByIdQuery(categoryId)
   });
-  return res.data.categories.nodes[0];
+  return res.data.categories.nodes[0]
+    ? mapGraphQlModelToCategoryModel(res.data.categories.nodes[0])
+    : undefined;
 };
 
 const getCategoryWithTranslationsById = async (
@@ -238,5 +240,7 @@ const getCategoryWithTranslationsById = async (
   const res = await buildGraphQLClient().query({
     query: buildGetCategoryWithTranslationsByIdQuery(categoryId)
   });
-  return mapGraphQlModelToCategoryModel(res.data.categories.nodes[0]);
+  return res.data.categories.nodes[0]
+    ? mapGraphQlModelToCategoryModel(res.data.categories.nodes[0])
+    : undefined;
 };
