@@ -1,3 +1,5 @@
+import { hash } from 'crypto';
+import { link } from 'fs';
 import Quill from 'quill';
 import slugify from 'slugify';
 
@@ -9,21 +11,21 @@ export function HeaderHashLink(quill: Quill, options: any) {
       const text = (header.textContent || '').trim();
       if (text) {
         const headerSize = header.tagName.toLowerCase(); // Get header size (e.g., h1, h2)
-        const textSlug = slugify(text, { lower: true, strict: true }); // Generate a slug from the text
-        const id = btoa(`${textSlug}-${headerSize}`) // Generate a base64 hash of text and header size
-          .replace(/=+$/, ''); // Remove padding characters
+        const id = slugify(`${headerSize} ${text}`, { lower: true, strict: true }); // Generate a slug from the text
 
         if (id && header.id !== id) {
           header.id = id;
 
           // Update or create the hash link
-          let hashLink = header.querySelector('a.hash-link');
+          let hashLink = Array.from(header.querySelectorAll('a')).filter((a) =>
+            a.innerHTML.includes('#')
+          )[0];
           if (!hashLink) {
             hashLink = document.createElement('a');
-            hashLink.classList.add('hash-link', 'text-inherit', '!no-underline', 'hover:underline');
             hashLink.innerHTML = `<span> #</span>`; // Update hash link content
             header.appendChild(hashLink); // Prepend the hash link to the header
           }
+          hashLink.classList.add('hash-link', 'text-inherit', '!no-underline', 'hover:underline');
           hashLink.setAttribute('href', `#${id}`);
         }
 
