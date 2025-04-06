@@ -21,9 +21,9 @@ import { notFound } from 'next/navigation';
 export async function generateMetadata({
   params
 }: {
-  params: { categorySlug: string };
+  params: Promise<{ categorySlug: string }>;
 }): Promise<Metadata> {
-  const { categorySlug } = params;
+  const { categorySlug } = await params;
   const hostname = process.env.PROXY_HOST || 'https://ducth.dev';
   const locale = await getLocale();
   const isDefaultLocale = locale === routing.defaultLocale;

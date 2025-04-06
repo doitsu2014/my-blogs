@@ -20,9 +20,9 @@ import { notFound } from 'next/navigation';
 export async function generateMetadata({
   params
 }: {
-  params: { categorySlug: string; blogSlug: string };
+  params: Promise<{ categorySlug: string; blogSlug: string }>;
 }): Promise<Metadata> {
-  const { blogSlug } = params;
+  const { categorySlug, blogSlug } = await params;
   const hostname = process.env.PROXY_HOST || 'https://ducth.dev';
   const locale = await getLocale(); // Assuming the locale is 'en' for this example
   const isDefaultLocale = locale === routing.defaultLocale; // Replace with your actual default locale check
@@ -52,7 +52,7 @@ export async function generateMetadata({
       title: blogTitle,
       description: blogDescription,
       type: 'article',
-      url: `${hostname}/${params.categorySlug}/${blogSlug}`,
+      url: `${hostname}/${categorySlug}/${blogSlug}`,
       images: [
         ...blogThumbnails.map((thumbnail) => ({
           url: thumbnail,
