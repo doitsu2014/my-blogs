@@ -99,8 +99,36 @@ export default async function BlogDetailPage({
   return (
     <div className="flex flex-col items-center min-h-screen bg-base-100 text-base-content p-4">
       <div className="w-full max-w-4xl">
-        <h1 className="text-4xl font-bold mb-2">{blogTitle}</h1>
         <meta name="keywords" content={blog.postTags.join(', ')} />
+        {/* Carousel for thumbnails */}
+        {blog.thumbnailPaths.length > 0 && (
+          <div className="carousel w-full my-4 h-156">
+            {blog.thumbnailPaths.map((thumbnail, index) => (
+              <div
+                key={index}
+                id={`slide-${index}`}
+                className="carousel-item relative w-full aspect-video">
+                <img src={thumbnail} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover rounded" />
+                {blog.thumbnailPaths.length > 1 && (
+                  <>
+                    <a
+                      href={`#slide-${(index - 1 + blog.thumbnailPaths.length) % blog.thumbnailPaths.length}`}
+                      className="btn btn-circle btn-sm absolute left-2 top-1/2 transform -translate-y-1/2">
+                      ❮
+                    </a>
+                    <a
+                      href={`#slide-${(index + 1) % blog.thumbnailPaths.length}`}
+                      className="btn btn-circle btn-sm absolute right-2 top-1/2 transform -translate-y-1/2">
+                      ❯
+                    </a>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+        <h1 className="text-4xl font-bold mb-2">{blogTitle}</h1>
+        <hr className="py-2" />
         <div
           className="ql-editor !prose !max-w-full w-full"
           dangerouslySetInnerHTML={{ __html: blogContent }}></div>

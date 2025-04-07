@@ -134,13 +134,6 @@ export default function AdminBlogsPage() {
                     </td>
                     <td className="max-w-48 p-3 font-semibold">
                       <div className="max-w-xs truncate">{blog.title}</div>
-                      {blog.thumbnailPaths && blog.thumbnailPaths.length > 0 && (
-                        <div className="avatar mt-1">
-                          <div className="w-8 rounded">
-                            <img src={blog.thumbnailPaths[0]} alt="Thumbnail" />
-                          </div>
-                        </div>
-                      )}
                     </td>
                     <td>
                       <div className="max-w-32 truncate text-sm">{blog.previewContent}</div>
@@ -155,11 +148,14 @@ export default function AdminBlogsPage() {
                     <td>
                       <div className="flex flex-wrap gap-1">
                         {blog.postTags &&
-                          blog.postTags.map((tag) => (
+                          blog.postTags.slice(0, 3).map((tag) => (
                             <span key={tag.id} className="badge badge-secondary mr-1">
                               {tag.name}
                             </span>
                           ))}
+                        {blog.postTags && blog.postTags.length > 3 && (
+                          <span className="badge badge-ghost">...</span>
+                        )}
                       </div>
                     </td>
                     <td className="text-sm">{blog.lastModifiedBy}</td>
