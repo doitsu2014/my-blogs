@@ -47,7 +47,7 @@ export default function MultiChipInput({
 
   const removeChip = (chipToRemove: string) => {
     if (!loading) {
-      const afterRemove = chips.filter((chip) => chip.label !== chipToRemove)
+      const afterRemove = chips.filter((chip) => chip.label !== chipToRemove);
       setChips(afterRemove);
     }
   };
@@ -63,7 +63,8 @@ export default function MultiChipInput({
           <button
             className="text-white hover:text-gray-300 font-bold"
             onClick={() => removeChip(chip.label)}
-            disabled={loading}>
+            disabled={loading}
+            type="button">
             &times;
           </button>
         </div>

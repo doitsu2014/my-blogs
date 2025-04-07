@@ -7,6 +7,7 @@ import MultiChipInput, { getRandomColor } from '../components/inputs/multi-chip-
 import { CategoryModel } from '@/domains/category';
 import { Info, ImagePlus, Tag, BookOpen, Save, FileText, Settings } from 'lucide-react';
 import { RichTextEditorWrapper } from '../components/inputs/rich-text-editor/rich-text-editor-wrapper';
+import ThumbnailsInput from '../components/inputs/thumbnail-input';
 
 const AVAILABLE_LANGUAGES = [{ code: 'vi', displayName: 'Vietnamese (vi)' }];
 
@@ -179,30 +180,8 @@ export default function BlogForm({ id }: { id?: string }) {
     setLoading(false);
   };
 
-  // Function to show thumbnail preview
-  const renderThumbnailPreview = () => {
-    if (thumbnailPaths.length === 0 || thumbnailPaths[0] === '') return null;
-
-    return (
-      <div className="flex flex-wrap gap-2 mt-2">
-        {thumbnailPaths.map((path, index) => (
-          <div key={index} className="relative group">
-            <img
-              src={path}
-              alt={`Thumbnail ${index + 1}`}
-              className="h-24 w-24 object-cover rounded-md border border-base-300"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src =
-                  'https://picsum.photos/200/300?random=' + index;
-              }}
-            />
-            <span className="absolute top-0 right-0 bg-base-100 text-xs px-1 rounded-bl-md rounded-tr-md">
-              {index + 1}
-            </span>
-          </div>
-        ))}
-      </div>
-    );
+  const handleThumbnailUploadSuccess = (urls: string[]) => {
+    setThumbnailPaths([...urls]);
   };
 
   return (
@@ -292,37 +271,7 @@ export default function BlogForm({ id }: { id?: string }) {
                       <ImagePlus size={18} />
                       Thumbnails
                     </h3>
-
-                    <label className="form-control w-full">
-                      <div className="label">
-                        <span className="label-text font-medium">Thumbnail URLs</span>
-                        <span className="label-text-alt">Separate with commas</span>
-                      </div>
-                      <input
-                        type="text"
-                        value={thumbnailPaths.join(', ')}
-                        onChange={(e) =>
-                          setThumbnailPaths(
-                            e.target.value
-                              .split(',')
-                              .map((path) => path.trim())
-                              .filter(Boolean)
-                          )
-                        }
-                        className="input input-bordered w-full"
-                        placeholder="https://example.com/image.jpg, ..."
-                        name="thumbnailPaths"
-                        disabled={loading}
-                      />
-                    </label>
-
-                    {renderThumbnailPreview()}
-
-                    {thumbnailPaths.length === 0 && (
-                      <div className="text-sm text-base-content/70 mt-2">
-                        No thumbnails added yet. Add URL(s) to display preview.
-                      </div>
-                    )}
+                    <ThumbnailsInput value={thumbnailPaths} onUploadSuccess={handleThumbnailUploadSuccess} />
                   </div>
 
                   {/* Tags */}

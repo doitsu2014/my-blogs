@@ -112,7 +112,7 @@ export default async function CategoryDetailPage({
         </div>
       </div>
 
-      <ul className="timeline timeline-vertical w-full max-w-3xl">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
         {posts
           .filter((post) => {
             const matchedTranslation = post.postTranslations?.find(
@@ -120,7 +120,7 @@ export default async function CategoryDetailPage({
             );
             return isDefaultLocale ? post : matchedTranslation;
           })
-          .map((post, index) => {
+          .map((post) => {
             // Format the date (assuming post.createdAt exists)
             const createdDate = post.createdAt
               ? new Date(post.createdAt).toLocaleDateString(locale, {
@@ -141,58 +141,25 @@ export default async function CategoryDetailPage({
             const postPreviewContent = isDefaultLocale
               ? post.previewContent
               : matchedTranslation?.previewContent || post.previewContent;
+            const postThumbnail = post.thumbnailPaths[0] || 'https://picsum.photos/300/200'; // Placeholder if no thumbnail
 
             return (
-              <li key={post.id}>
-                {/* Add connecting line except for the last item */}
-                {index > 0 && <hr />}
-
-                {/* Apply timeline-start only for even indexed posts */}
-                {index % 2 === 0 && (
-                  <div className="timeline-start timeline-box bg-base-200 hover:bg-base-300 transition-colors duration-300 shadow-xl p-4">
-                    <h2 className="font-bold text-lg text-primary">{postTitle}</h2>
-                    <p className="text-base-content my-2">{postPreviewContent}</p>
-                    <div className="flex justify-between items-center flex-wrap gap-2 mt-2">
-                      <span className="badge badge-secondary badge-outline">{createdDate}</span>
-                      <a
-                        href={`/${locale}/${categorySlug}/${postSlug}`}
-                        className="btn btn-primary btn-sm">
-                        {t('readMore')}
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {/* Middle icon */}
-                <div className="timeline-middle">
-                  <div
-                    className={`p-2 rounded-full ${
-                      index % 2 === 0
-                        ? 'bg-primary text-primary-content'
-                        : 'bg-secondary text-secondary-content'
-                    }`}>
-                    <BookOpenText size={18} />
+              <li key={post.id} className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                <figure>
+                  <img src={postThumbnail} alt={postTitle} className="w-full h-48 object-cover" />
+                </figure>
+                <div className="card-body">
+                  <h2 className="card-title text-primary">{postTitle}</h2>
+                  <p className="text-base-content my-2">{postPreviewContent}</p>
+                  <div className="flex justify-between items-center flex-wrap gap-2 mt-2">
+                    <span className="badge badge-secondary badge-outline">{createdDate}</span>
+                    <a
+                      href={`/${locale}/${categorySlug}/${postSlug}`}
+                      className="btn btn-primary btn-sm">
+                      {t('readMore')}
+                    </a>
                   </div>
                 </div>
-
-                {/* Apply timeline-end only for odd indexed posts */}
-                {index % 2 === 1 && (
-                  <div className="timeline-end timeline-box bg-base-200 hover:bg-base-300 transition-colors duration-300 shadow-xl p-4">
-                    <h2 className="font-bold text-lg text-accent">{postTitle}</h2>
-                    <p className="text-base-content my-2">{postPreviewContent}</p>
-                    <div className="flex justify-between items-center flex-wrap gap-2 mt-2">
-                      <span className="badge badge-primary badge-outline">{createdDate}</span>
-                      <a
-                        href={`/${locale}/${categorySlug}/${postSlug}`}
-                        className="btn btn-secondary btn-sm">
-                        {t('readMore')}
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {/* Add connecting line except for the last item */}
-                {index < posts.length - 1 && <hr />}
               </li>
             );
           })}
