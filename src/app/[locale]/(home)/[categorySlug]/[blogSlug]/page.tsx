@@ -66,7 +66,9 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: blogTitle,
       description: blogDescription,
-      images: [...blogThumbnails]
+      images: {
+        url: blogThumbnails[0], // Use the first thumbnail as the Twitter image
+      },
     }
   };
 }
