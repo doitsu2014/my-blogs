@@ -106,11 +106,21 @@ export function buildGetPostsByCategoryIdsInFooter(
           is_in: ${JSON.stringify(blogCategories)}
         },
         ${isFilterByPublished ? 'published: { eq: true }' : ''},
+      }, 
+      orderBy: {
+        createdAt: DESC
+      },
+      pagination: {
+        page: {
+          limit: 5,
+          page: 0
+        }
       }) {
         nodes {
           id
           title
           slug
+          createdAt
           categories {
             id
             displayName

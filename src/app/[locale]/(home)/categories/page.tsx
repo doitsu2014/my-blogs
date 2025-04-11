@@ -38,18 +38,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const categoryNames = categories.map((category) => category.displayName).join(', ');
 
   return {
-    title: 'Website - ducth.dev - Categories',
+    title: `Website - ducth.dev - ${categoryNames}`,
     description: `Explore various blog categories: ${categoryNames}.`,
     keywords: `categories, blogs, ${categoryNames}`,
     openGraph: {
-      title: 'Website - ducth.dev - Categories',
+      title: `Website - ducth.dev - ${categoryNames}`,
       description: `Explore various blog categories: ${categoryNames}.`,
       type: 'website',
       url: `${hostname}/${locale}/categories`
     },
     twitter: {
       card: 'summary',
-      title: 'Website - ducth.dev - Categories',
+      title: `Website - ducth.dev - ${categoryNames}`,
       description: `Explore various blog categories: ${categoryNames}.`
     }
   };

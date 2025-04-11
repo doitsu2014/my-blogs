@@ -37,4 +37,5 @@ export interface PostInFooterModel {
   slug: string;
   category: CategoryModel;
   postTranslations: PostTranslationModel[];
+  createdAt: string;
 }

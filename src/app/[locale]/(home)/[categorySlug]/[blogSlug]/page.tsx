@@ -41,12 +41,12 @@ export async function generateMetadata({
   const blog = await getBlogById(postId); // Fetch the blog details
   const blogTitle = blog.title;
   const blogDescription = blog.previewContent || blog.content.slice(0, 150); // Fallback to content snippet
-  const blogTags = blog?.postTags?.map(t => t.name)?.join(', ') || ''; // Join tags with commas
+  const blogTags = blog?.postTags?.map((t) => t.name)?.join(', ') || ''; // Join tags with commas
   const blogThumbnails = blog.thumbnailPaths || ['/images/duc-tran.png']; // Assuming thumbnailPaths is an array
 
   return {
-    title: `Website - ducth.dev - ${blogTitle}`,
-    description: blogDescription,
+    title: `Website - ducth.dev - ${blogTitle} - ${blogTags}`,
+    description: `${blogDescription} ${blogTags}`,
     keywords: blogTags, // Add blog tags to metadata
     openGraph: {
       title: blogTitle,
@@ -67,8 +67,8 @@ export async function generateMetadata({
       title: blogTitle,
       description: blogDescription,
       images: {
-        url: blogThumbnails[0], // Use the first thumbnail as the Twitter image
-      },
+        url: blogThumbnails[0] // Use the first thumbnail as the Twitter image
+      }
     }
   };
 }
@@ -110,11 +110,17 @@ export default async function BlogDetailPage({
                 key={index}
                 id={`slide-${index}`}
                 className="carousel-item relative w-full aspect-video">
-                <img src={thumbnail} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover rounded" />
+                <img
+                  src={thumbnail}
+                  alt={`Thumbnail ${index + 1}`}
+                  className="w-full h-full object-cover rounded"
+                />
                 {blog.thumbnailPaths.length > 1 && (
                   <>
                     <a
-                      href={`#slide-${(index - 1 + blog.thumbnailPaths.length) % blog.thumbnailPaths.length}`}
+                      href={`#slide-${
+                        (index - 1 + blog.thumbnailPaths.length) % blog.thumbnailPaths.length
+                      }`}
                       className="btn btn-circle btn-sm absolute left-2 top-1/2 transform -translate-y-1/2">
                       ❮
                     </a>

@@ -6,10 +6,10 @@ import { getTranslations } from 'next-intl/server';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Website - ducth.dev - Home',
+  title: 'Website - ducth.dev - Programming, AI, Blockchain, and Software Engineering',
   description: 'Welcome to ducth.dev! Explore insights, tutorials, and discussions on technology and software engineering.',
   openGraph: {
-    title: 'Website - ducth.dev - Home',
+    title: 'Website - ducth.dev - Programming, AI, Blockchain, and Software Engineering',
     description: 'Explore insights, tutorials, and discussions on technology and software engineering.',
     url: 'https://ducth.dev',
     images: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Website - ducth.dev - Home',
+    title: 'Website - ducth.dev - Programming, AI, Blockchain, and Software Engineering',
     description: 'Explore insights, tutorials, and discussions on technology and software engineering.',
     images: ['/images/duc-tran.png'],
   },
@@ -38,7 +38,7 @@ export default async function Home({
   const t = await getTranslations('home');
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen max-w-4xl p-4 mx-auto bg-base-100 text-base-content">
       <div className="text-center">
         <div className="avatar mb-4">
           <div className="w-64 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">

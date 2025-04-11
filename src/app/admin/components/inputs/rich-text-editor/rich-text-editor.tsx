@@ -110,7 +110,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           hljs: hljs,
           languages: [
             { label: 'Rust', key: 'rust' },
-            { label: 'YAML', key: 'yaml' }
+            { label: 'YAML', key: 'yaml' },
+            { label: 'Bash', key: 'bash' },
+            { label: 'Toml', key: 'toml' }
           ]
         },
         clipboard: {
