@@ -9,13 +9,12 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react'; // Importing an icon from lucide-react
 
-import 'quill/dist/quill.snow.css';
-import 'highlight.js/styles/github-dark.min.css';
 import { getHomePageCacheEnabled } from '@/infrastructure/utilities';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import buildGetPostByIdQuery from '@/infrastructure/graphQL/queries/posts/get-post-by-id';
 import { notFound } from 'next/navigation';
+import PostContent from './post-content.component';
 
 export async function generateMetadata({
   params
@@ -137,9 +136,12 @@ export default async function BlogDetailPage({
         )}
         <h1 className="text-4xl font-bold mb-2">{blogTitle}</h1>
         <hr className="py-2" />
-        <div
-          className="ql-editor !prose !max-w-full w-full"
-          dangerouslySetInnerHTML={{ __html: blogContent }}></div>
+        <PostContent contentHtml={blogContent} />
+
+        {/* <div className="ql-editor !prose !max-w-full w-full"
+          dangerouslySetInnerHTML={{ __html: blogContent }}>
+
+          </div> */}
         <div className="flex justify-between items-center w-full mt-4 text-sm">
           <p className="border border-base-400 rounded p-2">
             {t('by')} {blog.createdBy}

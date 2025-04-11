@@ -8,6 +8,9 @@ import { CategoryModel } from '@/domains/category';
 import { Info, ImagePlus, Tag, BookOpen, Save, FileText, Settings } from 'lucide-react';
 import { RichTextEditorWrapper } from '../components/inputs/rich-text-editor/rich-text-editor-wrapper';
 import ThumbnailsInput from '../components/inputs/thumbnail-input';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.min.css';
+import PostContent from '@/app/[locale]/(home)/[categorySlug]/[blogSlug]/post-content.component';
 
 const AVAILABLE_LANGUAGES = [{ code: 'vi', displayName: 'Vietnamese (vi)' }];
 
@@ -346,7 +349,9 @@ export default function BlogForm({ id }: { id?: string }) {
                       <button
                         type="button"
                         className="btn btn-sm btn-secondary"
-                        onClick={() => setIsPreviewModalOpen(true)}
+                        onClick={() => {
+                          setIsPreviewModalOpen(true);
+                        }}
                         disabled={loading}>
                         Preview
                       </button>
@@ -541,7 +546,7 @@ export default function BlogForm({ id }: { id?: string }) {
               </button>
             </div>
             <div className="modal-body prose max-w-none mt-4 overflow-y-auto h-[calc(100%-8rem)]">
-              <div dangerouslySetInnerHTML={{ __html: content }} />
+              <PostContent contentHtml={content} ></PostContent>
             </div>
             <div className="modal-action justify-end mt-4 border-t pt-2">
               <button
