@@ -21,7 +21,9 @@ export default function AdminBlogsPage() {
         // Replace with your actual API call
         const response = await fetch('/api/admin/blogs');
         const data = await response.json();
-        setBlogs(data);
+        // Sort blogs by createdAt in descending order
+        const sortedBlogs = data.sort((a: PostModel, b: PostModel) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setBlogs(sortedBlogs);
       } catch (error) {
         console.error('Error fetching blogs:', error);
       } finally {
@@ -133,7 +135,12 @@ export default function AdminBlogsPage() {
                       </div>
                     </td>
                     <td className="max-w-48 p-3 font-semibold">
-                      <div className="max-w-xs truncate">{blog.title}</div>
+                      <div className="flex items-center gap-1">
+                        <div className="max-w-xs truncate">{blog.title}</div>
+                        <div className="tooltip" data-tip={blog.title}>
+                          <Info className="w-3 h-3 text-gray-400" />
+                        </div>
+                      </div>
                     </td>
                     <td>
                       <div className="max-w-32 truncate text-sm">{blog.previewContent}</div>

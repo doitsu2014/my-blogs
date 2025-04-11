@@ -120,6 +120,7 @@ export default async function CategoryDetailPage({
             );
             return isDefaultLocale ? post : matchedTranslation;
           })
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // Sort by createdAt descending
           .map((post) => {
             // Format the date (assuming post.createdAt exists)
             const createdDate = post.createdAt
