@@ -5,6 +5,7 @@ import { getCategories } from '../server-actions/category.actions';
 import { routing } from '@/i18n/routing';
 import { getLocale } from 'next-intl/server';
 import LanguageSwitcher from '../../components/language-switcher';
+import SearchPosts from './inputs/search-post';
 
 export default async function Navbar() {
   const locale = await getLocale(); // Get the current locale
@@ -30,40 +31,60 @@ export default async function Navbar() {
       });
 
   return (
-    <div className="navbar bg-base-100">
-      <div className="flex-none">
-        <Link className="btn btn-ghost text-xl" href={`/${locale}/`}>
-          <div className="w-10 rounded-full">
-            <Image
-              src="/images/doitsu-technology-logo.png"
-              width={45}
-              height={45}
-              className="mr-3"
-              alt="D Tech"
-            />
-          </div>
-          Duc Tran
-        </Link>
+    <>
+      {/* Mobile Search Bar */}
+      <div className="flex flex-1 top-16 left-0 w-full bg-base-100 px-2 py-2 shadow-md justify-center">
+        <SearchPosts className="w-full lg:w-auto"  />
       </div>
-      {/* Mobile Menu Toggle */}
-      <div className="flex-1 lg:hidden">
-        <details className="dropdown">
-          <summary className="btn btn-ghost lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 5.25h16.5m-16.5 6h16.5m-16.5 6h16.5"
+
+      <div className="navbar bg-base-100">
+        <div className="flex-none">
+          <Link className="btn btn-ghost text-xl text-left px-0" href={`/${locale}/`}>
+            <div className="w-10 rounded-full py-2">
+              <Image
+                src="/images/doitsu-technology-logo.png"
+                width={45}
+                height={45}
+                className="mr-3"
+                alt="D Tech"
               />
-            </svg>
-          </summary>
-          <ul className="dropdown-content menu mt-3 p-4 shadow-lg bg-primary text-primary-content rounded-lg border border-primary-focus min-w-40">
+            </div>
+            Duc Tran
+          </Link>
+        </div>
+        {/* Mobile Menu Toggle */}
+        <div className="flex-1 lg:hidden">
+          <details className="dropdown">
+            <summary className="btn btn-ghost lg:hidden">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 5.25h16.5m-16.5 6h16.5m-16.5 6h16.5"
+                />
+              </svg>
+            </summary>
+            <ul className="dropdown-content menu mt-3 p-4 shadow-lg bg-primary text-primary-content rounded-lg border border-primary-focus min-w-40">
+              {links.map((link) => (
+                <li key={link.id}>
+                  <NavbarItem
+                    slug={`/${locale}/${link.slug}`}
+                    displayName={link.displayName}
+                    key={link.id}></NavbarItem>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </div>
+        {/* Categories for larger screens */}
+        <div className="hidden lg:flex flex-1 justify-end px-2">
+          <ul className="menu menu-horizontal px-1 space-x-1">
             {links.map((link) => (
               <li key={link.id}>
                 <NavbarItem
@@ -73,25 +94,12 @@ export default async function Navbar() {
               </li>
             ))}
           </ul>
-        </details>
+        </div>
+        {/* Language Switcher */}
+        <div className="flex-none">
+          <LanguageSwitcher />
+        </div>
       </div>
-      {/* Categories for larger screens */}
-      <div className="hidden lg:flex flex-1 justify-end px-2">
-        <ul className="menu menu-horizontal px-1 space-x-1">
-          {links.map((link) => (
-            <li key={link.id}>
-              <NavbarItem
-                slug={`/${locale}/${link.slug}`}
-                displayName={link.displayName}
-                key={link.id}></NavbarItem>
-            </li>
-          ))}
-        </ul>
-      </div>
-      {/* Language Switcher */}
-      <div className="flex-none">
-        <LanguageSwitcher />
-      </div>
-    </div>
+    </>
   );
 }

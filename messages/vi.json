@@ -32,6 +32,10 @@
     "signInKeycloak": {
       "title": "Đăng nhập với Keycloak",
       "subtitle": "Vui lòng đăng nhập để tiếp tục"
+    },
+    "searchPosts": {
+      "placeholder": "Tìm kiếm bài viết",
+      "noResults": "Không tìm thấy bài viết nào với từ khóa này"
     }
   }
 }

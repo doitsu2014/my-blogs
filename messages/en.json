@@ -32,6 +32,10 @@
     "signInKeycloak": {
       "title": "Sign in with Keycloak",
       "subtitle": "Please sign in to continue"
+    },
+    "searchPosts": {
+      "placeholder": "Search posts",
+      "noResults": "No posts found with this keyword"
     }
   }
 }
