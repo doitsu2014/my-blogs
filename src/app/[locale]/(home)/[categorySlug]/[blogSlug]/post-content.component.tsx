@@ -17,11 +17,6 @@ export default function PostContent({ contentHtml }: { contentHtml: string }) {
 
   return (
     <>
-      <script
-        src="https://fpyf8.com/88/tag.min.js"
-        data-zone="159470"
-        async
-        data-cfasync="false"></script>
       <div
         className="ql-editor !prose !max-w-full w-full"
         dangerouslySetInnerHTML={{ __html: contentHtml.replace(/&nbsp;/g, ' ') }}></div>
